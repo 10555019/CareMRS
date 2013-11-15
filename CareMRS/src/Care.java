@@ -13,6 +13,8 @@ public class Care {
 		
 		//WELCOME...HELLO
 		
+		//IT IS WORKING...
+		
 		/************************************************************************/
 		/*login information:
 			trial: set dummy account:
