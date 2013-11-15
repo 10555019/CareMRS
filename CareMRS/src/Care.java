@@ -11,6 +11,8 @@ public class Care {
 		
 		//TESTING HERE......
 		
+		//WELCOME...HELLO
+		
 		/************************************************************************/
 		/*login information:
 			trial: set dummy account:
