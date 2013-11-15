@@ -9,16 +9,6 @@ public class Care {
 	
 	public static void main(String[] args) {
 		
-		//TESTING HERE......
-		
-		//WELCOME...HELLO
-		
-		//IT IS WORKING...
-		
-		//PUSHING...
-		
-		//commit
-		
 		/************************************************************************/
 		/*login information:
 			trial: set dummy account:
