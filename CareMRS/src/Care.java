@@ -25,7 +25,7 @@ public class Care {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Login frame = new Login();
+					MyWindow frame = new MyWindow();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

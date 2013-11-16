@@ -23,7 +23,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 
-public class Login extends JFrame {
+public class MyWindow extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
@@ -32,7 +32,7 @@ public class Login extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Login() {
+	public MyWindow() {
 		
 		/*
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
