@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Frame;
+import java.awt.Image;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
@@ -19,6 +20,7 @@ import java.awt.Color;
 import java.util.LinkedList;
 
 import javax.swing.ImageIcon;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -41,12 +43,14 @@ public class MyWindow extends JFrame {
 		*/
 		
 		setTitle("CareMRS");
+		setIconImage(new ImageIcon(getClass().getResource("C.png")).getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1000, 700);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
 		
 		textField = new JTextField();
 		textField.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -95,25 +99,11 @@ public class MyWindow extends JFrame {
 		B_exit.setFont(new Font("Arial", Font.PLAIN, 20));
 		B_exit.setBounds(547, 452, 110, 60);
 		contentPane.add(B_exit);
-		
-		
-		
-		/*JLabel lblCareMedicalRecord = new JLabel("Care Medical Record System");
-		lblCareMedicalRecord.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblCareMedicalRecord.setBounds(375, 80, 281, 71);
-		contentPane.add(lblCareMedicalRecord);
-		
-		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setIcon(new ImageIcon("C:\\Users\\C\\Desktop\\CareMRS.png"));
-		lblNewLabel_1.setBounds(90, 32, 871, 196);
-		contentPane.add(lblNewLabel_1);
-		*/
-		
 
-		ImageIcon image1;
+		ImageIcon image_title;
 		JLabel label1;
-		image1 = new ImageIcon(getClass().getResource("CareMRS.png"));
-		label1 = new JLabel(image1);
+		image_title = new ImageIcon(getClass().getResource("CareMRS.png"));
+		label1 = new JLabel(image_title);
 		label1.setBounds(90,32,871,196);
 		contentPane.add(label1);
 
