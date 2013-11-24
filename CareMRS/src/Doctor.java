@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.LinkedList;
 
 
 public class Doctor {
@@ -6,7 +7,7 @@ public class Doctor {
 	private String userName; //used to login to the system, so needed to be UNIQUE
 	private String password; //used to login to the system, can be same for different user
 	private int room; // which room the doctor is using
-	private DBooking booking; //timetable for doctor
+	private LinkedList<DBooking> booking = new LinkedList<DBooking>(); //timetable for doctor
 	
 	//constructor - to create doctor object
 	public Doctor(String name, String userName, String password, int room){
@@ -47,15 +48,15 @@ public class Doctor {
 	public void setRoom(int room) {
 		this.room = room;
 	}
-
-	public DBooking getBooking() {
+	
+	public LinkedList<DBooking> getBooking() {
 		return booking;
 	}
 
-	public void setBooking(DBooking booking) {
+	public void setBooking(LinkedList<DBooking> booking) {
 		this.booking = booking;
 	}
-	
+
 	public static boolean checkLogin(String userName, char[] password){
 		int i = Care.doctor.size();
 		int k=0; //looping variable

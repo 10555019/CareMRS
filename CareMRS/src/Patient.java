@@ -1,17 +1,18 @@
-import java.util.Date;
-
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.LinkedList;
 
 public class Patient {
 	private String name;
 	private String HKID;
 	private String telephone;
 	private char gender;
-	private MyDate dob;
-	private PBooking booking; //store the booking records
-	private TreatmentRec record; //store the treatment records
+	private Calendar dob = new GregorianCalendar();
+	private LinkedList<PBooking> booking = new LinkedList<PBooking>(); //store the booking records
+	private LinkedList<TreatmentRec> record = new LinkedList<TreatmentRec>(); //store the treatment records
 	
 	//constructor - to create patient object
-	public Patient(String name, String HKID, String telephone, char gender, MyDate dob){
+	public Patient(String name, String HKID, String telephone, char gender, Calendar dob){
 		this.name.equals(name);
 		this.HKID.equals(HKID);
 		this.telephone.equals(telephone);
@@ -51,34 +52,32 @@ public class Patient {
 		this.gender = gender;
 	}
 
-	public MyDate getDob() {
+	public Calendar getDob() {
 		return dob;
 	}
 	
 	public String getDob_S(){
-		return Integer.toString(dob.getDay()) + "/" + Integer.toString(dob.getMonth()) + "/" + Integer.toString(dob.getYear());
+		return Integer.toString(dob.get(5)) + "/" + Integer.toString(dob.get(2)+1) + "/" + Integer.toString(dob.get(1));
 	}
-	
 
-	public void setDob(MyDate dob) {
+	public void setDob(Calendar dob) {
 		this.dob = dob;
 	}
 
-	public PBooking getBooking() {
+	public LinkedList<PBooking> getBooking() {
 		return booking;
 	}
 
-	public void setBooking(PBooking booking) {
+	public void setBooking(LinkedList<PBooking> booking) {
 		this.booking = booking;
 	}
 
-	public TreatmentRec getRecord() {
+	public LinkedList<TreatmentRec> getRecord() {
 		return record;
 	}
 
-	public void setRecord(TreatmentRec record) {
+	public void setRecord(LinkedList<TreatmentRec> record) {
 		this.record = record;
 	}
-	
 	
 }
