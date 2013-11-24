@@ -40,29 +40,23 @@ public class MyWindow extends JFrame {
 	private JPanel menuPane;
 	private JPanel p_searchPane;
 	private JPanel patientPane;
-	private JTextField userNameField;
-	private JPasswordField passwordField;
 	CardLayout cardLayout = new CardLayout();
 	
 	private Patient patient;
-	private JTextField txtTesting;
-	private JTextField txtY;
-	private JTextField textField;
-	private JTextField textField_1;
 	
 	
 	
 	private void loginPage(){
 		loginPane = new JPanel();
 		loginPane.setLayout(null);
+		final JTextField userNameField = new JTextField();
+		final JPasswordField passwordField = new JPasswordField();
 		//TextField, for user to type user name
-		userNameField = new JTextField();
 		userNameField.setFont(new Font("Arial", Font.PLAIN, 20));
 		userNameField.setBounds(455, 265, 253, 30);
 		loginPane.add(userNameField);
 		userNameField.setColumns(10);
 		//PasswordField, for user to type password
-		passwordField = new JPasswordField();
 		passwordField.setFont(new Font("Arial", Font.PLAIN, 20));
 		passwordField.setBounds(455, 342, 253, 30);
 		loginPane.add(passwordField);
@@ -152,6 +146,11 @@ public class MyWindow extends JFrame {
 		logout.addActionListener(new exitaction());
 		//*****Menu Bar*****//
 		JButton B_new = new JButton("New");
+		B_new.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(contentPane, "Patient");
+			}
+		});
 		B_new.setFont(new Font("Arial", Font.PLAIN, 25));
 		B_new.setBounds(158, 219, 136, 56);
 		menuPane.add(B_new);
@@ -168,6 +167,11 @@ public class MyWindow extends JFrame {
 		b_myTimetable.setBounds(537, 167, 282, 108);
 		menuPane.add(b_myTimetable);
 		JButton B_logOut = new JButton("Log out");
+		B_logOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(contentPane, "Login");
+			}
+		});
 		B_logOut.setFont(new Font("Arial", Font.PLAIN, 25));
 		B_logOut.setBounds(537, 352, 282, 108);
 		menuPane.add(B_logOut);
@@ -180,6 +184,103 @@ public class MyWindow extends JFrame {
 	private void patientPage(){
 		patientPane = new JPanel();
 		patientPane.setLayout(null);
+		final JTextField T_name = new JTextField();
+		final JTextField T_HKID = new JTextField();
+		final JTextField T_gender = new JTextField();
+		final JTextField T_dob = new JTextField();
+		
+		JLabel lblName = new JLabel("Name:");
+		lblName.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblName.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblName.setBounds(36, 50, 133, 32);
+		patientPane.add(lblName);
+		
+		JLabel lblHkid = new JLabel("HKID:");
+		lblHkid.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblHkid.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblHkid.setBounds(36, 132, 133, 32);
+		patientPane.add(lblHkid);
+		
+		JLabel lblGender = new JLabel("Gender:");
+		lblGender.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblGender.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblGender.setBounds(322, 132, 133, 32);
+		patientPane.add(lblGender);
+		
+		JLabel label_1 = new JLabel("Date of Birth:");
+		label_1.setHorizontalAlignment(SwingConstants.RIGHT);
+		label_1.setFont(new Font("Arial", Font.PLAIN, 20));
+		label_1.setBounds(36, 214, 133, 32);
+		patientPane.add(label_1);
+		
+		JButton btnNewButton = new JButton("Save");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//**********
+				//**
+				//** Method: change patient record
+				//**
+				//**********
+				JOptionPane.showMessageDialog(null, "Patient records have been saved","Patient record", JOptionPane.PLAIN_MESSAGE);
+				T_name.setEditable(false);
+				T_HKID.setEditable(false);
+				T_gender.setEditable(false);
+				T_dob.setEditable(false);
+			}
+		});
+		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 20));
+		btnNewButton.setBounds(698, 331, 98, 32);
+		patientPane.add(btnNewButton);
+		
+		JButton btnUpdate = new JButton("Update");
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				T_name.setEditable(true);
+				T_HKID.setEditable(true);
+				T_gender.setEditable(true);
+				T_dob.setEditable(true);
+			}
+		});
+		btnUpdate.setFont(new Font("Arial", Font.PLAIN, 20));
+		btnUpdate.setBounds(826, 331, 98, 32);
+		patientPane.add(btnUpdate);
+		
+		T_name.setFont(new Font("Arial", Font.PLAIN, 20));
+		T_name.setBounds(179, 50, 419, 32);
+		patientPane.add(T_name);
+		T_name.setColumns(10);
+		
+		T_HKID.setFont(new Font("Arial", Font.PLAIN, 20));
+		T_HKID.setColumns(10);
+		T_HKID.setBounds(179, 132, 133, 32);
+		patientPane.add(T_HKID);
+		
+		T_gender.setFont(new Font("Arial", Font.PLAIN, 20));
+		T_gender.setColumns(10);
+		T_gender.setBounds(465, 132, 133, 32);
+		patientPane.add(T_gender);
+		
+		T_dob.setFont(new Font("Arial", Font.PLAIN, 20));
+		T_dob.setColumns(10);
+		T_dob.setBounds(179, 214, 133, 32);
+		patientPane.add(T_dob);
+		
+		JLabel lblPatient = new JLabel("Patient");
+		lblPatient.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPatient.setFont(new Font("Arial", Font.PLAIN, 25));
+		lblPatient.setBounds(158, 167, 282, 42);
+		menuPane.add(lblPatient);
+		
+		if (patient != null){
+			T_name.setText(patient.getName());
+			T_HKID.setText(patient.getHKID());
+			T_gender.setText(Character.toString(patient.getGender()));
+			T_dob.setText(patient.getDob_S());
+			T_name.setEditable(false);
+			T_HKID.setEditable(false);
+			T_gender.setEditable(false);
+			T_dob.setEditable(false);
+		}
 		
 	}
 
@@ -208,71 +309,6 @@ public class MyWindow extends JFrame {
 		contentPane.add(menuPane, "Menu");
 		patientPage();
 		contentPane.add(patientPane, "Patient");
-		
-		JLabel lblName = new JLabel("Name:");
-		lblName.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblName.setFont(new Font("Arial", Font.PLAIN, 20));
-		lblName.setBounds(36, 50, 133, 32);
-		patientPane.add(lblName);
-		
-		JLabel lblHkid = new JLabel("HKID:");
-		lblHkid.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblHkid.setFont(new Font("Arial", Font.PLAIN, 20));
-		lblHkid.setBounds(36, 132, 133, 32);
-		patientPane.add(lblHkid);
-		
-		JLabel lblGender = new JLabel("Gender:");
-		lblGender.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblGender.setFont(new Font("Arial", Font.PLAIN, 20));
-		lblGender.setBounds(322, 132, 133, 32);
-		patientPane.add(lblGender);
-		
-		JLabel label_1 = new JLabel("Date of Birth:");
-		label_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		label_1.setFont(new Font("Arial", Font.PLAIN, 20));
-		label_1.setBounds(36, 214, 133, 32);
-		patientPane.add(label_1);
-		
-		JButton btnNewButton = new JButton("Save");
-		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 20));
-		btnNewButton.setBounds(698, 331, 98, 32);
-		patientPane.add(btnNewButton);
-		
-		JButton btnUpdate = new JButton("Update");
-		btnUpdate.setFont(new Font("Arial", Font.PLAIN, 20));
-		btnUpdate.setBounds(826, 331, 98, 32);
-		patientPane.add(btnUpdate);
-		
-		txtTesting = new JTextField();
-		txtTesting.setText("testing");
-		txtTesting.setFont(new Font("Arial", Font.PLAIN, 20));
-		txtTesting.setBounds(179, 50, 440, 32);
-		patientPane.add(txtTesting);
-		txtTesting.setColumns(10);
-		
-		txtY = new JTextField();
-		txtY.setFont(new Font("Arial", Font.PLAIN, 20));
-		txtY.setColumns(10);
-		txtY.setBounds(179, 132, 133, 32);
-		patientPane.add(txtY);
-		
-		textField = new JTextField();
-		textField.setFont(new Font("Arial", Font.PLAIN, 20));
-		textField.setColumns(10);
-		textField.setBounds(465, 132, 133, 32);
-		patientPane.add(textField);
-		
-		textField_1 = new JTextField();
-		textField_1.setFont(new Font("Arial", Font.PLAIN, 20));
-		textField_1.setColumns(10);
-		textField_1.setBounds(179, 214, 133, 32);
-		patientPane.add(textField_1);
-		
-		JLabel lblPatient = new JLabel("Patient");
-		lblPatient.setHorizontalAlignment(SwingConstants.CENTER);
-		lblPatient.setFont(new Font("Arial", Font.PLAIN, 25));
-		lblPatient.setBounds(158, 167, 282, 42);
-		menuPane.add(lblPatient);
 		
 		cardLayout.show(contentPane, "Login");
 	}

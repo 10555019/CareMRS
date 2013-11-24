@@ -6,12 +6,12 @@ public class Patient {
 	private String HKID;
 	private String telephone;
 	private char gender;
-	private Date dob;
+	private MyDate dob;
 	private PBooking booking; //store the booking records
 	private TreatmentRec record; //store the treatment records
 	
 	//constructor - to create patient object
-	public Patient(String name, String HKID, String telephone, char gender, Date dob){
+	public Patient(String name, String HKID, String telephone, char gender, MyDate dob){
 		this.name.equals(name);
 		this.HKID.equals(HKID);
 		this.telephone.equals(telephone);
@@ -51,11 +51,16 @@ public class Patient {
 		this.gender = gender;
 	}
 
-	public Date getDob() {
+	public MyDate getDob() {
 		return dob;
 	}
+	
+	public String getDob_S(){
+		return Integer.toString(dob.getDay()) + "/" + Integer.toString(dob.getMonth()) + "/" + Integer.toString(dob.getYear());
+	}
+	
 
-	public void setDob(Date dob) {
+	public void setDob(MyDate dob) {
 		this.dob = dob;
 	}
 
