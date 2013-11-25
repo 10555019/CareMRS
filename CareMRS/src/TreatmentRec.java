@@ -9,5 +9,8 @@ public class TreatmentRec {
 	private float discount, totalPrice;
 	private boolean payment;
 	
-	public static int treatmentSearch()
+	public static int treatmentSearch(Link<TreatmentRec> TRec)
+	{
+		//TRec.get(i).doctorID            //By John, it will change when I know what the searching attribute is...
+	}
 }
