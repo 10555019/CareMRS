@@ -19,4 +19,12 @@ public class Db {
 		this.doctor.add(doctor);
 	}
 	
+	public Patient getPatient(int index){
+		return patient.get(index);
+	}
+	
+	public Doctor getDoctor(int index){
+		return doctor.get(index);
+	}
+	
 }

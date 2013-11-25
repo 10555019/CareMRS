@@ -178,6 +178,8 @@ public class MyWindow extends JFrame {
 	}
 	
 	private void p_searchPage(){
+		p_searchPane = new JPanel();
+		p_searchPane.setLayout(null);
 		
 	}
 	
@@ -229,7 +231,7 @@ public class MyWindow extends JFrame {
 			}
 		});
 		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 20));
-		btnNewButton.setBounds(698, 331, 98, 32);
+		btnNewButton.setBounds(698, 298, 98, 32);
 		patientPane.add(btnNewButton);
 		
 		JButton btnUpdate = new JButton("Update");
@@ -242,8 +244,43 @@ public class MyWindow extends JFrame {
 			}
 		});
 		btnUpdate.setFont(new Font("Arial", Font.PLAIN, 20));
-		btnUpdate.setBounds(826, 331, 98, 32);
+		btnUpdate.setBounds(826, 298, 98, 32);
 		patientPane.add(btnUpdate);
+		
+		JButton btnNewButton_1 = new JButton("Booking");
+		btnNewButton_1.setFont(new Font("Arial", Font.PLAIN, 25));
+		btnNewButton_1.setBounds(101, 384, 190, 100);
+		patientPane.add(btnNewButton_1);
+		
+		JButton btnTreatment = new JButton("Treatment");
+		btnTreatment.setFont(new Font("Arial", Font.PLAIN, 25));
+		btnTreatment.setBounds(392, 384, 190, 100);
+		patientPane.add(btnTreatment);
+		
+		JButton button_1 = new JButton("New button");
+		button_1.setFont(new Font("Arial", Font.PLAIN, 25));
+		button_1.setBounds(683, 384, 190, 100);
+		patientPane.add(button_1);
+		
+		JButton button_2 = new JButton("New button");
+		button_2.setFont(new Font("Arial", Font.PLAIN, 25));
+		button_2.setBounds(101, 506, 190, 100);
+		patientPane.add(button_2);
+		
+		JButton btnLog = new JButton("Log");
+		btnLog.setFont(new Font("Arial", Font.PLAIN, 25));
+		btnLog.setBounds(392, 506, 190, 100);
+		patientPane.add(btnLog);
+		
+		JButton btnLogOut = new JButton("Log out");
+		btnLogOut.setFont(new Font("Arial", Font.PLAIN, 25));
+		btnLogOut.setBounds(683, 506, 190, 100);
+		patientPane.add(btnLogOut);
+		
+		JPanel color1 = new JPanel();
+		color1.setBackground(new Color(245, 222, 179));
+		color1.setBounds(24, 21, 924, 341);
+		patientPane.add(color1);
 		
 		T_name.setFont(new Font("Arial", Font.PLAIN, 20));
 		T_name.setBounds(179, 50, 419, 32);
@@ -308,7 +345,9 @@ public class MyWindow extends JFrame {
 		menuPage();
 		contentPane.add(menuPane, "Menu");
 		patientPage();
-		contentPane.add(patientPane, "Patient");
+		contentPane.add(patientPane, "Patient");	
+		p_searchPage();
+		contentPane.add(p_searchPane, "P_search");
 		
 		cardLayout.show(contentPane, "Login");
 	}
