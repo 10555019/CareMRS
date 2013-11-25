@@ -8,4 +8,6 @@ public class TreatmentRec {
 	private String condition;
 	private float discount, totalPrice;
 	private boolean payment;
+	
+	public static int treatmentSearch()
 }
