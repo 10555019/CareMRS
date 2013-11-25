@@ -10,6 +10,7 @@ public class Patient {
 	private Calendar dob = new GregorianCalendar();
 	private LinkedList<PBooking> booking = new LinkedList<PBooking>(); //store the booking records
 	private LinkedList<TreatmentRec> record = new LinkedList<TreatmentRec>(); //store the treatment records
+	private int index; //By John  For searching the object of patient linklist
 	
 	//constructor - to create patient object
 	public Patient(String name, String HKID, String telephone, char gender, Calendar dob){
@@ -18,6 +19,27 @@ public class Patient {
 		this.telephone.equals(telephone);
 		this.gender = gender;
 		this.dob = dob;
+	}
+	
+	public static void patientSearch(String inputHKID,List<Patient> patientlist) {	//By John Assume that there is a linklist of patients
+		int i = -1;
+		do
+		{
+			i++;
+			if (inputHKID.equals(patientlist.get(i).HKID))
+			{
+				System.out.println("The patient has been found.");
+				System.out.println("-----------------------------------------------------");
+				System.out.println("Name :" + patientlist.get(i).name);
+				System.out.println("HKID :" + patientlist.get(i).HKID);
+				System.out.println("Telephone :" + patientlist.get(i).telephone);
+				System.out.println("Gender :" + patientlist.get(i).gender);
+				System.out.println("Date of birth :" + patientlist.get(i).dob);
+				System.out.println("-----------------------------------------------------");
+			}
+			else
+				System.out.println("The patient has not been found.");
+		} while (!(inputHKID.equals(patientlist.get(i).HKID))&&(i != patientlist.size()-1));	
 	}
 
 	public String getName() {
