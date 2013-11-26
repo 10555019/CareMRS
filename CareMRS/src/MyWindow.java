@@ -34,6 +34,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
+import javax.swing.JTable;
+import javax.swing.JComboBox;
 
 
 public class MyWindow extends JFrame {
@@ -46,6 +48,7 @@ public class MyWindow extends JFrame {
 	CardLayout cardLayout = new CardLayout();
 	
 	private Patient patient;
+	private JTextField T_telephone;
 	
 	
 	
@@ -148,6 +151,18 @@ public class MyWindow extends JFrame {
 		}
 		logout.addActionListener(new exitaction());
 		//*****Menu Bar*****//
+		
+		JLabel lbl_menu = new JLabel("Menu");
+		lbl_menu.setFont(new Font("Arial", Font.PLAIN, 30));
+		lbl_menu.setBounds(445, 20, 83, 56);
+		menuPane.add(lbl_menu);
+		
+		JLabel lbl_patient = new JLabel("Patient");
+		lbl_patient.setHorizontalAlignment(SwingConstants.CENTER);
+		lbl_patient.setFont(new Font("Arial", Font.PLAIN, 25));
+		lbl_patient.setBounds(158, 167, 282, 42);
+		menuPane.add(lbl_patient);
+		
 		JButton B_new = new JButton("New");
 		B_new.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -282,80 +297,63 @@ public class MyWindow extends JFrame {
 		B_menu.setBounds(683, 506, 190, 100);
 		patientPane.add(B_menu);
 		
-		JLabel lbl_patient = new JLabel("Patient");
-		lbl_patient.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_patient.setFont(new Font("Arial", Font.PLAIN, 25));
-		lbl_patient.setBounds(158, 167, 282, 42);
-		menuPane.add(lbl_patient);
-		
-		JLabel lbl_menu = new JLabel("Menu");
-		lbl_menu.setFont(new Font("Arial", Font.PLAIN, 30));
-		lbl_menu.setBounds(445, 20, 83, 56);
-		menuPane.add(lbl_menu);
-		
 		JPanel color1 = new JPanel();
 		color1.setBackground(new Color(245, 222, 179));
 		color1.setBounds(25, 85, 924, 270);
 		patientPane.add(color1);
 		color1.setLayout(null);
 		
-		JLabel label_1 = new JLabel("Date of Birth:");
-		label_1.setBounds(36, 194, 133, 32);
-		color1.add(label_1);
-		label_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		label_1.setFont(new Font("Arial", Font.PLAIN, 20));
-		final JTextField T_dob = new JTextField();
-		T_dob.setBounds(179, 194, 133, 32);
-		color1.add(T_dob);
+		JLabel lbl_dob = new JLabel("Date of Birth:");
+		lbl_dob.setBounds(36, 194, 133, 32);
+		color1.add(lbl_dob);
+		lbl_dob.setHorizontalAlignment(SwingConstants.RIGHT);
+		lbl_dob.setFont(new Font("Arial", Font.PLAIN, 20));
 		
-		T_dob.setFont(new Font("Arial", Font.PLAIN, 20));
-		T_dob.setColumns(10);
-		
-		JLabel lblHkid = new JLabel("HKID:");
-		lblHkid.setBounds(36, 112, 133, 32);
-		color1.add(lblHkid);
-		lblHkid.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblHkid.setFont(new Font("Arial", Font.PLAIN, 20));
+		JLabel lbl_HKID = new JLabel("HKID:");
+		lbl_HKID.setBounds(36, 112, 133, 32);
+		color1.add(lbl_HKID);
+		lbl_HKID.setHorizontalAlignment(SwingConstants.RIGHT);
+		lbl_HKID.setFont(new Font("Arial", Font.PLAIN, 20));
 		final JTextField T_HKID = new JTextField();
-		T_HKID.setBounds(179, 112, 133, 32);
+		T_HKID.setBounds(179, 112, 215, 32);
 		color1.add(T_HKID);
 		
 		T_HKID.setFont(new Font("Arial", Font.PLAIN, 20));
 		T_HKID.setColumns(10);
 		
-		JLabel lblGender = new JLabel("Gender:");
-		lblGender.setBounds(322, 112, 133, 32);
-		color1.add(lblGender);
-		lblGender.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblGender.setFont(new Font("Arial", Font.PLAIN, 20));
+		JLabel lbl_gender = new JLabel("Gender:");
+		lbl_gender.setBounds(404, 112, 133, 32);
+		color1.add(lbl_gender);
+		lbl_gender.setHorizontalAlignment(SwingConstants.RIGHT);
+		lbl_gender.setFont(new Font("Arial", Font.PLAIN, 20));
 		final JTextField T_gender = new JTextField();
-		T_gender.setBounds(465, 112, 133, 32);
+		T_gender.setBounds(547, 112, 133, 32);
 		color1.add(T_gender);
 		
 		T_gender.setFont(new Font("Arial", Font.PLAIN, 20));
 		T_gender.setColumns(10);
 		
-		JLabel lblName = new JLabel("Name:");
-		lblName.setBounds(36, 30, 133, 32);
-		color1.add(lblName);
-		lblName.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblName.setFont(new Font("Arial", Font.PLAIN, 20));
+		JLabel lbl_name = new JLabel("Name:");
+		lbl_name.setBounds(36, 30, 133, 32);
+		color1.add(lbl_name);
+		lbl_name.setHorizontalAlignment(SwingConstants.RIGHT);
+		lbl_name.setFont(new Font("Arial", Font.PLAIN, 20));
 		final JTextField T_name = new JTextField();
-		T_name.setBounds(179, 30, 419, 32);
+		T_name.setBounds(179, 30, 501, 32);
 		color1.add(T_name);
 		
 		T_name.setFont(new Font("Arial", Font.PLAIN, 20));
 		T_name.setColumns(10);
 		
-		JLabel lblNewLabel_1 = new JLabel("Patient");
-		lblNewLabel_1.setFont(new Font("Arial", Font.PLAIN, 30));
-		lblNewLabel_1.setBounds(436, 20, 102, 41);
-		patientPane.add(lblNewLabel_1);
+		JLabel lbl_patient = new JLabel("Patient");
+		lbl_patient.setFont(new Font("Arial", Font.PLAIN, 30));
+		lbl_patient.setBounds(436, 20, 102, 41);
+		patientPane.add(lbl_patient);
 		p_searchPage();
 		contentPane.add(p_searchPane, "P_search");
-		
+
 		JButton B_save = new JButton("Save");
-		B_save.setBounds(673, 216, 98, 32);
+		B_save.setBounds(693, 227, 98, 32);
 		color1.add(B_save);
 		B_save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -364,18 +362,29 @@ public class MyWindow extends JFrame {
 				//** Method: change patient record
 				//**
 				//**********
-
-				JOptionPane.showMessageDialog(null, "Patient records have been saved","Patient record", JOptionPane.PLAIN_MESSAGE);
-				T_name.setEditable(false);
-				T_HKID.setEditable(false);
-				T_gender.setEditable(false);
-				T_dob.setEditable(false);
+				try{
+					if (T_HKID.getText().equals("")) throw new NullFieldException(); //primary key should not be null
+					if (patient==null){
+						//need to create a new patient
+						//patient = new Patient(T_name.getText(),T_HKID.getText(),T_telephone.getText(),T_gender.getText().charAt(0),);
+					} else {
+						//amend current patient record
+						
+					}
+					JOptionPane.showMessageDialog(null, "Patient records have been saved","Patient record", JOptionPane.PLAIN_MESSAGE);
+					T_name.setEditable(false);
+					T_HKID.setEditable(false);
+					T_gender.setEditable(false);
+					T_dob.setEditable(false);
+				} catch (NullFieldException e1){
+					e1.error();
+				}
 			}
 		});
 		B_save.setFont(new Font("Arial", Font.PLAIN, 20));
 
 		JButton B_update = new JButton("Update");
-		B_update.setBounds(801, 216, 98, 32);
+		B_update.setBounds(816, 227, 98, 32);
 		color1.add(B_update);
 		B_update.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -386,6 +395,42 @@ public class MyWindow extends JFrame {
 			}
 		});
 		B_update.setFont(new Font("Arial", Font.PLAIN, 20));
+		
+		JLabel lbl_telephone = new JLabel("Telephone:");
+		lbl_telephone.setHorizontalAlignment(SwingConstants.RIGHT);
+		lbl_telephone.setFont(new Font("Arial", Font.PLAIN, 20));
+		lbl_telephone.setBounds(404, 194, 133, 32);
+		color1.add(lbl_telephone);
+		
+		T_telephone = new JTextField();
+		T_telephone.setFont(new Font("Arial", Font.PLAIN, 20));
+		T_telephone.setColumns(10);
+		T_telephone.setBounds(547, 194, 133, 32);
+		color1.add(T_telephone);
+		
+		String[] s_day = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"};
+		JComboBox C_day = new JComboBox(s_day);
+		C_day.setFont(new Font("Arial", Font.PLAIN, 25));
+		C_day.setBounds(179, 194, 55, 32);
+		color1.add(C_day);
+		
+		String[] s_month = {"1","2","3","4","5","6","7","8","9","10","11","12"};
+		JComboBox C_month = new JComboBox(s_month);
+		C_month.setFont(new Font("Arial", Font.PLAIN, 25));
+		C_month.setBounds(244, 194, 55, 32);
+		color1.add(C_month);
+		
+		JLabel lblddmmyyyy = new JLabel("(dd/mm/yyyy)");
+		lblddmmyyyy.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblddmmyyyy.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblddmmyyyy.setBounds(36, 216, 133, 32);
+		color1.add(lblddmmyyyy);
+		
+		String[] s_year = {""
+		JComboBox C_year = new JComboBox(new Object[]{});
+		C_year.setFont(new Font("Arial", Font.PLAIN, 25));
+		C_year.setBounds(309, 194, 85, 32);
+		color1.add(C_year);
 		
 		//after search patient, get and show the patient record
 		if (patient != null){
@@ -429,6 +474,6 @@ public class MyWindow extends JFrame {
 		p_searchPage();
 		contentPane.add(p_searchPane, "Search");
 		
-		cardLayout.show(contentPane, "Login");
+		cardLayout.show(contentPane, "Menu");
 	}
 }
