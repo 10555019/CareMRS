@@ -16,6 +16,17 @@ public class Doctor {
 		this.password=password;
 		this.room = room;
 	}
+	
+	public static int doctorSearch(String Username){
+		int i = 0;
+		while (Db.getDoctor(i) != null)
+		{
+			if (Username.equals(Db.getDoctor(i).userName))
+				return i;
+			i++;
+		}
+		return -1;
+	}
 
 	public String getName() {
 		return name;
