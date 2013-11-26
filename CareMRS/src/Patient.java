@@ -22,7 +22,7 @@ public class Patient {
 	
 	public static int patientSearch(String inputHKID) {	
 	int min=0;
-	int max=Db.getPatientSize();
+	int max=Db.getPatientSize() - 1;
 	int mid;
 	while(min != max)
 	{
