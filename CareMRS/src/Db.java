@@ -28,7 +28,11 @@ public class Db {
 	}
 	
 	public static Doctor getDoctor(int index){
-		return l_doctor.get(index);
+		try{
+			return l_doctor.get(index);
+		} catch (IndexOutOfBoundsException e){
+		}
+		return null;
 	}
 	
 }
