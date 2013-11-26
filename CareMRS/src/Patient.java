@@ -24,9 +24,9 @@ public class Patient {
 	int min=0;
 	int max=Db.getPatientSize();
 	int mid;
-	mid = (int) ((min+max)/2);
 	while(min != max)
 	{
+	mid = (int) ((min+max)/2);
 	 if (inputHKID.charAt(0) == Db.getPatient(mid).HKID.charAt(0))
 	    {
 	      if (Integer.parseInt(inputHKID.substring(1,7)) == Integer.parseInt(Db.getPatient(mid).HKID.substring(1,7)))
