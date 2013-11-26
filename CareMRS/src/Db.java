@@ -23,6 +23,10 @@ public class Db {
 		return l_patient.get(index);
 	}
 	
+	public static int getPatientSize(){
+		return l_patient.size();
+	}
+	
 	public static Doctor getDoctor(int index){
 		return l_doctor.get(index);
 	}

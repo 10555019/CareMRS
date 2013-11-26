@@ -21,25 +21,28 @@ public class Patient {
 		this.dob = dob;
 	}
 	
-	public static void patientSearch(String inputHKID,List<Patient> patientlist) {	//By John Assume that there is a linklist of patients
+	public static int patientSearch(String inputHKID) {	
 		int i = -1;
+		
 		do
 		{
 			i++;
-			if (inputHKID.equals(patientlist.get(i).HKID))
+			if (inputHKID.equals(Db.getPatient(i).HKID))
 			{
 				System.out.println("The patient has been found.");
 				System.out.println("-----------------------------------------------------");
-				System.out.println("Name :" + patientlist.get(i).name);
-				System.out.println("HKID :" + patientlist.get(i).HKID);
-				System.out.println("Telephone :" + patientlist.get(i).telephone);
-				System.out.println("Gender :" + patientlist.get(i).gender);
-				System.out.println("Date of birth :" + patientlist.get(i).dob);
+				System.out.println("Name :" + Db.getPatient(i).name);
+				System.out.println("HKID :" + Db.getPatient(i).HKID);
+				System.out.println("Telephone :" + Db.getPatient(i).telephone);
+				System.out.println("Gender :" + Db.getPatient(i).gender);
+				System.out.println("Date of birth :" + Db.getPatient(i).dob);
 				System.out.println("-----------------------------------------------------");
+				return i;
 			}
-			else
-				System.out.println("The patient has not been found.");
-		} while (!(inputHKID.equals(patientlist.get(i).HKID))&&(i != patientlist.size()-1));	
+			else{
+				return -1;
+			}
+		} while (!(inputHKID.equals(Db.getPatient(i).HKID))&&(i != Db.l_patient.size()-1));	
 	}
 
 	public String getName() {
