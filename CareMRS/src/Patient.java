@@ -29,7 +29,7 @@ public class Patient {
 	{
 	 if (inputHKID.charAt(0) == Db.getPatient(mid).HKID.charAt(0))
 	    {
-	      if (Integer.parseInt(inputHKID) == Integer.parseInt(Db.getPatient(mid).HKID))
+	      if (Integer.parseInt(inputHKID.substring(1,7)) == Integer.parseInt(Db.getPatient(mid).HKID.substring(1,7)))
 	         {
 	           if (inputHKID.charAt(8) == Db.getPatient(mid).HKID.charAt(8))
 	                return mid;
@@ -38,7 +38,7 @@ public class Patient {
 	           else
 	                min = mid;
 	         }
-	      else if (Integer.parseInt(inputHKID) < Integer.parseInt(Db.getPatient(mid).HKID))
+	      else if (Integer.parseInt(inputHKID.substring(1,7)) < Integer.parseInt(Db.getPatient(mid).HKID.substring(1,7)))
 	              max = mid;
 	      else 
 	              min = mid;
