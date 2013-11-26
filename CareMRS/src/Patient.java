@@ -10,7 +10,6 @@ public class Patient {
 	private Calendar dob = new GregorianCalendar();
 	private LinkedList<PBooking> booking = new LinkedList<PBooking>(); //store the booking records
 	private LinkedList<TreatmentRec> record = new LinkedList<TreatmentRec>(); //store the treatment records
-	private int index; //By John  For searching the object of patient linklist
 	
 	//constructor - to create patient object
 	public Patient(String name, String HKID, String telephone, char gender, Calendar dob){
@@ -22,27 +21,33 @@ public class Patient {
 	}
 	
 	public static int patientSearch(String inputHKID) {	
-		int i = -1;
-		
-		do
-		{
-			i++;
-			if (inputHKID.equals(Db.getPatient(i).HKID))
-			{
-				System.out.println("The patient has been found.");
-				System.out.println("-----------------------------------------------------");
-				System.out.println("Name :" + Db.getPatient(i).name);
-				System.out.println("HKID :" + Db.getPatient(i).HKID);
-				System.out.println("Telephone :" + Db.getPatient(i).telephone);
-				System.out.println("Gender :" + Db.getPatient(i).gender);
-				System.out.println("Date of birth :" + Db.getPatient(i).dob);
-				System.out.println("-----------------------------------------------------");
-				return i;
-			}
-			else{
-				return -1;
-			}
-		} while (!(inputHKID.equals(Db.getPatient(i).HKID))&&(i != Db.l_patient.size()-1));	
+	int min=0;
+	int max=Db.getPatientSize();
+	int mid;
+	mid = (int) ((min+max)/2);
+	while(min != max)
+	{
+	 if (inputHKID.charAt(0) == Db.getPatient(mid).HKID.charAt(0))
+	    {
+	      if (Integer.parseInt(inputHKID) == Integer.parseInt(Db.getPatient(mid).HKID))
+	         {
+	           if (inputHKID.charAt(8) == Db.getPatient(mid).HKID.charAt(8))
+	                return mid;
+	           else if ((inputHKID.charAt(8) < Db.getPatient(mid).HKID.charAt(8)))
+	                max = mid;
+	           else
+	                min = mid;
+	         }
+	      else if (Integer.parseInt(inputHKID) < Integer.parseInt(Db.getPatient(mid).HKID))
+	              max = mid;
+	      else 
+	              min = mid;
+	    }	
+	else if (inputHKID.charAt(0) < Db.getPatient(mid).HKID.charAt(0))      
+	      max = mid;
+	else  min = mid;
+	 }
+	   return -1;                                                   //Not found
 	}
 
 	public String getName() {
