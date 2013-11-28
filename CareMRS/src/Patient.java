@@ -24,7 +24,7 @@ public class Patient {
 	int min=0;
 	int max=Db.getPatientSize() - 1;
 	int mid;
-	while(min != max)
+	while(min <= max)
 	{
 	mid = (int) ((min+max)/2);
 	 if (inputHKID.charAt(0) == Db.getPatient(mid).HKID.charAt(0))
@@ -34,18 +34,18 @@ public class Patient {
 	           if (inputHKID.charAt(8) == Db.getPatient(mid).HKID.charAt(8))
 	                return mid;
 	           else if ((inputHKID.charAt(8) < Db.getPatient(mid).HKID.charAt(8)))
-	                max = mid;
+	                max = mid - 1;
 	           else
-	                min = mid;
+	                min = mid + 1;
 	         }
 	      else if (Integer.parseInt(inputHKID.substring(1,7)) < Integer.parseInt(Db.getPatient(mid).HKID.substring(1,7)))
-	              max = mid;
+	              max = mid - 1;
 	      else 
-	              min = mid;
+	              min = mid + 1;
 	    }	
 	else if (inputHKID.charAt(0) < Db.getPatient(mid).HKID.charAt(0))      
-	      max = mid;
-	else  min = mid;
+	      max = mid - 1;
+	else  min = mid + 1;
 	 }
 	   return -1;                                                   //Not found
 	}
