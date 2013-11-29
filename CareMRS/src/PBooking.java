@@ -8,12 +8,15 @@ public class PBooking {
 		this.patientID = patientID;
 	}
 	public ShowBooking(){
-		
+		//search Booking
 	}
 	public PrintBooking(){
-		
+		//search booking
 	}
 	public CreateBooking(){
-		
+		//add list,add in order
+	}
+	public CancelBoioking(){
+		//delete list
 	}
 }
