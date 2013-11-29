@@ -1,10 +1,4 @@
-import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Frame;
-import java.awt.Image;
-import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -23,7 +17,6 @@ import javax.swing.JButton;
 
 import java.awt.Color;
 import java.text.ParseException;
-import java.util.LinkedList;
 
 import javax.swing.ImageIcon;
 
@@ -32,15 +25,12 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
-import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
-import javax.swing.JTable;
-import javax.swing.JComboBox;
-import javax.swing.JInternalFrame;
 
 
 public class MyWindow extends JFrame {
 
+	//**********Data Member of MyWindow**********//
 	private JPanel contentPane;
 	private JPanel loginPane;
 	private JPanel menuPane;
@@ -51,8 +41,7 @@ public class MyWindow extends JFrame {
 	CardLayout cardLayout = new CardLayout();
 
 	private Patient patient;
-	private JTextField T_telephone;
-
+	//**********Data Member of MyWindow**********//
 
 
 	private void loginPage(){
@@ -155,17 +144,20 @@ public class MyWindow extends JFrame {
 		logout.addActionListener(new exitaction());
 		//*****Menu Bar*****//
 
+		//*****head label*****
 		JLabel lbl_menu = new JLabel("Menu");
 		lbl_menu.setFont(new Font("Arial", Font.PLAIN, 30));
 		lbl_menu.setBounds(445, 20, 83, 56);
 		menuPane.add(lbl_menu);
 
+		//*****patient label*****
 		JLabel lbl_patient = new JLabel("Patient");
 		lbl_patient.setHorizontalAlignment(SwingConstants.CENTER);
 		lbl_patient.setFont(new Font("Arial", Font.PLAIN, 25));
 		lbl_patient.setBounds(158, 167, 282, 42);
 		menuPane.add(lbl_patient);
-
+		
+		//*****Patient_New*****
 		JButton B_new = new JButton("New");
 		B_new.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -175,6 +167,8 @@ public class MyWindow extends JFrame {
 		B_new.setFont(new Font("Arial", Font.PLAIN, 25));
 		B_new.setBounds(158, 219, 136, 56);
 		menuPane.add(B_new);
+		
+		//*****Patient_Search*****
 		JButton B_search = new JButton("Search");
 		B_search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -184,14 +178,29 @@ public class MyWindow extends JFrame {
 		B_search.setFont(new Font("Arial", Font.PLAIN, 25));
 		B_search.setBounds(304, 219, 136, 56);
 		menuPane.add(B_search);
+		
+		//*****Clinic*****
 		JButton B_clinic = new JButton("Clinic");
 		B_clinic.setFont(new Font("Arial", Font.PLAIN, 25));
-		B_clinic.setBounds(346, 352, 282, 108);
+		B_clinic.setBounds(158, 352, 282, 108);
 		menuPane.add(B_clinic);
+		
+		//*****My Timetable*****
 		JButton B_myTimetable = new JButton("My Timetable");
 		B_myTimetable.setFont(new Font("Arial", Font.PLAIN, 25));
 		B_myTimetable.setBounds(537, 167, 282, 108);
 		menuPane.add(B_myTimetable);
+		
+		//*****Log out*****
+		JButton lbl_logOut = new JButton("Log out");
+		lbl_logOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				cardLayout.show(contentPane, "Login");
+			}
+		});
+		lbl_logOut.setFont(new Font("Arial", Font.PLAIN, 25));
+		lbl_logOut.setBounds(537, 352, 282, 108);
+		menuPane.add(lbl_logOut);
 	}
 
 	private void p_searchPage(){
@@ -300,14 +309,15 @@ public class MyWindow extends JFrame {
 
 		MaskFormatter idFormatter = new MaskFormatter("U######'(#')");
 		final JFormattedTextField T_HKID = new JFormattedTextField(idFormatter);
+		T_HKID.setText("");
 		T_HKID.setFont(new Font("Arial", Font.PLAIN, 25));
-		T_HKID.setBounds(179,112,215,32);
+		T_HKID.setBounds(179,112,163,32);
 		color1.add(T_HKID);
 		T_HKID.setColumns(10);
 		
 		//*****Gender*****
 		JLabel lbl_gender = new JLabel("Gender:");
-		lbl_gender.setBounds(404, 112, 133, 32);
+		lbl_gender.setBounds(373, 112, 133, 32);
 		color1.add(lbl_gender);
 		lbl_gender.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_gender.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -334,8 +344,9 @@ public class MyWindow extends JFrame {
 		
 		MaskFormatter dateFormatter = new MaskFormatter("##'/##'/####");
 		final JFormattedTextField T_dob = new JFormattedTextField(dateFormatter);
+		T_dob.setText("");
 		T_dob.setFont(new Font("Arial", Font.PLAIN, 25));
-		T_dob.setBounds(179,194,215,32);
+		T_dob.setBounds(179,194,163,32);
 		color1.add(T_dob);
 		T_dob.setColumns(10);
 		
@@ -343,13 +354,14 @@ public class MyWindow extends JFrame {
 		JLabel lbl_tel = new JLabel("Telephone:");
 		lbl_tel.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_tel.setFont(new Font("Arial", Font.PLAIN, 20));
-		lbl_tel.setBounds(404, 194, 133, 32);
+		lbl_tel.setBounds(373, 194, 133, 32);
 		color1.add(lbl_tel);
 
-		MaskFormatter telFormatter = new MaskFormatter("####'-####");
+		MaskFormatter telFormatter = new MaskFormatter("####' ####");
 		final JFormattedTextField T_tel = new JFormattedTextField(telFormatter);
+		T_tel.setText("");
 		T_tel.setFont(new Font("Arial", Font.PLAIN, 25));
-		T_tel.setBounds(547,194,133,32);
+		T_tel.setBounds(516,194,164,32);
 		color1.add(T_tel);
 		T_tel.setColumns(10);
 
@@ -452,6 +464,11 @@ public class MyWindow extends JFrame {
 
 	}
 
+	private void p_bookingPage(){
+		p_bookingPane = new JPanel();
+		p_bookingPane.setLayout(null);
+	}
+	
 	/**
 	 * Create the frame.
 	 * @throws ParseException 
@@ -480,6 +497,8 @@ public class MyWindow extends JFrame {
 		contentPane.add(patientPane, "Patient");
 		p_searchPage();
 		contentPane.add(p_searchPane, "Search");
+		p_bookingPage();
+		contentPane.add(p_bookingPane, "Booking");
 
 		cardLayout.show(contentPane, "Menu");
 	}
