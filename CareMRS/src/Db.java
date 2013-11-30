@@ -75,23 +75,38 @@ public class Db implements Serializable{
 		
 	}
 	
-	public Db load() throws IOException, ClassNotFoundException{
-		File inFile = new File(filePath);
-		FileInputStream inFileStream = new FileInputStream(inFile);
-		ObjectInputStream inObjectStream = new ObjectInputStream(inFileStream);
-		
-		Db tmpDb = (Db) inObjectStream.readObject();
-		inObjectStream.close();
-		return tmpDb;
+	public Db load(){
+		try{
+			File inFile = new File(filePath);
+			FileInputStream inFileStream = new FileInputStream(inFile);
+			ObjectInputStream inObjectStream = new ObjectInputStream(inFileStream);
+
+
+			if (inFile.exists()){
+				Db tmpDb = (Db) inObjectStream.readObject();
+				inObjectStream.close();
+				return tmpDb;
+			}else{
+				inObjectStream.close();
+				return null;
+			}
+		} catch (IOException e){
+			return null;
+		} catch (ClassNotFoundException e){
+			return null;
+		}
 	}
-	
-	public void save() throws IOException{
-		File outFile = new File(filePath);
-		FileOutputStream outFileStream = new FileOutputStream(outFile);
-		ObjectOutputStream outObjectStream = new ObjectOutputStream(outFileStream);
-		
-		outObjectStream.writeObject(this);
-		outObjectStream.close();
+
+	public void save(){
+		try{
+			File outFile = new File(filePath);
+			FileOutputStream outFileStream = new FileOutputStream(outFile);
+			ObjectOutputStream outObjectStream = new ObjectOutputStream(outFileStream);
+
+			outObjectStream.writeObject(Care.db);
+			outObjectStream.close();
+		} catch (IOException e){
+		}
 	}
-	
+
 }

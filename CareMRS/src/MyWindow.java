@@ -81,10 +81,12 @@ public class MyWindow extends JFrame {
 		logout.addActionListener(new exitaction());
 	}
 
+	//Login method
 	private void login(String userName, char[] password, JTextField userNameField, JPasswordField passwordField){
 		userNameField.setText("");
 		passwordField.setText("");
 		if (Doctor.checkLogin(userName,password)){
+			Care.db = Care.db.load();
 			cardLayout.show(contentPane, "Menu");
 			setJMenuBar(menubar);
 		}
@@ -92,7 +94,9 @@ public class MyWindow extends JFrame {
 			JOptionPane.showMessageDialog(null, "Please retry","Login Failed", JOptionPane.ERROR_MESSAGE);
 	}
 
+	//Logout method
 	private void logout(){
+		Care.db.save();
 		cardLayout.show(contentPane, "Login");
 		setJMenuBar(null);
 	}
@@ -311,7 +315,7 @@ public class MyWindow extends JFrame {
 	//******************************Patient Search Page******************************
 	//*******************************************************************************
 
-	//***********************************************************************
+	//************************************************************************
 	//******************************Patient Page******************************
 	//************************************************************************
 	private void patientPage() throws ParseException{
@@ -508,7 +512,7 @@ public class MyWindow extends JFrame {
 		}
 
 	}
-	//***********************************************************************
+	//************************************************************************
 	//******************************Patient Page******************************
 	//************************************************************************
 
