@@ -1,8 +1,6 @@
-import java.util.Arrays;
 import java.util.LinkedList;
 
 public class Doctor extends Staff{
-	private String name; //doctor's FULL name
 	private int room; // which room the doctor is using
 	private LinkedList<DBooking> booking = new LinkedList<DBooking>(); //timetable for doctor
 	
@@ -16,21 +14,12 @@ public class Doctor extends Staff{
 	
 	public static int doctorSearch(String Username){
 		int i = 0;
-		while (Care.db.getDoctor(i) != null)
-		{
+		while (Care.db.getDoctor(i) != null){
 			if (Username.equals(Care.db.getDoctor(i).userName))
 				return i;
 			i++;
 		}
 		return -1;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public int getRoom() {
@@ -47,18 +36,5 @@ public class Doctor extends Staff{
 
 	public void setBooking(LinkedList<DBooking> booking) {
 		this.booking = booking;
-	}
-
-	public static boolean checkLogin(String userName, char[] password){
-		int i = Care.doctor.size();
-		int k=0; //looping variable
-		do{
-			if (Care.doctor.get(k).getUserName().equals(userName)){
-				if (Arrays.equals(Care.doctor.get(k).getPassword().toCharArray(),password))
-					return true;
-			}
-			k++;
-		} while (k<i);
-		return false;
 	}
 }
