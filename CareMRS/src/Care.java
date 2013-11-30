@@ -6,6 +6,8 @@ public class Care {
 	
 	public static LinkedList<Doctor> doctor = new LinkedList<Doctor>();
 	
+	protected Db db = new Db();
+	
 	
 	public static void main(String[] args) {
 		
