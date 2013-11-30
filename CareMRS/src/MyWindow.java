@@ -26,6 +26,9 @@ import java.awt.event.ActionEvent;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.SwingConstants;
+import java.awt.SystemColor;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 
 public class MyWindow extends JFrame {
@@ -37,81 +40,15 @@ public class MyWindow extends JFrame {
 	private JPanel p_searchPane;
 	private JPanel patientPane;
 	private JPanel p_bookingPane;
-	
+
 	CardLayout cardLayout = new CardLayout();
+
+	private JMenuBar menubar = new JMenuBar();
 
 	private Patient patient;
 	//**********Data Member of MyWindow**********//
 
-
-	private void loginPage(){
-		loginPane = new JPanel();
-		loginPane.setLayout(null);
-		final JTextField userNameField = new JTextField();
-		final JPasswordField passwordField = new JPasswordField();
-		//TextField, for user to type user name
-		userNameField.setFont(new Font("Arial", Font.PLAIN, 20));
-		userNameField.setBounds(455, 265, 253, 30);
-		loginPane.add(userNameField);
-		userNameField.setColumns(10);
-		//PasswordField, for user to type password
-		passwordField.setFont(new Font("Arial", Font.PLAIN, 20));
-		passwordField.setBounds(455, 342, 253, 30);
-		loginPane.add(passwordField);
-		//Label, User name
-		JLabel lblNewLabel = new JLabel("User Name :");
-		lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-		lblNewLabel.setBounds(301, 265, 120, 30);
-		loginPane.add(lblNewLabel);
-		//Label, Password
-		JLabel lblPassword = new JLabel("Password :");
-		lblPassword.setFont(new Font("Arial", Font.PLAIN, 20));
-		lblPassword.setBounds(301, 342, 120, 30);
-		loginPane.add(lblPassword);
-		//Button, Login
-		JButton B_login = new JButton("Login");
-		B_login.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				//when login button is pressed
-				if (Doctor.checkLogin(userNameField.getText(),passwordField.getPassword() )){
-					userNameField.setText("");
-					passwordField.setText("");
-					menuPage();
-					cardLayout.show(contentPane, "Menu");
-				}
-				else
-					JOptionPane.showMessageDialog(null, "Please retry","Login Failed", JOptionPane.ERROR_MESSAGE);
-			}
-		});
-		B_login.setFont(new Font("Arial", Font.PLAIN, 20));
-		B_login.setBounds(327, 452, 110, 60);
-		loginPane.add(B_login);
-		//Button, Exit
-		JButton B_exit = new JButton("Exit");
-		B_exit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.exit(0);
-			}
-		});
-		B_exit.setFont(new Font("Arial", Font.PLAIN, 20));
-		B_exit.setBounds(547, 452, 110, 60);
-		loginPane.add(B_exit);
-		//Title Image, CareMRS
-		ImageIcon image_title;
-		JLabel label1;
-		image_title = new ImageIcon(getClass().getResource("CareMRS.png"));
-		label1 = new JLabel(image_title);
-		label1.setBounds(90,32,871,196);
-		loginPane.add(label1);
-	}
-
-	private void menuPage(){
-		menuPane = new JPanel();
-		menuPane.setLayout(null);
-		//*****Menu Bar*****//
-		JMenuBar menubar = new JMenuBar();
-		setJMenuBar(menubar);
-
+	private void menubar(){
 		JMenu patient = new JMenu("Patient");
 		menubar.add(patient);
 		JMenuItem newpatient = new JMenuItem("New");
@@ -138,15 +75,109 @@ public class MyWindow extends JFrame {
 		account.add(logout);
 		class exitaction implements ActionListener{
 			public void actionPerformed (ActionEvent e){
-				cardLayout.show(contentPane, "Login");
+				logout();
 			}
 		}
 		logout.addActionListener(new exitaction());
-		//*****Menu Bar*****//
+	}
+
+	private void login(String userName, char[] password, JTextField userNameField, JPasswordField passwordField){
+		userNameField.setText("");
+		passwordField.setText("");
+		if (Doctor.checkLogin(userName,password)){
+			cardLayout.show(contentPane, "Menu");
+			setJMenuBar(menubar);
+		}
+		else
+			JOptionPane.showMessageDialog(null, "Please retry","Login Failed", JOptionPane.ERROR_MESSAGE);
+	}
+
+	private void logout(){
+		cardLayout.show(contentPane, "Login");
+		setJMenuBar(null);
+	}
+	
+	//**********************************************************************
+	//******************************Login Page******************************
+	//**********************************************************************
+	private void loginPage(){
+		loginPane = new JPanel();
+		loginPane.setBackground(SystemColor.activeCaption);
+		loginPane.setLayout(null);
+		
+		final JTextField userNameField = new JTextField();
+		final JPasswordField passwordField = new JPasswordField();
+		//Title Image, CareMRS
+		ImageIcon image_title;
+		JLabel label1;
+		image_title = new ImageIcon(getClass().getResource("CareMRS.png"));
+		label1 = new JLabel(image_title);
+		label1.setBounds(51,32,871,196);
+		loginPane.add(label1);
+		//Button, Login
+		JButton B_login = new JButton("Login");
+		B_login.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				login(userNameField.getText(),passwordField.getPassword(),userNameField,passwordField);
+			}
+		});
+		B_login.setFont(new Font("Arial", Font.PLAIN, 20));
+		B_login.setBounds(327, 452, 110, 60);
+		loginPane.add(B_login);
+		//Button, Exit
+		JButton B_exit = new JButton("Exit");
+		B_exit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(0);
+			}
+		});
+		B_exit.setFont(new Font("Arial", Font.PLAIN, 20));
+		B_exit.setBounds(547, 452, 110, 60);
+		loginPane.add(B_exit);
+		//TextField, for user to type user name
+		userNameField.setFont(new Font("Arial", Font.PLAIN, 20));
+		userNameField.setBounds(439, 265, 253, 30);
+		loginPane.add(userNameField);
+		userNameField.setColumns(10);
+		//PasswordField, for user to type password
+		passwordField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				int key = arg0.getKeyCode();
+				if (key == KeyEvent.VK_ENTER) {
+					login(userNameField.getText(),passwordField.getPassword(),userNameField,passwordField);
+				}
+			}
+		});
+		passwordField.setFont(new Font("Arial", Font.PLAIN, 20));
+		passwordField.setBounds(439, 342, 253, 30);
+		loginPane.add(passwordField);
+		//Label, User name
+		JLabel lblNewLabel = new JLabel("User Name :");
+		lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblNewLabel.setBounds(285, 265, 120, 30);
+		loginPane.add(lblNewLabel);
+		//Label, Password
+		JLabel lblPassword = new JLabel("Password :");
+		lblPassword.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblPassword.setBounds(285, 342, 120, 30);
+		loginPane.add(lblPassword);
+	}
+	//**********************************************************************
+	//******************************Login Page******************************
+	//**********************************************************************
+	
+	//*********************************************************************
+	//******************************Menu Page******************************
+	//*********************************************************************
+	private void menuPage(){
+		menuPane = new JPanel();
+		menuPane.setBackground(SystemColor.activeCaption);
+		menuPane.setLayout(null);
 
 		//*****head label*****
 		JLabel lbl_menu = new JLabel("Menu");
-		lbl_menu.setFont(new Font("Arial", Font.PLAIN, 30));
+		lbl_menu.setFont(new Font("Arial", Font.BOLD, 30));
 		lbl_menu.setBounds(445, 20, 83, 56);
 		menuPane.add(lbl_menu);
 
@@ -156,7 +187,7 @@ public class MyWindow extends JFrame {
 		lbl_patient.setFont(new Font("Arial", Font.PLAIN, 25));
 		lbl_patient.setBounds(158, 167, 282, 42);
 		menuPane.add(lbl_patient);
-		
+
 		//*****Patient_New*****
 		JButton B_new = new JButton("New");
 		B_new.addActionListener(new ActionListener() {
@@ -167,7 +198,7 @@ public class MyWindow extends JFrame {
 		B_new.setFont(new Font("Arial", Font.PLAIN, 25));
 		B_new.setBounds(158, 219, 136, 56);
 		menuPane.add(B_new);
-		
+
 		//*****Patient_Search*****
 		JButton B_search = new JButton("Search");
 		B_search.addActionListener(new ActionListener() {
@@ -178,54 +209,60 @@ public class MyWindow extends JFrame {
 		B_search.setFont(new Font("Arial", Font.PLAIN, 25));
 		B_search.setBounds(304, 219, 136, 56);
 		menuPane.add(B_search);
-		
+
 		//*****Clinic*****
 		JButton B_clinic = new JButton("Clinic");
 		B_clinic.setFont(new Font("Arial", Font.PLAIN, 25));
 		B_clinic.setBounds(158, 352, 282, 108);
 		menuPane.add(B_clinic);
-		
+
 		//*****My Timetable*****
 		JButton B_myTimetable = new JButton("My Timetable");
 		B_myTimetable.setFont(new Font("Arial", Font.PLAIN, 25));
 		B_myTimetable.setBounds(537, 167, 282, 108);
 		menuPane.add(B_myTimetable);
-		
+
 		//*****Log out*****
 		JButton lbl_logOut = new JButton("Log out");
 		lbl_logOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				cardLayout.show(contentPane, "Login");
+				logout();
 			}
 		});
 		lbl_logOut.setFont(new Font("Arial", Font.PLAIN, 25));
 		lbl_logOut.setBounds(537, 352, 282, 108);
 		menuPane.add(lbl_logOut);
 	}
+	//*********************************************************************
+	//******************************Menu Page******************************
+	//*********************************************************************
 
+	//*******************************************************************************
+	//******************************Patient Search Page******************************
+	//*******************************************************************************
 	private void p_searchPage(){
 		p_searchPane = new JPanel();
+		p_searchPane.setBackground(SystemColor.activeCaption);
 		p_searchPane.setLayout(null);
-
+		
 		JLabel lbl_searchPatient = new JLabel("Search Patient");
-		lbl_searchPatient.setFont(new Font("Arial", Font.PLAIN, 30));
-		lbl_searchPatient.setBounds(386, 20, 202, 41);
+		lbl_searchPatient.setFont(new Font("Arial", Font.BOLD, 30));
+		lbl_searchPatient.setBounds(376, 20, 221, 41);
 		p_searchPane.add(lbl_searchPatient);
-
-		JLabel lbl_HKID = new JLabel("HKID:");
-		lbl_HKID.setFont(new Font("Arial", Font.PLAIN, 25));
-		lbl_HKID.setBounds(343, 253, 80, 41);
-		p_searchPane.add(lbl_HKID);
 
 		MaskFormatter idFormatter;
 		try {
 			idFormatter = new MaskFormatter("U######'(#')");
+			JLabel lbl_HKID = new JLabel("HKID:");
+			lbl_HKID.setFont(new Font("Arial", Font.PLAIN, 25));
+			lbl_HKID.setBounds(343, 253, 80, 41);
+			p_searchPane.add(lbl_HKID);
 			final JFormattedTextField T_HKID = new JFormattedTextField(idFormatter);
 			T_HKID.setFont(new Font("Arial", Font.PLAIN, 25));
 			T_HKID.setBounds(447, 253, 171, 41);
 			p_searchPane.add(T_HKID);
 			T_HKID.setColumns(10);
-
+			
 			JButton B_clear = new JButton("Clear");
 			B_clear.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
@@ -235,48 +272,56 @@ public class MyWindow extends JFrame {
 			B_clear.setFont(new Font("Arial", Font.PLAIN, 25));
 			B_clear.setBounds(416, 366, 142, 70);
 			p_searchPane.add(B_clear);
+			
+			JButton B_search = new JButton("Search");
+			B_search.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+
+					//**********
+					//**
+					//** Method: call search method here
+					//**
+					//** patient = Patient.search(.....);
+					//**********				
+					T_HKID.setText("");
+					cardLayout.show(contentPane, "Patient");
+				}
+			});
+			B_search.setFont(new Font("Arial", Font.PLAIN, 25));
+			B_search.setBounds(230, 366, 142, 70);
+			p_searchPane.add(B_search);
+			
+			JButton B_menu = new JButton("Menu");
+			B_menu.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					T_HKID.setText("");
+					cardLayout.show(contentPane, "Menu");
+				}
+			});
+			B_menu.setFont(new Font("Arial", Font.PLAIN, 25));
+			B_menu.setBounds(602, 366, 142, 70);
+			p_searchPane.add(B_menu);
 
 		} catch (ParseException e) {
 			JOptionPane.showMessageDialog(null, "Unable to add ID Field","Failed", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
-
-		JButton B_search = new JButton("Search");
-		B_search.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				//**********
-				//**
-				//** Method: call search method here
-				//**
-				//** patient = Patient.search(.....);
-				//**********				
-
-				cardLayout.show(contentPane, "Patient");
-			}
-		});
-		B_search.setFont(new Font("Arial", Font.PLAIN, 25));
-		B_search.setBounds(230, 366, 142, 70);
-		p_searchPane.add(B_search);
-
-		JButton B_menu = new JButton("Menu");
-		B_menu.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				cardLayout.show(contentPane, "Menu");
-			}
-		});
-		B_menu.setFont(new Font("Arial", Font.PLAIN, 25));
-		B_menu.setBounds(602, 366, 142, 70);
-		p_searchPane.add(B_menu);
 	}
+	//*******************************************************************************
+	//******************************Patient Search Page******************************
+	//*******************************************************************************
 
+	//***********************************************************************
+	//******************************Patient Page******************************
+	//************************************************************************
 	private void patientPage() throws ParseException{
 		patientPane = new JPanel();
+		patientPane.setBackground(SystemColor.activeCaption);
 		patientPane.setLayout(null);
-		
+
 		//*****Head Label*****
 		JLabel lbl_patient = new JLabel("Patient");
-		lbl_patient.setFont(new Font("Arial", Font.PLAIN, 30));
+		lbl_patient.setFont(new Font("Arial", Font.BOLD, 30));
 		lbl_patient.setBounds(436, 20, 102, 41);
 		patientPane.add(lbl_patient);
 
@@ -286,20 +331,20 @@ public class MyWindow extends JFrame {
 		color1.setBounds(25, 85, 924, 270);
 		patientPane.add(color1);
 		color1.setLayout(null);
-		
+
 		//*****Name*****
 		JLabel lbl_name = new JLabel("Name:");
 		lbl_name.setBounds(36, 30, 133, 32);
 		color1.add(lbl_name);
 		lbl_name.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_name.setFont(new Font("Arial", Font.PLAIN, 20));
-		
+
 		final JTextField T_name = new JTextField();
 		T_name.setBounds(179, 30, 501, 32);
 		color1.add(T_name);
 		T_name.setFont(new Font("Arial", Font.PLAIN, 20));
 		T_name.setColumns(10);
-		
+
 		//*****HKID*****
 		JLabel lbl_HKID = new JLabel("HKID:");
 		lbl_HKID.setBounds(36, 112, 133, 32);
@@ -314,7 +359,7 @@ public class MyWindow extends JFrame {
 		T_HKID.setBounds(179,112,163,32);
 		color1.add(T_HKID);
 		T_HKID.setColumns(10);
-		
+
 		//*****Gender*****
 		JLabel lbl_gender = new JLabel("Gender:");
 		lbl_gender.setBounds(373, 112, 133, 32);
@@ -341,7 +386,7 @@ public class MyWindow extends JFrame {
 		lbl_dmy.setFont(new Font("Arial", Font.PLAIN, 20));
 		lbl_dmy.setBounds(36, 216, 133, 32);
 		color1.add(lbl_dmy);
-		
+
 		MaskFormatter dateFormatter = new MaskFormatter("##'/##'/####");
 		final JFormattedTextField T_dob = new JFormattedTextField(dateFormatter);
 		T_dob.setText("");
@@ -349,7 +394,7 @@ public class MyWindow extends JFrame {
 		T_dob.setBounds(179,194,163,32);
 		color1.add(T_dob);
 		T_dob.setColumns(10);
-		
+
 		//*****Tel*****
 		JLabel lbl_tel = new JLabel("Telephone:");
 		lbl_tel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -412,7 +457,7 @@ public class MyWindow extends JFrame {
 			}
 		});
 		B_update.setFont(new Font("Arial", Font.PLAIN, 20));
-		
+
 		//*****action button*****
 		JButton B_booking = new JButton("Booking");
 		B_booking.setFont(new Font("Arial", Font.PLAIN, 25));
@@ -463,17 +508,28 @@ public class MyWindow extends JFrame {
 		}
 
 	}
+	//***********************************************************************
+	//******************************Patient Page******************************
+	//************************************************************************
 
+	//***********************************************************************
+	//***********************Patient booking Page****************************
+	//***********************************************************************
 	private void p_bookingPage(){
 		p_bookingPane = new JPanel();
+		p_bookingPane.setBackground(SystemColor.activeCaption);
 		p_bookingPane.setLayout(null);
 	}
-	
+	//***********************************************************************
+	//***********************Patient booking Page****************************
+	//***********************************************************************
+
 	/**
 	 * Create the frame.
 	 * @throws ParseException 
 	 */
 	public MyWindow() throws ParseException {
+		setResizable(false);
 
 		/*
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -489,17 +545,19 @@ public class MyWindow extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(cardLayout);
+		menubar();
 		loginPage();
 		contentPane.add(loginPane, "Login");
 		menuPage();
 		contentPane.add(menuPane, "Menu");
+		p_searchPage();
+		contentPane.add(p_searchPane, "Search");
 		patientPage();
 		contentPane.add(patientPane, "Patient");
 		p_searchPage();
-		contentPane.add(p_searchPane, "Search");
 		p_bookingPage();
 		contentPane.add(p_bookingPane, "Booking");
 
-		cardLayout.show(contentPane, "Menu");
+		cardLayout.show(contentPane, "Login");
 	}
 }

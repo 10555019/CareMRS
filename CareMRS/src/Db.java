@@ -1,6 +1,8 @@
 import java.io.*;
 import java.util.LinkedList;
 
+import javax.swing.JOptionPane;
+
 
 public class Db implements Serializable{
 	
@@ -34,6 +36,10 @@ public class Db implements Serializable{
 		return patient.size();
 	}
 	
+	public int getAdminSize(){
+		return admin.size();
+	}
+	
 	public Doctor getDoctor(int index){
 		try{
 			return doctor.get(index);
@@ -48,6 +54,21 @@ public class Db implements Serializable{
 		} catch (IndexOutOfBoundsException e){
 		}
 		return null;
+	}
+	
+	public void deletePatient(int index){
+		patient.remove(index);
+		JOptionPane.showMessageDialog(null, "Patient is deleted","Delete", JOptionPane.PLAIN_MESSAGE);
+	}
+	
+	public void deleteDoctor(int index){
+		doctor.remove(index);
+		JOptionPane.showMessageDialog(null, "Doctor is deleted","Delete", JOptionPane.PLAIN_MESSAGE);
+	}
+	
+	public void deleteAdmin(int index){
+		if (getAdminSize()==1)
+			JOptionPane.showMessageDialog(null, "There should be at least one Admin user, user is not deleted","Delete", JOptionPane.ERROR_MESSAGE);
 	}
 	
 	public void setPath(){
