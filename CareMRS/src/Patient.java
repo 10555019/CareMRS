@@ -22,28 +22,28 @@ public class Patient {
 	
 	public static int patientSearch(String inputHKID) {	
 	int min=0;
-	int max=Db.getPatientSize() - 1;
+	int max=Care.db.getPatientSize() - 1;
 	int mid;
 	while(min <= max)
 	{
 	mid = (int) ((min+max)/2);
-	 if (inputHKID.charAt(0) == Db.getPatient(mid).HKID.charAt(0))
+	 if (inputHKID.charAt(0) == Care.db.getPatient(mid).HKID.charAt(0))
 	    {
-	      if (Integer.parseInt(inputHKID.substring(1,7)) == Integer.parseInt(Db.getPatient(mid).HKID.substring(1,7)))
+	      if (Integer.parseInt(inputHKID.substring(1,7)) == Integer.parseInt(Care.db.getPatient(mid).HKID.substring(1,7)))
 	         {
-	           if (inputHKID.charAt(8) == Db.getPatient(mid).HKID.charAt(8))
+	           if (inputHKID.charAt(8) == Care.db.getPatient(mid).HKID.charAt(8))
 	                return mid;
-	           else if ((inputHKID.charAt(8) < Db.getPatient(mid).HKID.charAt(8)))
+	           else if ((inputHKID.charAt(8) < Care.db.getPatient(mid).HKID.charAt(8)))
 	                max = mid - 1;
 	           else
 	                min = mid + 1;
 	         }
-	      else if (Integer.parseInt(inputHKID.substring(1,7)) < Integer.parseInt(Db.getPatient(mid).HKID.substring(1,7)))
+	      else if (Integer.parseInt(inputHKID.substring(1,7)) < Integer.parseInt(Care.db.getPatient(mid).HKID.substring(1,7)))
 	              max = mid - 1;
 	      else 
 	              min = mid + 1;
 	    }	
-	else if (inputHKID.charAt(0) < Db.getPatient(mid).HKID.charAt(0))      
+	else if (inputHKID.charAt(0) < Care.db.getPatient(mid).HKID.charAt(0))      
 	      max = mid - 1;
 	else  min = mid + 1;
 	 }
