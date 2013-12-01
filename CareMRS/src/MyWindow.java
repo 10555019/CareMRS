@@ -41,7 +41,7 @@ import javax.swing.JList;
 public class MyWindow extends JFrame {
 
 	//**********Data Member of MyWindow**********//
-	int mode=0;
+	int mode=0; //1:doctor 2:admin
 	
 	private JPanel contentPane;
 	private JPanel loginPane;
@@ -50,14 +50,15 @@ public class MyWindow extends JFrame {
 	private JPanel patientPane;
 	private JPanel p_bookingPane;
 
-	CardLayout cardLayout = new CardLayout();
+	CardLayout cardLayout = new CardLayout(); //cardLayout, used for different panel
 
-	private JMenuBar menubar = new JMenuBar();
+	private JMenuBar menubar = new JMenuBar(); //top menu bar (not shown on login page)
 
-	private Patient patient;
+	private Patient patient; //pointer pointing accessing which patient 
 	//**********Data Member of MyWindow**********//
 
 	private void menubar(final Db db){
+		//construct the menubar
 		JMenu patient = new JMenu("Patient");
 		menubar.add(patient);
 		JMenuItem newpatient = new JMenuItem("New");
@@ -92,23 +93,24 @@ public class MyWindow extends JFrame {
 
 	//Login method
 	private void login(Db db, String userName, char[] password, JTextField userNameField, JPasswordField passwordField){
-		userNameField.setText("");
-		passwordField.setText("");
-		if ((mode = Doctor.checkLogin(db,userName,password))!=0){
-			db = db.load();
-			cardLayout.show(contentPane, "Menu");
-			setJMenuBar(menubar);
+		userNameField.setText(""); //clear the userName
+		passwordField.setText(""); //clear the password
+		if ((mode = Doctor.checkLogin(db,userName,password))!=0){ //when password match, saved mode : 1:Doctor 2:admin
+			db = db.load(); //load data from file
+			cardLayout.show(contentPane, "Menu"); //change panel
+			setJMenuBar(menubar); //show the menu bar
 		}
 		else
-			JOptionPane.showMessageDialog(null, "Please retry","Login Failed", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Please retry","Login Failed", JOptionPane.ERROR_MESSAGE); //password not patch, show error message box
 	}
 
 	//Logout method
 	private void logout(Db db){
-		db.save(db);
+		db.save(db); //save data in db
 		cardLayout.show(contentPane, "Login");
-		setJMenuBar(null);
+		setJMenuBar(null); //disable the menubar when logout
 	}
+	
 	
 	//**********************************************************************
 	//******************************Login Page******************************
@@ -157,7 +159,7 @@ public class MyWindow extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				int key = arg0.getKeyCode();
-				if (key == KeyEvent.VK_ENTER) {
+				if (key == KeyEvent.VK_ENTER) { //when user press Enter key after typing password
 					login(db,userNameField.getText(),passwordField.getPassword(),userNameField,passwordField);
 				}
 			}
@@ -179,6 +181,7 @@ public class MyWindow extends JFrame {
 	//**********************************************************************
 	//******************************Login Page******************************
 	//**********************************************************************
+	
 	
 	//*********************************************************************
 	//******************************Menu Page******************************
@@ -250,6 +253,7 @@ public class MyWindow extends JFrame {
 	//******************************Menu Page******************************
 	//*********************************************************************
 
+	
 	//*******************************************************************************
 	//******************************Patient Search Page******************************
 	//*******************************************************************************
@@ -324,10 +328,11 @@ public class MyWindow extends JFrame {
 	//******************************Patient Search Page******************************
 	//*******************************************************************************
 
+	
 	//************************************************************************
 	//******************************Patient Page******************************
 	//************************************************************************
-	private void patientPage() throws ParseException{
+	private void patientPage(final Db db) throws ParseException{
 		patientPane = new JPanel();
 		patientPane.setBackground(SystemColor.activeCaption);
 		patientPane.setLayout(null);
@@ -435,13 +440,29 @@ public class MyWindow extends JFrame {
 				//**
 				//**********
 				try{
-					if (T_HKID.getText().equals("")) throw new NullFieldException(); //primary key should not be null
+					int index = Patient.patientSearch(db, T_HKID.getText());
+					if (T_HKID.getText().equals("       ( )")) throw new NullFieldException(); //primary key should not be null
 					if (patient==null){
 						//need to create a new patient
-						//patient = new Patient(T_name.getText(),T_HKID.getText(),T_telephone.getText(),T_gender.getText().charAt(0),);
+						if (index == -1){
+							patient = new Patient(T_name.getText(),T_HKID.getText(),T_tel.getText(),T_gender.getText().charAt(0),T_dob.getText());
+						} else{
+							if (JOptionPane.showConfirmDialog(null, "Same patient found, amend record?","Patient record", JOptionPane.YES_NO_OPTION)==1){
+								patient = new Patient(T_name.getText(),T_HKID.getText(),T_tel.getText(),T_gender.getText().charAt(0),T_dob.getText());
+							} else {
+								JOptionPane.showMessageDialog(null, "Original Patient record will be shown","Patient record", JOptionPane.PLAIN_MESSAGE);
+								patient = db.getPatient(index);
+								T_name.setText(patient.getName());
+								T_HKID.setText(patient.getHKID());
+								T_gender.setText(Character.toString(patient.getGender()));
+								T_dob.setText(patient.getDob_S());
+							}
+						}
 					} else {
 						//amend current patient record
-
+						db.getPatient(index).setName(T_name.getText());
+						db.getPatient(index).setHKID(T_HKID.getText());
+						
 					}
 					JOptionPane.showMessageDialog(null, "Patient records have been saved","Patient record", JOptionPane.PLAIN_MESSAGE);
 					T_name.setEditable(false);
@@ -525,6 +546,7 @@ public class MyWindow extends JFrame {
 	//******************************Patient Page******************************
 	//************************************************************************
 
+	
 	//***********************************************************************
 	//***********************Patient booking Page****************************
 	//***********************************************************************
@@ -665,6 +687,7 @@ public class MyWindow extends JFrame {
 	//***********************Patient booking Page****************************
 	//***********************************************************************
 
+	
 	/**
 	 * Create the frame.
 	 * @throws ParseException 
@@ -686,7 +709,7 @@ public class MyWindow extends JFrame {
 		contentPane.add(menuPane, "Menu");
 		p_searchPage();
 		contentPane.add(p_searchPane, "Search");
-		patientPage();
+		patientPage(db);
 		contentPane.add(patientPane, "Patient");
 		p_searchPage();
 		p_bookingPage();

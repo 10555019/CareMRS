@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 public class Db implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
-	private LinkedList<Patient> patient = new LinkedList<Patient>();
+	private MyLinkedList<Patient> patient = new MyLinkedList<Patient>();
 	private LinkedList<Doctor> doctor = new LinkedList<Doctor>();
 	private LinkedList<Admin> admin = new LinkedList<Admin>();
 	private Clinic clinic = new Clinic();
