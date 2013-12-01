@@ -25,8 +25,6 @@ public class Care {
 			db.addAdmin(admin);
 		}
 		
-		
-		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

@@ -30,12 +30,12 @@ public class Staff {
 		this.password = password;
 	}
 	
-	public static boolean checkLogin(Db db, String userName, char[] password){
+	public static int checkLogin(Db db, String userName, char[] password){
 		int i = 0;
 		while (db.getDoctor(i)!=null){
 			if (db.getDoctor(i).getUserName().equals(userName)){
 				if (Arrays.equals(db.getDoctor(i).getPassword().toCharArray(),password))
-					return true;
+					return 1;
 			}
 			i++;
 		}
@@ -43,10 +43,10 @@ public class Staff {
 		while (db.getAdmin(i)!=null){
 			if (db.getAdmin(i).getUserName().equals(userName)){
 				if (Arrays.equals(db.getAdmin(i).getPassword().toCharArray(),password))
-					return true;
+					return 2;
 			}
 			i++;
 		}		
-		return false;
+		return 0;
 	}
 }

@@ -8,6 +8,7 @@ import javax.swing.JTextField;
 
 import java.awt.Font;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JFormattedTextField;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -26,14 +27,22 @@ import java.awt.event.ActionEvent;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.SwingConstants;
+
 import java.awt.SystemColor;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+
+import javax.swing.JComboBox;
+import javax.swing.JRadioButton;
+import javax.swing.JToggleButton;
+import javax.swing.JList;
 
 
 public class MyWindow extends JFrame {
 
 	//**********Data Member of MyWindow**********//
+	int mode=0;
+	
 	private JPanel contentPane;
 	private JPanel loginPane;
 	private JPanel menuPane;
@@ -85,7 +94,7 @@ public class MyWindow extends JFrame {
 	private void login(Db db, String userName, char[] password, JTextField userNameField, JPasswordField passwordField){
 		userNameField.setText("");
 		passwordField.setText("");
-		if (Doctor.checkLogin(db,userName,password)){
+		if ((mode = Doctor.checkLogin(db,userName,password))!=0){
 			db = db.load();
 			cardLayout.show(contentPane, "Menu");
 			setJMenuBar(menubar);
@@ -523,6 +532,134 @@ public class MyWindow extends JFrame {
 		p_bookingPane = new JPanel();
 		p_bookingPane.setBackground(SystemColor.activeCaption);
 		p_bookingPane.setLayout(null);
+		
+		JLabel lbl_Booking = new JLabel("Booking");
+		lbl_Booking.setFont(new Font("Arial", Font.BOLD, 30));
+		lbl_Booking.setBounds(428, 20, 127, 47);
+		p_bookingPane.add(lbl_Booking);
+		
+		JLabel lbl_date = new JLabel("Date:");
+		lbl_date.setHorizontalAlignment(SwingConstants.RIGHT);
+		lbl_date.setFont(new Font("Arial", Font.PLAIN, 20));
+		lbl_date.setBounds(81, 103, 57, 24);
+		p_bookingPane.add(lbl_date);
+		
+		JLabel lbl_doctor = new JLabel("Doctor:");
+		lbl_doctor.setHorizontalAlignment(SwingConstants.RIGHT);
+		lbl_doctor.setFont(new Font("Arial", Font.PLAIN, 20));
+		lbl_doctor.setBounds(69, 156, 71, 24);
+		p_bookingPane.add(lbl_doctor);
+		
+		JButton B_update = new JButton("update");
+		B_update.setFont(new Font("Arial", Font.PLAIN, 20));
+		B_update.setBounds(428, 138, 101, 47);
+		p_bookingPane.add(B_update);
+		
+		JFormattedTextField formattedTextField = new JFormattedTextField();
+		formattedTextField.setFont(new Font("Arial", Font.PLAIN, 20));
+		formattedTextField.setBounds(148, 100, 127, 29);
+		p_bookingPane.add(formattedTextField);
+		
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setFont(new Font("Arial", Font.PLAIN, 20));
+		comboBox.setBounds(150, 156, 206, 24);
+		p_bookingPane.add(comboBox);
+		
+		JLabel lblNewLabel_1 = new JLabel("10:00     11:00     12:00     15:00     16:00     17:00     18:00     19:00");
+		lblNewLabel_1.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblNewLabel_1.setBounds(81, 213, 620, 29);
+		p_bookingPane.add(lblNewLabel_1);
+		
+		JLabel label = new JLabel("    -            -            -            -            -             -            -            -");
+		label.setFont(new Font("Arial", Font.PLAIN, 20));
+		label.setBounds(81, 237, 620, 29);
+		p_bookingPane.add(label);
+		
+		JLabel label_1 = new JLabel("11:00     12:00     13:00     16:00     17:00     18:00     19:00     20:00");
+		label_1.setFont(new Font("Arial", Font.PLAIN, 20));
+		label_1.setBounds(81, 263, 620, 29);
+		p_bookingPane.add(label_1);
+		
+		JRadioButton radioButton = new JRadioButton("");
+		radioButton.setBackground(SystemColor.activeCaption);
+		radioButton.setHorizontalAlignment(SwingConstants.CENTER);
+		radioButton.setFont(new Font("·s²Ó©úÅé", Font.PLAIN, 20));
+		radioButton.setBounds(75, 288, 60, 50);
+		p_bookingPane.add(radioButton);
+		
+		JRadioButton radioButton_1 = new JRadioButton("");
+		radioButton_1.setBackground(SystemColor.activeCaption);
+		radioButton_1.setHorizontalAlignment(SwingConstants.CENTER);
+		radioButton_1.setBounds(155, 288, 60, 50);
+		p_bookingPane.add(radioButton_1);
+		
+		JRadioButton radioButton_2 = new JRadioButton("");
+		radioButton_2.setBackground(SystemColor.activeCaption);
+		radioButton_2.setHorizontalAlignment(SwingConstants.CENTER);
+		radioButton_2.setBounds(233, 288, 60, 50);
+		p_bookingPane.add(radioButton_2);
+		
+		JRadioButton radioButton_3 = new JRadioButton("");
+		radioButton_3.setBackground(SystemColor.activeCaption);
+		radioButton_3.setHorizontalAlignment(SwingConstants.CENTER);
+		radioButton_3.setBounds(314, 288, 60, 50);
+		p_bookingPane.add(radioButton_3);
+		
+		JRadioButton radioButton_4 = new JRadioButton("");
+		radioButton_4.setBackground(SystemColor.activeCaption);
+		radioButton_4.setHorizontalAlignment(SwingConstants.CENTER);
+		radioButton_4.setBounds(393, 288, 60, 50);
+		p_bookingPane.add(radioButton_4);
+		
+		JRadioButton radioButton_5 = new JRadioButton("");
+		radioButton_5.setBackground(SystemColor.activeCaption);
+		radioButton_5.setHorizontalAlignment(SwingConstants.CENTER);
+		radioButton_5.setBounds(474, 288, 60, 50);
+		p_bookingPane.add(radioButton_5);
+		
+		JRadioButton radioButton_6 = new JRadioButton("");
+		radioButton_6.setBackground(SystemColor.activeCaption);
+		radioButton_6.setHorizontalAlignment(SwingConstants.CENTER);
+		radioButton_6.setBounds(556, 288, 60, 50);
+		p_bookingPane.add(radioButton_6);
+		
+		JRadioButton radioButton_7 = new JRadioButton("");
+		radioButton_7.setBackground(SystemColor.activeCaption);
+		radioButton_7.setHorizontalAlignment(SwingConstants.CENTER);
+		radioButton_7.setBounds(634, 288, 60, 50);
+		p_bookingPane.add(radioButton_7);
+		
+		ButtonGroup radioGroup = new ButtonGroup();
+		radioGroup.add(radioButton);
+		radioGroup.add(radioButton_1);
+		radioGroup.add(radioButton_2);
+		radioGroup.add(radioButton_3);
+		radioGroup.add(radioButton_4);
+		radioGroup.add(radioButton_5);
+		radioGroup.add(radioButton_6);
+		radioGroup.add(radioButton_7);
+		
+		JButton B_book = new JButton("Book");
+		B_book.setFont(new Font("Arial", Font.PLAIN, 20));
+		B_book.setBounds(782, 280, 109, 47);
+		p_bookingPane.add(B_book);
+		
+		JList list = new JList();
+		list.setBounds(62, 357, 828, 211);
+		p_bookingPane.add(list);
+		
+		JButton btnNewButton = new JButton("Delete");
+		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 20));
+		btnNewButton.setBounds(685, 585, 116, 47);
+		p_bookingPane.add(btnNewButton);
+		
+		JButton btnBackToPatient = new JButton("Patient");
+		btnBackToPatient.setFont(new Font("Arial", Font.PLAIN, 20));
+		btnBackToPatient.setBounds(827, 585, 116, 47);
+		p_bookingPane.add(btnBackToPatient);
+		
+		
 	}
 	//***********************************************************************
 	//***********************Patient booking Page****************************

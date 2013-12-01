@@ -5,6 +5,7 @@ import javax.swing.JOptionPane;
 
 
 public class Db implements Serializable{
+	private static final long serialVersionUID = 1L;
 	
 	private LinkedList<Patient> patient = new LinkedList<Patient>();
 	private LinkedList<Doctor> doctor = new LinkedList<Doctor>();
@@ -50,6 +51,10 @@ public class Db implements Serializable{
 		} catch (IndexOutOfBoundsException e){
 		}
 		return null;
+	}
+	
+	public Clinic getClinic(){
+		return clinic;
 	}
 	
 	public void deletePatient(int index){
