@@ -12,10 +12,10 @@ public class Doctor extends Staff{
 		this.room = room;
 	}
 	
-	public static int doctorSearch(String Username){
+	public static int doctorSearch(Db db, String Username){
 		int i = 0;
-		while (Care.db.getDoctor(i) != null){
-			if (Username.equals(Care.db.getDoctor(i).userName))
+		while (db.getDoctor(i) != null){
+			if (Username.equals(db.getDoctor(i).userName))
 				return i;
 			i++;
 		}

@@ -20,30 +20,30 @@ public class Patient {
 		this.dob = dob;
 	}
 	
-	public static int patientSearch(String inputHKID) {	
+	public static int patientSearch(Db db, String inputHKID) {	
 	int min=0;
-	int max=Care.db.getPatientSize() - 1;
+	int max=db.getPatientSize() - 1;
 	int mid;
 	while(min <= max)
 	{
 	mid = (int) ((min+max)/2);
-	 if (inputHKID.charAt(0) == Care.db.getPatient(mid).HKID.charAt(0))
+	 if (inputHKID.charAt(0) == db.getPatient(mid).HKID.charAt(0))
 	    {
-	      if (Integer.parseInt(inputHKID.substring(1,7)) == Integer.parseInt(Care.db.getPatient(mid).HKID.substring(1,7)))
+	      if (Integer.parseInt(inputHKID.substring(1,7)) == Integer.parseInt(db.getPatient(mid).HKID.substring(1,7)))
 	         {
-	           if (inputHKID.charAt(8) == Care.db.getPatient(mid).HKID.charAt(8))
+	           if (inputHKID.charAt(8) == db.getPatient(mid).HKID.charAt(8))
 	                return mid;
-	           else if ((inputHKID.charAt(8) < Care.db.getPatient(mid).HKID.charAt(8)))
+	           else if ((inputHKID.charAt(8) < db.getPatient(mid).HKID.charAt(8)))
 	                max = mid - 1;
 	           else
 	                min = mid + 1;
 	         }
-	      else if (Integer.parseInt(inputHKID.substring(1,7)) < Integer.parseInt(Care.db.getPatient(mid).HKID.substring(1,7)))
+	      else if (Integer.parseInt(inputHKID.substring(1,7)) < Integer.parseInt(db.getPatient(mid).HKID.substring(1,7)))
 	              max = mid - 1;
 	      else 
 	              min = mid + 1;
 	    }	
-	else if (inputHKID.charAt(0) < Care.db.getPatient(mid).HKID.charAt(0))      
+	else if (inputHKID.charAt(0) < db.getPatient(mid).HKID.charAt(0))      
 	      max = mid - 1;
 	else  min = mid + 1;
 	 }

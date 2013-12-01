@@ -48,7 +48,7 @@ public class MyWindow extends JFrame {
 	private Patient patient;
 	//**********Data Member of MyWindow**********//
 
-	private void menubar(){
+	private void menubar(final Db db){
 		JMenu patient = new JMenu("Patient");
 		menubar.add(patient);
 		JMenuItem newpatient = new JMenuItem("New");
@@ -75,18 +75,18 @@ public class MyWindow extends JFrame {
 		account.add(logout);
 		class exitaction implements ActionListener{
 			public void actionPerformed (ActionEvent e){
-				logout();
+				logout(db);
 			}
 		}
 		logout.addActionListener(new exitaction());
 	}
 
 	//Login method
-	private void login(String userName, char[] password, JTextField userNameField, JPasswordField passwordField){
+	private void login(Db db, String userName, char[] password, JTextField userNameField, JPasswordField passwordField){
 		userNameField.setText("");
 		passwordField.setText("");
-		if (Doctor.checkLogin(userName,password)){
-			Care.db = Care.db.load();
+		if (Doctor.checkLogin(db,userName,password)){
+			db = db.load();
 			cardLayout.show(contentPane, "Menu");
 			setJMenuBar(menubar);
 		}
@@ -95,8 +95,8 @@ public class MyWindow extends JFrame {
 	}
 
 	//Logout method
-	private void logout(){
-		Care.db.save();
+	private void logout(Db db){
+		db.save(db);
 		cardLayout.show(contentPane, "Login");
 		setJMenuBar(null);
 	}
@@ -104,7 +104,7 @@ public class MyWindow extends JFrame {
 	//**********************************************************************
 	//******************************Login Page******************************
 	//**********************************************************************
-	private void loginPage(){
+	private void loginPage(final Db db){
 		loginPane = new JPanel();
 		loginPane.setBackground(SystemColor.activeCaption);
 		loginPane.setLayout(null);
@@ -122,7 +122,7 @@ public class MyWindow extends JFrame {
 		JButton B_login = new JButton("Login");
 		B_login.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				login(userNameField.getText(),passwordField.getPassword(),userNameField,passwordField);
+				login(db,userNameField.getText(),passwordField.getPassword(),userNameField,passwordField);
 			}
 		});
 		B_login.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -149,7 +149,7 @@ public class MyWindow extends JFrame {
 			public void keyPressed(KeyEvent arg0) {
 				int key = arg0.getKeyCode();
 				if (key == KeyEvent.VK_ENTER) {
-					login(userNameField.getText(),passwordField.getPassword(),userNameField,passwordField);
+					login(db,userNameField.getText(),passwordField.getPassword(),userNameField,passwordField);
 				}
 			}
 		});
@@ -174,7 +174,7 @@ public class MyWindow extends JFrame {
 	//*********************************************************************
 	//******************************Menu Page******************************
 	//*********************************************************************
-	private void menuPage(){
+	private void menuPage(final Db db){
 		menuPane = new JPanel();
 		menuPane.setBackground(SystemColor.activeCaption);
 		menuPane.setLayout(null);
@@ -230,7 +230,7 @@ public class MyWindow extends JFrame {
 		JButton lbl_logOut = new JButton("Log out");
 		lbl_logOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				logout();
+				logout(db);
 			}
 		});
 		lbl_logOut.setFont(new Font("Arial", Font.PLAIN, 25));
@@ -532,15 +532,8 @@ public class MyWindow extends JFrame {
 	 * Create the frame.
 	 * @throws ParseException 
 	 */
-	public MyWindow() throws ParseException {
+	public MyWindow(Db db) throws ParseException {
 		setResizable(false);
-
-		/*
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		double width = screenSize.getWidth();
-		double height = screenSize.getHeight();
-		 */
-
 		setTitle("CareMRS");
 		setIconImage(new ImageIcon(getClass().getResource("C.png")).getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -549,10 +542,10 @@ public class MyWindow extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(cardLayout);
-		menubar();
-		loginPage();
+		menubar(db);
+		loginPage(db);
 		contentPane.add(loginPane, "Login");
-		menuPage();
+		menuPage(db);
 		contentPane.add(menuPane, "Menu");
 		p_searchPage();
 		contentPane.add(p_searchPane, "Search");

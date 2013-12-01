@@ -6,11 +6,11 @@ public class Admin extends Staff{
 		this.password = password;
 	}
 	
-	public static int adminSearch(String Username){
+	public static int adminSearch(Db db,String Username){
 		int i = 0;
-		while (Care.db.getAdmin(i) != null)
+		while (db.getAdmin(i) != null)
 		{
-			if (Username.equals(Care.db.getAdmin(i).userName))
+			if (Username.equals(db.getAdmin(i).userName))
 				return i;
 			i++;
 		}

@@ -2,7 +2,6 @@ import java.awt.EventQueue;
 import java.io.File;
 
 public class Care {
-	protected static Db db = new Db();
 	
 	public static void main(String[] args) {
 		
@@ -15,6 +14,8 @@ public class Care {
 								load text file storing user account information
 		*/
 		/************************************************************************/
+		
+		final Db db = new Db();
 		
 		//load login information
 		File file = new File("dat.sav");
@@ -29,7 +30,7 @@ public class Care {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MyWindow frame = new MyWindow();
+					MyWindow frame = new MyWindow(db);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

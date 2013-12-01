@@ -30,19 +30,19 @@ public class Staff {
 		this.password = password;
 	}
 	
-	public static boolean checkLogin(String userName, char[] password){
+	public static boolean checkLogin(Db db, String userName, char[] password){
 		int i = 0;
-		while (Care.db.getDoctor(i)!=null){
-			if (Care.db.getDoctor(i).getUserName().equals(userName)){
-				if (Arrays.equals(Care.db.getDoctor(i).getPassword().toCharArray(),password))
+		while (db.getDoctor(i)!=null){
+			if (db.getDoctor(i).getUserName().equals(userName)){
+				if (Arrays.equals(db.getDoctor(i).getPassword().toCharArray(),password))
 					return true;
 			}
 			i++;
 		}
 		i = 0;
-		while (Care.db.getAdmin(i)!=null){
-			if (Care.db.getAdmin(i).getUserName().equals(userName)){
-				if (Arrays.equals(Care.db.getAdmin(i).getPassword().toCharArray(),password))
+		while (db.getAdmin(i)!=null){
+			if (db.getAdmin(i).getUserName().equals(userName)){
+				if (Arrays.equals(db.getAdmin(i).getPassword().toCharArray(),password))
 					return true;
 			}
 			i++;

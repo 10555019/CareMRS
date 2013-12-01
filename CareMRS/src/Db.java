@@ -12,10 +12,6 @@ public class Db implements Serializable{
 	private Clinic clinic = new Clinic();
 	private String filePath = "db.sav";
 	
-	public Db(){
-		
-	}
-	
 	public void addPatient(Patient patient){
 		this.patient.add(patient);
 	}
@@ -97,13 +93,13 @@ public class Db implements Serializable{
 		}
 	}
 
-	public void save(){
+	public void save(Db db){
 		try{
 			File outFile = new File(filePath);
 			FileOutputStream outFileStream = new FileOutputStream(outFile);
 			ObjectOutputStream outObjectStream = new ObjectOutputStream(outFileStream);
 
-			outObjectStream.writeObject(Care.db);
+			outObjectStream.writeObject(db);
 			outObjectStream.close();
 		} catch (IOException e){
 		}
