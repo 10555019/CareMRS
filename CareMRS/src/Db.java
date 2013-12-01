@@ -7,14 +7,20 @@ import javax.swing.JOptionPane;
 public class Db implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
-	private MyLinkedList<Patient> patient = new MyLinkedList<Patient>();
+	private LinkedList<Patient> patient = new LinkedList<Patient>();
 	private LinkedList<Doctor> doctor = new LinkedList<Doctor>();
 	private LinkedList<Admin> admin = new LinkedList<Admin>();
 	private Clinic clinic = new Clinic();
 	private String filePath = "db.sav";
 	
 	public void addPatient(Patient patient){
-		this.patient.add(patient);
+		int index = 0;
+		while (index < getPatientSize()){
+			if (patient.getHKID().compareTo(this.patient.get(index).getHKID())>0)
+				index++;
+		}
+		this.patient.add(index, patient);
+		System.out.println("Added to db");
 	}
 	
 	public void addDoctor(Doctor doctor){
@@ -82,9 +88,10 @@ public class Db implements Serializable{
 			FileInputStream inFileStream = new FileInputStream(inFile);
 			ObjectInputStream inObjectStream = new ObjectInputStream(inFileStream);
 
-
 			if (inFile.exists()){
 				Db tmpDb = (Db) inObjectStream.readObject();
+				System.out.println("number: " + getPatientSize());
+				
 				inObjectStream.close();
 				return tmpDb;
 			}else{

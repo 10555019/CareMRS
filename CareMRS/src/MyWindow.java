@@ -54,7 +54,7 @@ public class MyWindow extends JFrame {
 
 	private JMenuBar menubar = new JMenuBar(); //top menu bar (not shown on login page)
 
-	private Patient patient; //pointer pointing accessing which patient 
+	private Patient patient = null; //pointer pointing accessing which patient 
 	//**********Data Member of MyWindow**********//
 
 	private void menubar(final Db db){
@@ -257,7 +257,7 @@ public class MyWindow extends JFrame {
 	//*******************************************************************************
 	//******************************Patient Search Page******************************
 	//*******************************************************************************
-	private void p_searchPage(){
+	private void p_searchPage(final Db db){
 		p_searchPane = new JPanel();
 		p_searchPane.setBackground(SystemColor.activeCaption);
 		p_searchPane.setLayout(null);
@@ -293,15 +293,14 @@ public class MyWindow extends JFrame {
 			JButton B_search = new JButton("Search");
 			B_search.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-
-					//**********
-					//**
-					//** Method: call search method here
-					//**
-					//** patient = Patient.search(.....);
-					//**********				
-					T_HKID.setText("");
-					cardLayout.show(contentPane, "Patient");
+					int index = Patient.patientSearch(db, T_HKID.getText());
+					if (index != -1){
+						patient = db.getPatient(index);
+						T_HKID.setText("");
+						cardLayout.show(contentPane, "Patient");
+					} else{
+						JOptionPane.showMessageDialog(null, "Patient cannot be found.","Search", JOptionPane.ERROR_MESSAGE);
+					}
 				}
 			});
 			B_search.setFont(new Font("Arial", Font.PLAIN, 25));
@@ -434,21 +433,21 @@ public class MyWindow extends JFrame {
 		color1.add(B_save);
 		B_save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//**********
-				//**
-				//** Method: change patient record
-				//**
-				//**********
-				try{
+				try{ //Saving or creating patient record
 					int index = Patient.patientSearch(db, T_HKID.getText());
+					boolean save = false; //used to toggle save message
 					if (T_HKID.getText().equals("       ( )")) throw new NullFieldException(); //primary key should not be null
 					if (patient==null){
 						//need to create a new patient
 						if (index == -1){
 							patient = new Patient(T_name.getText(),T_HKID.getText(),T_tel.getText(),T_gender.getText().charAt(0),T_dob.getText());
+							db.addPatient(patient);
+							save = true;
 						} else{
 							if (JOptionPane.showConfirmDialog(null, "Same patient found, amend record?","Patient record", JOptionPane.YES_NO_OPTION)==1){
 								patient = new Patient(T_name.getText(),T_HKID.getText(),T_tel.getText(),T_gender.getText().charAt(0),T_dob.getText());
+								db.addPatient(patient);
+								save = true;
 							} else {
 								JOptionPane.showMessageDialog(null, "Original Patient record will be shown","Patient record", JOptionPane.PLAIN_MESSAGE);
 								patient = db.getPatient(index);
@@ -461,10 +460,13 @@ public class MyWindow extends JFrame {
 					} else {
 						//amend current patient record
 						db.getPatient(index).setName(T_name.getText());
-						db.getPatient(index).setHKID(T_HKID.getText());
-						
+						db.getPatient(index).setTelephone(T_tel.getText());
+						db.getPatient(index).setGender(T_gender.getText().charAt(0));
+						db.getPatient(index).setDob(T_dob.getText());
+						save = true;
 					}
-					JOptionPane.showMessageDialog(null, "Patient records have been saved","Patient record", JOptionPane.PLAIN_MESSAGE);
+					if (save)
+						JOptionPane.showMessageDialog(null, "Patient records have been saved","Patient record", JOptionPane.PLAIN_MESSAGE);
 					T_name.setEditable(false);
 					T_HKID.setEditable(false);
 					T_gender.setEditable(false);
@@ -483,8 +485,8 @@ public class MyWindow extends JFrame {
 		color1.add(B_update);
 		B_update.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				//**HKID cannot be changed**
 				T_name.setEditable(true);
-				T_HKID.setEditable(true);
 				T_gender.setEditable(true);
 				T_tel.setEditable(true);
 				T_dob.setEditable(true);
@@ -707,11 +709,10 @@ public class MyWindow extends JFrame {
 		contentPane.add(loginPane, "Login");
 		menuPage(db);
 		contentPane.add(menuPane, "Menu");
-		p_searchPage();
+		p_searchPage(db);
 		contentPane.add(p_searchPane, "Search");
 		patientPage(db);
 		contentPane.add(patientPane, "Patient");
-		p_searchPage();
 		p_bookingPage();
 		contentPane.add(p_bookingPane, "Booking");
 

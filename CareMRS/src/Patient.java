@@ -13,9 +13,9 @@ public class Patient {
 
 	//constructor - to create patient object
 	public Patient(String name, String HKID, String telephone, char gender, String date){
-		this.name.equals(name);
-		this.HKID.equals(HKID);
-		this.telephone.equals(telephone);
+		this.name = name;
+		this.HKID = HKID;
+		this.telephone = telephone;
 		this.gender = gender;
 		setDob(date);
 	}
