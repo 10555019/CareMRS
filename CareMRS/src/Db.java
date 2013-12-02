@@ -1,38 +1,120 @@
+import java.io.*;
 import java.util.LinkedList;
 
+import javax.swing.JOptionPane;
 
-public class Db {
+
+public class Db implements Serializable{
+	private static final long serialVersionUID = 1L;
 	
-	private static LinkedList<Patient> l_patient = new LinkedList<Patient>();
-	private static LinkedList<Doctor> l_doctor = new LinkedList<Doctor>();
-	private static Clinic clinic = new Clinic();
+	private LinkedList<Patient> patient = new LinkedList<Patient>();
+	private LinkedList<Doctor> doctor = new LinkedList<Doctor>();
+	private LinkedList<Admin> admin = new LinkedList<Admin>();
+	private Clinic clinic = new Clinic();
+	private String filePath = "db.sav";
 	
-	public Db(){
-		
+	public void addPatient(Patient patient){
+		int index = 0;
+		while (index < getPatientSize()){
+			if (patient.getHKID().compareTo(this.patient.get(index).getHKID())>0)
+				index++;
+		}
+		this.patient.add(index, patient);
+		System.out.println("Added to db");
 	}
 	
-	public static void addPatient(Patient patient){
-		l_patient.add(patient);
+	public void addDoctor(Doctor doctor){
+		this.doctor.add(doctor);
 	}
 	
-	public static void addDoctor(Doctor doctor){
-		l_doctor.add(doctor);
+	public void addAdmin(Admin admin){
+		this.admin.add(admin);
 	}
 	
-	public static Patient getPatient(int index){
-		return l_patient.get(index);
+	public Patient getPatient(int index){
+		return patient.get(index);
 	}
 	
-	public static int getPatientSize(){
-		return l_patient.size();
+	public int getPatientSize(){
+		return patient.size();
 	}
 	
-	public static Doctor getDoctor(int index){
+	public int getAdminSize(){
+		return admin.size();
+	}
+	
+	public Doctor getDoctor(int index){
 		try{
-			return l_doctor.get(index);
+			return doctor.get(index);
 		} catch (IndexOutOfBoundsException e){
 		}
 		return null;
 	}
 	
+	public Admin getAdmin(int index){
+		try{
+			return admin.get(index);
+		} catch (IndexOutOfBoundsException e){
+		}
+		return null;
+	}
+	
+	public Clinic getClinic(){
+		return clinic;
+	}
+	
+	public void deletePatient(int index){
+		patient.remove(index);
+		JOptionPane.showMessageDialog(null, "Patient is deleted","Delete", JOptionPane.PLAIN_MESSAGE);
+	}
+	
+	public void deleteDoctor(int index){
+		doctor.remove(index);
+		JOptionPane.showMessageDialog(null, "Doctor is deleted","Delete", JOptionPane.PLAIN_MESSAGE);
+	}
+	
+	public void deleteAdmin(int index){
+		if (getAdminSize()==1)
+			JOptionPane.showMessageDialog(null, "There should be at least one Admin user, user is not deleted","Delete", JOptionPane.ERROR_MESSAGE);
+	}
+	
+	public void setPath(){
+		
+	}
+	
+	public Db load(){
+		try{
+			File inFile = new File(filePath);
+			FileInputStream inFileStream = new FileInputStream(inFile);
+			ObjectInputStream inObjectStream = new ObjectInputStream(inFileStream);
+
+			if (inFile.exists()){
+				Db tmpDb = (Db) inObjectStream.readObject();
+				System.out.println("number: " + getPatientSize());
+				
+				inObjectStream.close();
+				return tmpDb;
+			}else{
+				inObjectStream.close();
+				return null;
+			}
+		} catch (IOException e){
+			return null;
+		} catch (ClassNotFoundException e){
+			return null;
+		}
+	}
+
+	public void save(Db db){
+		try{
+			File outFile = new File(filePath);
+			FileOutputStream outFileStream = new FileOutputStream(outFile);
+			ObjectOutputStream outObjectStream = new ObjectOutputStream(outFileStream);
+
+			outObjectStream.writeObject(db);
+			outObjectStream.close();
+		} catch (IOException e){
+		}
+	}
+
 }

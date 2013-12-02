@@ -1,11 +1,6 @@
-import java.util.Arrays;
 import java.util.LinkedList;
 
-
-public class Doctor {
-	private String name; //doctor's FULL name
-	private String userName; //used to login to the system, so needed to be UNIQUE
-	private String password; //used to login to the system, can be same for different user
+public class Doctor extends Staff{
 	private int room; // which room the doctor is using
 	private LinkedList<DBooking> booking = new LinkedList<DBooking>(); //timetable for doctor
 	
@@ -17,39 +12,14 @@ public class Doctor {
 		this.room = room;
 	}
 	
-	public static int doctorSearch(String Username){
+	public static int doctorSearch(Db db, String Username){
 		int i = 0;
-		while (Db.getDoctor(i) != null)
-		{
-			if (Username.equals(Db.getDoctor(i).userName))
+		while (db.getDoctor(i) != null){
+			if (Username.equals(db.getDoctor(i).userName))
 				return i;
 			i++;
 		}
 		return -1;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public int getRoom() {
@@ -67,19 +37,4 @@ public class Doctor {
 	public void setBooking(LinkedList<DBooking> booking) {
 		this.booking = booking;
 	}
-
-	public static boolean checkLogin(String userName, char[] password){
-		int i = Care.doctor.size();
-		int k=0; //looping variable
-		
-		do{
-			if (Care.doctor.get(k).getUserName().equals(userName)){
-				if (Arrays.equals(Care.doctor.get(k).getPassword().toCharArray(),password))
-					return true;
-			}
-			k++;
-		} while (k<i);
-		return false;
-	}
-	
 }

@@ -1,11 +1,7 @@
 import java.awt.EventQueue;
-import java.util.LinkedList;
-
+import java.io.File;
 
 public class Care {
-	
-	public static LinkedList<Doctor> doctor = new LinkedList<Doctor>();
-	
 	
 	public static void main(String[] args) {
 		
@@ -17,15 +13,22 @@ public class Care {
 			real: load file IO here:
 								load text file storing user account information
 		*/
-		
-		//set dummy account start
-		doctor.add(new Doctor("Doctor A","user","user",1)); //creates one doctor
 		/************************************************************************/
+		
+		final Db db = new Db();
+		
+		//load login information
+		File file = new File("dat.sav");
+		if (!file.exists()){
+			//first time use
+			Admin admin = new Admin("Superusr","user","user");
+			db.addAdmin(admin);
+		}
 		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MyWindow frame = new MyWindow();
+					MyWindow frame = new MyWindow(db);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
