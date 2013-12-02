@@ -5,7 +5,6 @@ import javax.swing.JOptionPane;
 
 
 public class Db implements Serializable{
-	private static final long serialVersionUID = 1L;
 	
 	private LinkedList<Patient> patient = new LinkedList<Patient>();
 	private LinkedList<Doctor> doctor = new LinkedList<Doctor>();
@@ -20,7 +19,6 @@ public class Db implements Serializable{
 				index++;
 		}
 		this.patient.add(index, patient);
-		System.out.println("Added to db");
 	}
 	
 	public void addDoctor(Doctor doctor){
@@ -77,11 +75,11 @@ public class Db implements Serializable{
 		if (getAdminSize()==1)
 			JOptionPane.showMessageDialog(null, "There should be at least one Admin user, user is not deleted","Delete", JOptionPane.ERROR_MESSAGE);
 	}
-	
+
 	public void setPath(){
-		
+
 	}
-	
+
 	public Db load(){
 		try{
 			File inFile = new File(filePath);
@@ -89,9 +87,10 @@ public class Db implements Serializable{
 			ObjectInputStream inObjectStream = new ObjectInputStream(inFileStream);
 
 			if (inFile.exists()){
+				System.out.println("infile exisis");
 				Db tmpDb = (Db) inObjectStream.readObject();
 				System.out.println("number: " + getPatientSize());
-				
+
 				inObjectStream.close();
 				return tmpDb;
 			}else{
@@ -99,8 +98,10 @@ public class Db implements Serializable{
 				return null;
 			}
 		} catch (IOException e){
+			System.out.println("IOException");
 			return null;
 		} catch (ClassNotFoundException e){
+			System.out.println("ClassNotFoundException");
 			return null;
 		}
 	}
@@ -114,6 +115,7 @@ public class Db implements Serializable{
 			outObjectStream.writeObject(db);
 			outObjectStream.close();
 		} catch (IOException e){
+			System.out.println("IOException");
 		}
 	}
 

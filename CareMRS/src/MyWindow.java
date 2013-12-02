@@ -3,6 +3,8 @@ import java.awt.CardLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.MaskFormatter;
 import javax.swing.JTextField;
 
@@ -31,6 +33,12 @@ import javax.swing.SwingConstants;
 import java.awt.SystemColor;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
@@ -42,6 +50,8 @@ public class MyWindow extends JFrame {
 
 	//**********Data Member of MyWindow**********//
 	int mode=0; //1:doctor 2:admin
+	
+	private String filePath = "db.sav";
 	
 	private JPanel contentPane;
 	private JPanel loginPane;
@@ -106,7 +116,7 @@ public class MyWindow extends JFrame {
 
 	//Logout method
 	private void logout(Db db){
-		db.save(db); //save data in db
+		//db.save(db); //save data in db
 		cardLayout.show(contentPane, "Login");
 		setJMenuBar(null); //disable the menubar when logout
 	}
@@ -208,6 +218,12 @@ public class MyWindow extends JFrame {
 		JButton B_new = new JButton("New");
 		B_new.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				patient = null;
+				try {
+					patientPage(db);
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				}
 				cardLayout.show(contentPane, "Patient");
 			}
 		});
@@ -297,6 +313,11 @@ public class MyWindow extends JFrame {
 					if (index != -1){
 						patient = db.getPatient(index);
 						T_HKID.setText("");
+						try {
+							patientPage(db);
+						} catch (ParseException e1) {
+							e1.printStackTrace();
+						}
 						cardLayout.show(contentPane, "Patient");
 					} else{
 						JOptionPane.showMessageDialog(null, "Patient cannot be found.","Search", JOptionPane.ERROR_MESSAGE);
@@ -368,13 +389,11 @@ public class MyWindow extends JFrame {
 		color1.add(lbl_HKID);
 		lbl_HKID.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_HKID.setFont(new Font("Arial", Font.PLAIN, 20));
-
-		MaskFormatter idFormatter = new MaskFormatter("U######'(#')");
-		final JFormattedTextField T_HKID = new JFormattedTextField(idFormatter);
-		T_HKID.setText("");
-		T_HKID.setFont(new Font("Arial", Font.PLAIN, 25));
+		
+		final JTextField T_HKID = new JTextField();
 		T_HKID.setBounds(179,112,163,32);
 		color1.add(T_HKID);
+		T_HKID.setFont(new Font("Arial", Font.PLAIN, 25));
 		T_HKID.setColumns(10);
 
 		//*****Gender*****
@@ -404,9 +423,7 @@ public class MyWindow extends JFrame {
 		lbl_dmy.setBounds(36, 216, 133, 32);
 		color1.add(lbl_dmy);
 
-		MaskFormatter dateFormatter = new MaskFormatter("##'/##'/####");
-		final JFormattedTextField T_dob = new JFormattedTextField(dateFormatter);
-		T_dob.setText("");
+		final JTextField T_dob = new JTextField();
 		T_dob.setFont(new Font("Arial", Font.PLAIN, 25));
 		T_dob.setBounds(179,194,163,32);
 		color1.add(T_dob);
@@ -419,9 +436,7 @@ public class MyWindow extends JFrame {
 		lbl_tel.setBounds(373, 194, 133, 32);
 		color1.add(lbl_tel);
 
-		MaskFormatter telFormatter = new MaskFormatter("####' ####");
-		final JFormattedTextField T_tel = new JFormattedTextField(telFormatter);
-		T_tel.setText("");
+		final JTextField T_tel = new JTextField();
 		T_tel.setFont(new Font("Arial", Font.PLAIN, 25));
 		T_tel.setBounds(516,194,164,32);
 		color1.add(T_tel);
@@ -496,6 +511,11 @@ public class MyWindow extends JFrame {
 
 		//*****action button*****
 		JButton B_booking = new JButton("Booking");
+		B_booking.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(contentPane, "Booking");
+			}
+		});
 		B_booking.setFont(new Font("Arial", Font.PLAIN, 25));
 		B_booking.setBounds(101, 384, 190, 100);
 		patientPane.add(B_booking);
@@ -523,6 +543,17 @@ public class MyWindow extends JFrame {
 		JButton B_menu = new JButton("Menu");
 		B_menu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				patient = null;
+				T_name.setEditable(true);
+				T_gender.setEditable(true);
+				T_tel.setEditable(true);
+				T_dob.setEditable(true);
+				T_HKID.setEditable(true);
+				T_name.setText("");
+				T_gender.setText("");
+				T_tel.setText("");
+				T_dob.setText("");
+				T_HKID.setText("");
 				cardLayout.show(contentPane, "Menu");
 			}
 		});
@@ -533,6 +564,7 @@ public class MyWindow extends JFrame {
 		//after search patient, get and show the patient record
 		if (patient != null){
 			T_name.setText(patient.getName());
+			System.out.println("NAME:" + patient.getName());
 			T_HKID.setText(patient.getHKID());
 			T_gender.setText(Character.toString(patient.getGender()));
 			T_dob.setText(patient.getDob_S());
