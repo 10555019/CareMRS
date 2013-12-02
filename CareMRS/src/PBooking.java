@@ -4,8 +4,10 @@ import java.util.Date;
 public class PBooking {
 	private Date time;
 	private int patientID;
-	public PBooking(int patientID){
+	private Date date= new Date();
+	public PBooking(int patientID, Date date){
 		this.patientID = patientID;
+		this.date = date;
 	}
 	public ShowBooking(){
 		//search Booking
@@ -14,9 +16,15 @@ public class PBooking {
 		//search booking
 	}
 	public CreateBooking(){
-		//add list,add in order
+		//add list,add in order,y=number of doctors
+		for (int i=0;i<y;i++){
+			//if (){
+				
+			//}
 	}
 	public CancelBoioking(){
-		//delete list
+		for (int j=0; j<y; j++){
+			
+		}
 	}
 }
