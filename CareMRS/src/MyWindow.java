@@ -299,7 +299,7 @@ public class MyWindow extends JFrame {
 			JButton B_clear = new JButton("Clear");
 			B_clear.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					T_HKID.setText("");
+					T_HKID.setText("        ");
 				}
 			});
 			B_clear.setFont(new Font("Arial", Font.PLAIN, 25));
