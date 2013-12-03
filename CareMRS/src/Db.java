@@ -107,7 +107,17 @@ public class Db implements Serializable{
 	}
 
 	public void save(Db db){
+		try{
+			File outFile = new File(filePath);
+			FileOutputStream outFileStream = new FileOutputStream(outFile);
+			ObjectOutputStream outObjectStream = new ObjectOutputStream(outFileStream);
 
+			outObjectStream.writeObject(db);
+			System.out.println(outFile.length());
+			outObjectStream.close();
+		} catch (IOException e){
+			System.out.println("outFile IOException");
+		}
 	}
 
 }

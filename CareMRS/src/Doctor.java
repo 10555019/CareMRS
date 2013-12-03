@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.LinkedList;
 
-public class Doctor extends Staff{
+public class Doctor extends Staff implements Serializable{
 	private int room; // which room the doctor is using
 	
 	//constructor - to create doctor object

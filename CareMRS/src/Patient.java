@@ -1,8 +1,9 @@
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
-public class Patient {
+public class Patient implements Serializable{
 	private String name;
 	private String HKID;
 	private String telephone;

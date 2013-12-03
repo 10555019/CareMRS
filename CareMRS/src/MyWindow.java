@@ -40,6 +40,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
@@ -47,7 +48,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JList;
 
 
-public class MyWindow extends JFrame {
+public class MyWindow extends JFrame implements Serializable{
 
 	//**********Data Member of MyWindow**********//
 	
@@ -137,20 +138,6 @@ public class MyWindow extends JFrame {
 
 	//Logout method
 	private void logout(Db db){
-		
-		try{
-			File outFile = new File(filePath);
-			FileOutputStream outFileStream = new FileOutputStream(outFile);
-			ObjectOutputStream outObjectStream = new ObjectOutputStream(outFileStream);
-
-			outObjectStream.writeObject(db);
-			System.out.println(outFile.length());
-			outObjectStream.close();
-		} catch (IOException e){
-			System.out.println("outFile IOException");
-		}
-		
-		
 		db.save(db); //save data in db
 		cardLayout.show(contentPane, "Login");
 		setJMenuBar(null); //disable the menubar when logout
