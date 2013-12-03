@@ -52,6 +52,8 @@ public class MyWindow extends JFrame implements Serializable{
 
 	//**********Data Member of MyWindow**********//
 	
+	private Db db;
+	
 	private MaskFormatter idFormatter = new MaskFormatter("U######'(#')");
 	private MaskFormatter telFormatter = new MaskFormatter("####' ####");
 	private MaskFormatter dateFormatter = new MaskFormatter("##'/##'/####");
@@ -61,6 +63,9 @@ public class MyWindow extends JFrame implements Serializable{
 	private JTextField PT_gender = new JTextField();
 	private JFormattedTextField PT_dob = new JFormattedTextField(dateFormatter);
 	private JFormattedTextField PT_tel = new JFormattedTextField(telFormatter);
+	
+	private JTextField L_userNameField = new JTextField();
+	private JPasswordField L_passwordField = new JPasswordField();
 	
 	
 	private JFormattedTextField SPT_HKID = new JFormattedTextField(idFormatter);
@@ -86,7 +91,7 @@ public class MyWindow extends JFrame implements Serializable{
 	private Patient patient = null; //pointer pointing accessing which patient 
 	//**********Data Member of MyWindow**********//
 
-	private void menubar(final Db db){
+	private void menubar(){
 		//construct the menubar
 		JMenu patient = new JMenu("Patient");
 		menubar.add(patient);
@@ -121,10 +126,10 @@ public class MyWindow extends JFrame implements Serializable{
 	}
 
 	//Login method
-	private void login(Db db, String userName, char[] password){
+	private void login(String userName, char[] password){
 		
 		//temp record for testing..........
-		db.addPatient(new Patient("Chan","A000001(1)","12345678",'M',"01/01/2013"));
+		//db.addPatient(new Patient("Chan","A000001(1)","12345678",'M',"01/01/2013"));
 		//temp record for testing..........
 		
 		if ((mode = Doctor.checkLogin(db,userName,password))!=0){ //when password match, saved mode : 1:Doctor 2:admin
@@ -147,13 +152,11 @@ public class MyWindow extends JFrame implements Serializable{
 	//**********************************************************************
 	//******************************Login Page******************************
 	//**********************************************************************
-	private void loginPage(final Db db){
+	private void loginPage(){
 		loginPane = new JPanel();
 		loginPane.setBackground(SystemColor.activeCaption);
 		loginPane.setLayout(null);
 		
-		final JTextField userNameField = new JTextField();
-		final JPasswordField passwordField = new JPasswordField();
 		//Title Image, CareMRS
 		ImageIcon image_title;
 		JLabel label1;
@@ -165,9 +168,9 @@ public class MyWindow extends JFrame implements Serializable{
 		JButton B_login = new JButton("Login");
 		B_login.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				userNameField.setText(null);
-				passwordField.setText(null);
-				login(db,userNameField.getText(),passwordField.getPassword());
+				login(L_userNameField.getText(),L_passwordField.getPassword());
+				L_userNameField.setText(null);
+				L_passwordField.setText(null);
 			}
 		});
 		B_login.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -183,26 +186,6 @@ public class MyWindow extends JFrame implements Serializable{
 		B_exit.setFont(new Font("Arial", Font.PLAIN, 20));
 		B_exit.setBounds(547, 452, 110, 60);
 		loginPane.add(B_exit);
-		//TextField, for user to type user name
-		userNameField.setFont(new Font("Arial", Font.PLAIN, 20));
-		userNameField.setBounds(439, 265, 253, 30);
-		loginPane.add(userNameField);
-		userNameField.setColumns(10);
-		//PasswordField, for user to type password
-		passwordField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent arg0) {
-				int key = arg0.getKeyCode();
-				if (key == KeyEvent.VK_ENTER) { //when user press Enter key after typing password
-					userNameField.setText(null);
-					passwordField.setText(null);
-					login(db,userNameField.getText(),passwordField.getPassword());
-				}
-			}
-		});
-		passwordField.setFont(new Font("Arial", Font.PLAIN, 20));
-		passwordField.setBounds(439, 342, 253, 30);
-		loginPane.add(passwordField);
 		//Label, User name
 		JLabel lblNewLabel = new JLabel("User Name :");
 		lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -222,7 +205,7 @@ public class MyWindow extends JFrame implements Serializable{
 	//*********************************************************************
 	//******************************Menu Page******************************
 	//*********************************************************************
-	private void menuPage(final Db db){
+	private void menuPage(){
 		menuPane = new JPanel();
 		menuPane.setBackground(SystemColor.activeCaption);
 		menuPane.setLayout(null);
@@ -246,7 +229,7 @@ public class MyWindow extends JFrame implements Serializable{
 			public void actionPerformed(ActionEvent e) {
 				patient = null;
 				try {
-					patientPage(db);
+					patientPage();
 				} catch (ParseException e1) {
 					e1.printStackTrace();
 				}
@@ -299,7 +282,7 @@ public class MyWindow extends JFrame implements Serializable{
 	//*******************************************************************************
 	//******************************Patient Search Page******************************
 	//*******************************************************************************
-	private void p_searchPage(final Db db){
+	private void p_searchPage(){
 		p_searchPane = new JPanel();
 		p_searchPane.setBackground(SystemColor.activeCaption);
 		p_searchPane.setLayout(null);
@@ -332,7 +315,7 @@ public class MyWindow extends JFrame implements Serializable{
 					SPT_HKID.setText(null);
 					cardLayout.show(contentPane, "Patient");
 					try {
-						patientPage(db);
+						patientPage();
 					} catch (ParseException e1) {
 						e1.printStackTrace();
 					}
@@ -364,7 +347,7 @@ public class MyWindow extends JFrame implements Serializable{
 	//************************************************************************
 	//******************************Patient Page******************************
 	//************************************************************************
-	private void patientPage(final Db db) throws ParseException{
+	private void patientPage() throws ParseException{
 		patientPane = new JPanel();
 		patientPane.setBackground(SystemColor.activeCaption);
 		patientPane.setLayout(null);
@@ -745,6 +728,27 @@ public class MyWindow extends JFrame implements Serializable{
 		SPT_HKID.setBounds(447, 253, 171, 41);
 		p_searchPane.add(SPT_HKID);
 		SPT_HKID.setColumns(10);
+		
+		//TextField, for user to type user name
+		L_userNameField.setFont(new Font("Arial", Font.PLAIN, 20));
+		L_userNameField.setBounds(439, 265, 253, 30);
+		loginPane.add(L_userNameField);
+		L_userNameField.setColumns(10);
+		//PasswordField, for user to type password
+		L_passwordField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				int key = arg0.getKeyCode();
+				if (key == KeyEvent.VK_ENTER) { //when user press Enter key after typing password
+					login(L_userNameField.getText(),L_passwordField.getPassword());
+					L_userNameField.setText(null);
+					L_passwordField.setText(null);
+				}
+			}
+		});
+		L_passwordField.setFont(new Font("Arial", Font.PLAIN, 20));
+		L_passwordField.setBounds(439, 342, 253, 30);
+		loginPane.add(L_passwordField);
 	}
 
 	
@@ -753,6 +757,7 @@ public class MyWindow extends JFrame implements Serializable{
 	 * @throws ParseException 
 	 */
 	public MyWindow(Db db) throws ParseException {
+		this.db = db;
 		setResizable(false);
 		setTitle("CareMRS");
 		setIconImage(new ImageIcon(getClass().getResource("C.png")).getImage());
@@ -762,14 +767,14 @@ public class MyWindow extends JFrame implements Serializable{
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(cardLayout);
-		menubar(db);
-		loginPage(db);
+		menubar();
+		loginPage();
 		contentPane.add(loginPane, "Login");
-		menuPage(db);
+		menuPage();
 		contentPane.add(menuPane, "Menu");
-		p_searchPage(db);
+		p_searchPage();
 		contentPane.add(p_searchPane, "Search");
-		patientPage(db);
+		patientPage();
 		
 		
 		addToWindow();
@@ -779,7 +784,7 @@ public class MyWindow extends JFrame implements Serializable{
 		p_bookingPage();
 		contentPane.add(p_bookingPane, "Booking");
 
-		login(db,"user","user".toCharArray());
+		login("user","user".toCharArray());
 		cardLayout.show(contentPane, "Menu");
 	}
 }

@@ -88,21 +88,18 @@ public class Db implements Serializable{
 			if (inFile.exists()){
 				FileInputStream inFileStream = new FileInputStream(inFile);
 				ObjectInputStream inObjectStream = new ObjectInputStream(inFileStream);
-				System.out.println("File exist");
-				System.out.println(inFile.length());
 				Db tmpDb = (Db) inObjectStream.readObject();
-
 				inObjectStream.close();
 				return tmpDb;
 			}else{
-				return null;
+				return this;
 			}
 		} catch (IOException e){
 			System.out.println("inFile IOException");
-			return null;
+			return this;
 		} catch (ClassNotFoundException e){
 			System.out.println("ClassNotFoundException");
-			return null;
+			return this;
 		}
 	}
 
@@ -111,9 +108,7 @@ public class Db implements Serializable{
 			File outFile = new File(filePath);
 			FileOutputStream outFileStream = new FileOutputStream(outFile);
 			ObjectOutputStream outObjectStream = new ObjectOutputStream(outFileStream);
-
 			outObjectStream.writeObject(db);
-			System.out.println(outFile.length());
 			outObjectStream.close();
 		} catch (IOException e){
 			System.out.println("outFile IOException");

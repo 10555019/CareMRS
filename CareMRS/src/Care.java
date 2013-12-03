@@ -29,6 +29,7 @@ public class Care {
 			public void run() {
 				try {
 					MyWindow frame = new MyWindow(db);
+					
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
