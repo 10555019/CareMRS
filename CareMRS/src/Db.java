@@ -9,6 +9,7 @@ public class Db implements Serializable{
 	private LinkedList<Patient> patient = new LinkedList<Patient>();
 	private LinkedList<Doctor> doctor = new LinkedList<Doctor>();
 	private LinkedList<Admin> admin = new LinkedList<Admin>();
+	private LinkedList<Booking> booking = new LinkedList<Booking>();
 	private Clinic clinic = new Clinic();
 	private String filePath = "db.sav";
 	
@@ -83,20 +84,21 @@ public class Db implements Serializable{
 	public Db load(){
 		try{
 			File inFile = new File(filePath);
-			FileInputStream inFileStream = new FileInputStream(inFile);
-			ObjectInputStream inObjectStream = new ObjectInputStream(inFileStream);
 
 			if (inFile.exists()){
+				FileInputStream inFileStream = new FileInputStream(inFile);
+				ObjectInputStream inObjectStream = new ObjectInputStream(inFileStream);
+				System.out.println("File exist");
+				System.out.println(inFile.length());
 				Db tmpDb = (Db) inObjectStream.readObject();
 
 				inObjectStream.close();
 				return tmpDb;
 			}else{
-				inObjectStream.close();
 				return null;
 			}
 		} catch (IOException e){
-			System.out.println("IOException");
+			System.out.println("inFile IOException");
 			return null;
 		} catch (ClassNotFoundException e){
 			System.out.println("ClassNotFoundException");
@@ -105,16 +107,7 @@ public class Db implements Serializable{
 	}
 
 	public void save(Db db){
-		try{
-			File outFile = new File(filePath);
-			FileOutputStream outFileStream = new FileOutputStream(outFile);
-			ObjectOutputStream outObjectStream = new ObjectOutputStream(outFileStream);
 
-			outObjectStream.writeObject(db);
-			outObjectStream.close();
-		} catch (IOException e){
-			System.out.println("IOException");
-		}
 	}
 
 }
