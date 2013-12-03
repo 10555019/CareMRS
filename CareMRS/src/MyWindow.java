@@ -54,21 +54,26 @@ public class MyWindow extends JFrame implements Serializable{
 	
 	private Db db;
 	
-	private MaskFormatter idFormatter = new MaskFormatter("U######'(#')");
-	private MaskFormatter telFormatter = new MaskFormatter("####' ####");
-	private MaskFormatter dateFormatter = new MaskFormatter("##'/##'/####");
+	//private MaskFormatter idFormatter = new MaskFormatter("U######'(#')");
+	//private MaskFormatter telFormatter = new MaskFormatter("####' ####");
+	//private MaskFormatter dateFormatter = new MaskFormatter("##'/##'/####");
 	
 	private JTextField PT_name = new JTextField();
-	private JFormattedTextField PT_HKID = new JFormattedTextField(idFormatter);
+	private JTextField PT_HKID = new JTextField();
 	private JTextField PT_gender = new JTextField();
-	private JFormattedTextField PT_dob = new JFormattedTextField(dateFormatter);
-	private JFormattedTextField PT_tel = new JFormattedTextField(telFormatter);
+	private JTextField PT_dob = new JTextField();
+	private JTextField PT_tel = new JTextField();
+	
+	//private JFormattedTextField PT_HKID = new JFormattedTextField(idFormatter);
+	//private JFormattedTextField PT_dob = new JFormattedTextField(dateFormatter);
+	//private JFormattedTextField PT_tel = new JFormattedTextField(telFormatter);
 	
 	private JTextField L_userNameField = new JTextField();
 	private JPasswordField L_passwordField = new JPasswordField();
 	
 	
-	private JFormattedTextField SPT_HKID = new JFormattedTextField(idFormatter);
+	private JTextField SPT_HKID = new JTextField();
+	//private JFormattedTextField SPT_HKID = new JFormattedTextField(idFormatter);
 	
 	
 	
@@ -378,9 +383,6 @@ public class MyWindow extends JFrame implements Serializable{
 		color1.add(lbl_HKID);
 		lbl_HKID.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_HKID.setFont(new Font("Arial", Font.PLAIN, 20));
-		
-		
-		
 
 		//*****Gender*****
 		JLabel lbl_gender = new JLabel("Gender:");
@@ -388,9 +390,6 @@ public class MyWindow extends JFrame implements Serializable{
 		color1.add(lbl_gender);
 		lbl_gender.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_gender.setFont(new Font("Arial", Font.PLAIN, 20));
-
-		
-		
 
 		//*****DOB*****
 		//upper label
@@ -406,19 +405,13 @@ public class MyWindow extends JFrame implements Serializable{
 		lbl_dmy.setBounds(36, 216, 133, 32);
 		color1.add(lbl_dmy);
 
-		
-		
-
 		//*****Tel*****
 		JLabel lbl_tel = new JLabel("Telephone:");
 		lbl_tel.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_tel.setFont(new Font("Arial", Font.PLAIN, 20));
 		lbl_tel.setBounds(373, 194, 133, 32);
 		color1.add(lbl_tel);
-
 		
-		
-
 		//*****B_save*****
 		JButton B_save = new JButton("Save");
 		B_save.setBounds(693, 227, 98, 32);
