@@ -1,4 +1,6 @@
-public class Admin extends Staff{
+import java.io.Serializable;
+
+public class Admin extends Staff implements Serializable{
 	
 	public Admin(String name, String userName, String password){
 		this.name = name;

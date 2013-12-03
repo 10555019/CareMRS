@@ -40,6 +40,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
@@ -47,7 +48,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JList;
 
 
-public class MyWindow extends JFrame {
+public class MyWindow extends JFrame implements Serializable{
 
 	//**********Data Member of MyWindow**********//
 	
@@ -120,9 +121,7 @@ public class MyWindow extends JFrame {
 	}
 
 	//Login method
-	private void login(Db db, String userName, char[] password, JTextField userNameField, JPasswordField passwordField){
-		userNameField.setText(""); //clear the userName
-		passwordField.setText(""); //clear the password
+	private void login(Db db, String userName, char[] password){
 		
 		//temp record for testing..........
 		db.addPatient(new Patient("Chan","A000001(1)","12345678",'M',"01/01/2013"));
@@ -139,7 +138,7 @@ public class MyWindow extends JFrame {
 
 	//Logout method
 	private void logout(Db db){
-		//db.save(db); //save data in db
+		db.save(db); //save data in db
 		cardLayout.show(contentPane, "Login");
 		setJMenuBar(null); //disable the menubar when logout
 	}
@@ -166,7 +165,9 @@ public class MyWindow extends JFrame {
 		JButton B_login = new JButton("Login");
 		B_login.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				login(db,userNameField.getText(),passwordField.getPassword(),userNameField,passwordField);
+				userNameField.setText(null);
+				passwordField.setText(null);
+				login(db,userNameField.getText(),passwordField.getPassword());
 			}
 		});
 		B_login.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -193,7 +194,9 @@ public class MyWindow extends JFrame {
 			public void keyPressed(KeyEvent arg0) {
 				int key = arg0.getKeyCode();
 				if (key == KeyEvent.VK_ENTER) { //when user press Enter key after typing password
-					login(db,userNameField.getText(),passwordField.getPassword(),userNameField,passwordField);
+					userNameField.setText(null);
+					passwordField.setText(null);
+					login(db,userNameField.getText(),passwordField.getPassword());
 				}
 			}
 		});
@@ -313,7 +316,7 @@ public class MyWindow extends JFrame {
 		JButton B_clear = new JButton("Clear");
 		B_clear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				SPT_HKID.setText("");
+				SPT_HKID.setText(null);
 			}
 		});
 		B_clear.setFont(new Font("Arial", Font.PLAIN, 25));
@@ -326,7 +329,7 @@ public class MyWindow extends JFrame {
 				int index = Patient.patientSearch(db, SPT_HKID.getText());
 				if (index != -1){
 					patient = db.getPatient(index);
-					SPT_HKID.setText("");
+					SPT_HKID.setText(null);
 					cardLayout.show(contentPane, "Patient");
 					try {
 						patientPage(db);
@@ -345,7 +348,7 @@ public class MyWindow extends JFrame {
 		JButton B_menu = new JButton("Menu");
 		B_menu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SPT_HKID.setText("");
+				SPT_HKID.setText(null);
 				cardLayout.show(contentPane, "Menu");
 			}
 		});
@@ -776,6 +779,7 @@ public class MyWindow extends JFrame {
 		p_bookingPage();
 		contentPane.add(p_bookingPane, "Booking");
 
-		cardLayout.show(contentPane, "Login");
+		login(db,"user","user".toCharArray());
+		cardLayout.show(contentPane, "Menu");
 	}
 }

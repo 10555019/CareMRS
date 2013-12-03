@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.Date;
 
-public class Clinic {
+public class Clinic implements Serializable{
 	private static boolean[][] openHr = new boolean[7][2];
 	private static String[] typeOfTreatment = new String[4];
 	private float[] feePerPart = new float[4];

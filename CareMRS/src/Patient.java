@@ -1,16 +1,16 @@
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
-public class Patient {
+public class Patient implements Serializable{
 	private String name;
 	private String HKID;
 	private String telephone;
 	private char gender;
 	private GregorianCalendar dob = new GregorianCalendar();
-	private LinkedList<PBooking> booking = new LinkedList<PBooking>(); //store the booking records
 	private LinkedList<TreatmentRec> record = new LinkedList<TreatmentRec>(); //store the treatment records
-
+	private Calendar current ;
 	//constructor - to create patient object
 	public Patient(String name, String HKID, String telephone, char gender, String date){
 		this.name = name;
@@ -18,6 +18,7 @@ public class Patient {
 		this.telephone = telephone;
 		this.gender = gender;
 		setDob(date);
+		current = Calendar.getInstance();
 	}
 
 	public static int patientSearch(Db db, String inputHKID) {	
@@ -96,15 +97,7 @@ public class Patient {
 		day = Integer.parseInt(date.substring(0,2));
 		month = Integer.parseInt(date.substring(3,5));
 		year = Integer.parseInt(date.substring(6,10));
-		dob.set(year, month-1, day);
-	}
-
-	public PBooking getBooking(int index) {
-		return booking.get(index);
-	}
-
-	public void setBooking(LinkedList<PBooking> booking) {
-		this.booking = booking;
+		dob.set(year, month, day);
 	}
 
 	public LinkedList<TreatmentRec> getRecord() {
@@ -115,6 +108,21 @@ public class Patient {
 		this.record = record;
 	}
 	public void Book(){
-		
+		int cyear = current.get(Calendar.YEAR);
+		int diff1 = cyear-dob.get(1);
+		int cmonth = current.get(Calendar.MONTH);
+		int diff = cmonth - dob.get(2);
+		if(diff<0){
+			diff1++;
+		}
+		else{
+			diff1--;
+		}
+		if(diff1>50){
+			int book = 2;
+		}
+		else{
+			int book = 1;
+		}
 	}
 }

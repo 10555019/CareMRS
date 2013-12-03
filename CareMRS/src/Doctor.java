@@ -1,8 +1,8 @@
+import java.io.Serializable;
 import java.util.LinkedList;
 
-public class Doctor extends Staff{
+public class Doctor extends Staff implements Serializable{
 	private int room; // which room the doctor is using
-	private LinkedList<DBooking> booking = new LinkedList<DBooking>(); //timetable for doctor
 	
 	//constructor - to create doctor object
 	public Doctor(String name, String userName, String password, int room){
@@ -29,12 +29,5 @@ public class Doctor extends Staff{
 	public void setRoom(int room) {
 		this.room = room;
 	}
-	
-	public LinkedList<DBooking> getBooking() {
-		return booking;
-	}
-
-	public void setBooking(LinkedList<DBooking> booking) {
-		this.booking = booking;
-	}
 }
+
