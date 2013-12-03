@@ -70,5 +70,9 @@ public class aaa extends JFrame {
 		lblAdminPage.setFont(new Font("Times New Roman", Font.PLAIN, 60));
 		lblAdminPage.setBounds(275, 60, 310, 100);
 		contentPane.add(lblAdminPage);
+		
+		JButton btnMenu = new JButton("Menu");
+		btnMenu.setBounds(303, 526, 282, 108);
+		contentPane.add(btnMenu);
 	}
 }
