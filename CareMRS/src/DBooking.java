@@ -8,12 +8,5 @@ public class DBooking {
 		this.patientID = patientID;
 		this.time = time;
 	}
-	public changeTime(){
-		//search link list, add in order. delete list
-	}
-	public showBooking(){
-		/*Use linklist option*/
-		//list count, show link list
-		
-	}
+	
 }
