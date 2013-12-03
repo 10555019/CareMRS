@@ -51,13 +51,17 @@ public class MyWindow extends JFrame {
 
 	//**********Data Member of MyWindow**********//
 	
-	private JTextField PT_name = new JTextField();
-	private JTextField PT_HKID = new JTextField();
-	private JTextField PT_gender = new JTextField();
-	private JTextField PT_dob = new JTextField();
-	private JTextField PT_tel = new JTextField();
-	
 	private MaskFormatter idFormatter = new MaskFormatter("U######'(#')");
+	private MaskFormatter telFormatter = new MaskFormatter("####' ####");
+	private MaskFormatter dateFormatter = new MaskFormatter("##'/##'/####");
+	
+	private JTextField PT_name = new JTextField();
+	private JFormattedTextField PT_HKID = new JFormattedTextField(idFormatter);
+	private JTextField PT_gender = new JTextField();
+	private JFormattedTextField PT_dob = new JFormattedTextField(dateFormatter);
+	private JFormattedTextField PT_tel = new JFormattedTextField(telFormatter);
+	
+	
 	private JFormattedTextField SPT_HKID = new JFormattedTextField(idFormatter);
 	
 	
@@ -301,26 +305,15 @@ public class MyWindow extends JFrame {
 		lbl_searchPatient.setFont(new Font("Arial", Font.BOLD, 30));
 		lbl_searchPatient.setBounds(376, 20, 221, 41);
 		p_searchPane.add(lbl_searchPatient);
-
 		JLabel lbl_HKID = new JLabel("HKID:");
 		lbl_HKID.setFont(new Font("Arial", Font.PLAIN, 25));
 		lbl_HKID.setBounds(343, 253, 80, 41);
 		p_searchPane.add(lbl_HKID);
-		SPT_HKID.setFont(new Font("Arial", Font.PLAIN, 25));
-		SPT_HKID.setBounds(447, 253, 171, 41);
-		p_searchPane.add(SPT_HKID);
-		SPT_HKID.setColumns(10);
 		
 		JButton B_clear = new JButton("Clear");
 		B_clear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				SPT_HKID.setText("");
-				try {
-					SPT_HKID.commitEdit();
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 			}
 		});
 		B_clear.setFont(new Font("Arial", Font.PLAIN, 25));
@@ -334,12 +327,6 @@ public class MyWindow extends JFrame {
 				if (index != -1){
 					patient = db.getPatient(index);
 					SPT_HKID.setText("");
-					try {
-						SPT_HKID.commitEdit();
-					} catch (ParseException e2) {
-						// TODO Auto-generated catch block
-						e2.printStackTrace();
-					}
 					cardLayout.show(contentPane, "Patient");
 					try {
 						patientPage(db);
@@ -359,12 +346,6 @@ public class MyWindow extends JFrame {
 		B_menu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SPT_HKID.setText("");
-				try {
-					SPT_HKID.commitEdit();
-				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 				cardLayout.show(contentPane, "Menu");
 			}
 		});
@@ -756,6 +737,11 @@ public class MyWindow extends JFrame {
 		PT_tel.setBounds(516,194,164,32);
 		color1.add(PT_tel);
 		PT_tel.setColumns(10);
+		
+		SPT_HKID.setFont(new Font("Arial", Font.PLAIN, 25));
+		SPT_HKID.setBounds(447, 253, 171, 41);
+		p_searchPane.add(SPT_HKID);
+		SPT_HKID.setColumns(10);
 	}
 
 	
