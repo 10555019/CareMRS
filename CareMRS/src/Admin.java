@@ -23,5 +23,11 @@ public class Admin extends Staff{
 		Clinic.setOpenHour(a,b,c);
 		
 	}
+	
+	private void setTypeOfTreatment(){
+		int a=0;
+		String b="123";
+		Clinic.setTypeOfTreatment(a,b);
+	}
 
 }

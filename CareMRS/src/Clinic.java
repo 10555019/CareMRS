@@ -2,7 +2,7 @@ import java.util.Date;
 
 public class Clinic {
 	private static boolean[][] openHr = new boolean[7][2];
-	private String[] typeOfTreatment = new String[4];
+	private static String[] typeOfTreatment = new String[4];
 	private float[] feePerPart = new float[4];
 	private boolean[] bodyParts = new boolean[4];
 	private String[] description = new String[3];
@@ -13,5 +13,9 @@ public class Clinic {
 	
 	public static void setOpenHour(int i, int j, boolean k){
 		openHr[i][j]=k;
+	}
+	
+	public static void setTypeOfTreatment(int i, String tot){
+		typeOfTreatment[i]=tot;
 	}
 }
