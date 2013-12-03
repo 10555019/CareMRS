@@ -28,12 +28,5 @@ public class Doctor extends Staff{
 	public void setRoom(int room) {
 		this.room = room;
 	}
-	
-	public LinkedList<DBooking> getBooking() {
-		return booking;
-	}
-
-	public void setBooking(LinkedList<DBooking> booking) {
-		this.booking = booking;
-	}
 }
+
