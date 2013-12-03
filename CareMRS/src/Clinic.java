@@ -1,7 +1,7 @@
 import java.util.Date;
 
 public class Clinic {
-	private boolean[][] openHr = new boolean[7][2];
+	private static boolean[][] openHr = new boolean[7][2];
 	private String[] typeOfTreatment = new String[4];
 	private float[] feePerPart = new float[4];
 	private boolean[] bodyParts = new boolean[4];
@@ -11,4 +11,7 @@ public class Clinic {
 	private float[] discount = new float[3];
 	private Date[] nonPeakHr = new Date[4];
 	
+	public static void setOpenHour(int i, int j, boolean k){
+		openHr[i][j]=k;
+	}
 }

@@ -16,5 +16,12 @@ public class Admin extends Staff{
 		}
 		return -1;
 	}
+	
+	private void setOpenHour(){
+		int a=0,b=0;
+		boolean c=true;
+		Clinic.setOpenHour(a,b,c);
+		
+	}
 
 }
