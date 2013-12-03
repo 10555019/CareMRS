@@ -2,7 +2,6 @@ import java.util.LinkedList;
 
 public class Doctor extends Staff{
 	private int room; // which room the doctor is using
-	private LinkedList<DBooking> booking = new LinkedList<DBooking>(); //timetable for doctor
 	
 	//constructor - to create doctor object
 	public Doctor(String name, String userName, String password, int room){
