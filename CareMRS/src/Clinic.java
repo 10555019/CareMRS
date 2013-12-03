@@ -7,7 +7,7 @@ public class Clinic {
 	private boolean[] bodyParts = new boolean[4];
 	private String[] description = new String[3];
 	private int[] requirement = new int[2];
-	private String[] specialArrangment = new String[3];
+	private static String[] specialArrangement = new String[3];
 	private float[] discount = new float[3];
 	private Date[] nonPeakHr = new Date[4];
 	
@@ -17,5 +17,9 @@ public class Clinic {
 	
 	public static void setTypeOfTreatment(int i, String tot){
 		typeOfTreatment[i]=tot;
+	}
+	
+	public static void setSpecialArrangement(int i, String sa){
+		specialArrangement[i]=sa;
 	}
 }

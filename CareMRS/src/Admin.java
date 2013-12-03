@@ -29,5 +29,12 @@ public class Admin extends Staff{
 		String b="123";
 		Clinic.setTypeOfTreatment(a,b);
 	}
+	
+	private void setSpecialArrangement(){
+		int a=0;
+		String b="123";
+		Clinic.setSpecialArrangement(a,b);
+		
+	}
 
 }
