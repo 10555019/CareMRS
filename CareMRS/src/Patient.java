@@ -96,7 +96,7 @@ public class Patient {
 		day = Integer.parseInt(date.substring(0,2));
 		month = Integer.parseInt(date.substring(3,5));
 		year = Integer.parseInt(date.substring(6,10));
-		dob.set(year, month, day);
+		dob.set(year, month-1, day);
 	}
 
 	public LinkedList<PBooking> getBooking() {

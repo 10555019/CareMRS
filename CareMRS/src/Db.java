@@ -87,9 +87,7 @@ public class Db implements Serializable{
 			ObjectInputStream inObjectStream = new ObjectInputStream(inFileStream);
 
 			if (inFile.exists()){
-				System.out.println("infile exisis");
 				Db tmpDb = (Db) inObjectStream.readObject();
-				System.out.println("number: " + getPatientSize());
 
 				inObjectStream.close();
 				return tmpDb;

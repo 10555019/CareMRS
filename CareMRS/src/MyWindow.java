@@ -20,6 +20,7 @@ import javax.swing.JButton;
 
 import java.awt.Color;
 import java.text.ParseException;
+import java.util.Scanner;
 
 import javax.swing.ImageIcon;
 
@@ -49,10 +50,23 @@ import javax.swing.JList;
 public class MyWindow extends JFrame {
 
 	//**********Data Member of MyWindow**********//
+	
+	private JTextField PT_name = new JTextField();
+	private JTextField PT_HKID = new JTextField();
+	private JTextField PT_gender = new JTextField();
+	private JTextField PT_dob = new JTextField();
+	private JTextField PT_tel = new JTextField();
+	
+	private MaskFormatter idFormatter = new MaskFormatter("U######'(#')");
+	private JFormattedTextField SPT_HKID = new JFormattedTextField(idFormatter);
+	
+	
+	
 	int mode=0; //1:doctor 2:admin
 	
 	private String filePath = "db.sav";
 	
+	private JPanel color1;
 	private JPanel contentPane;
 	private JPanel loginPane;
 	private JPanel menuPane;
@@ -105,6 +119,11 @@ public class MyWindow extends JFrame {
 	private void login(Db db, String userName, char[] password, JTextField userNameField, JPasswordField passwordField){
 		userNameField.setText(""); //clear the userName
 		passwordField.setText(""); //clear the password
+		
+		//temp record for testing..........
+		db.addPatient(new Patient("Chan","A000001(1)","12345678",'M',"01/01/2013"));
+		//temp record for testing..........
+		
 		if ((mode = Doctor.checkLogin(db,userName,password))!=0){ //when password match, saved mode : 1:Doctor 2:admin
 			db = db.load(); //load data from file
 			cardLayout.show(contentPane, "Menu"); //change panel
@@ -283,66 +302,75 @@ public class MyWindow extends JFrame {
 		lbl_searchPatient.setBounds(376, 20, 221, 41);
 		p_searchPane.add(lbl_searchPatient);
 
-		MaskFormatter idFormatter;
-		try {
-			idFormatter = new MaskFormatter("U######'(#')");
-			JLabel lbl_HKID = new JLabel("HKID:");
-			lbl_HKID.setFont(new Font("Arial", Font.PLAIN, 25));
-			lbl_HKID.setBounds(343, 253, 80, 41);
-			p_searchPane.add(lbl_HKID);
-			final JFormattedTextField T_HKID = new JFormattedTextField(idFormatter);
-			T_HKID.setFont(new Font("Arial", Font.PLAIN, 25));
-			T_HKID.setBounds(447, 253, 171, 41);
-			p_searchPane.add(T_HKID);
-			T_HKID.setColumns(10);
-			
-			JButton B_clear = new JButton("Clear");
-			B_clear.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					T_HKID.setText("");
+		JLabel lbl_HKID = new JLabel("HKID:");
+		lbl_HKID.setFont(new Font("Arial", Font.PLAIN, 25));
+		lbl_HKID.setBounds(343, 253, 80, 41);
+		p_searchPane.add(lbl_HKID);
+		SPT_HKID.setFont(new Font("Arial", Font.PLAIN, 25));
+		SPT_HKID.setBounds(447, 253, 171, 41);
+		p_searchPane.add(SPT_HKID);
+		SPT_HKID.setColumns(10);
+		
+		JButton B_clear = new JButton("Clear");
+		B_clear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				SPT_HKID.setText("");
+				try {
+					SPT_HKID.commitEdit();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-			});
-			B_clear.setFont(new Font("Arial", Font.PLAIN, 25));
-			B_clear.setBounds(416, 366, 142, 70);
-			p_searchPane.add(B_clear);
-			
-			JButton B_search = new JButton("Search");
-			B_search.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					int index = Patient.patientSearch(db, T_HKID.getText());
-					if (index != -1){
-						patient = db.getPatient(index);
-						T_HKID.setText("");
-						try {
-							patientPage(db);
-						} catch (ParseException e1) {
-							e1.printStackTrace();
-						}
-						cardLayout.show(contentPane, "Patient");
-					} else{
-						JOptionPane.showMessageDialog(null, "Patient cannot be found.","Search", JOptionPane.ERROR_MESSAGE);
+			}
+		});
+		B_clear.setFont(new Font("Arial", Font.PLAIN, 25));
+		B_clear.setBounds(416, 366, 142, 70);
+		p_searchPane.add(B_clear);
+		
+		JButton B_search = new JButton("Search");
+		B_search.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int index = Patient.patientSearch(db, SPT_HKID.getText());
+				if (index != -1){
+					patient = db.getPatient(index);
+					SPT_HKID.setText("");
+					try {
+						SPT_HKID.commitEdit();
+					} catch (ParseException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
 					}
+					cardLayout.show(contentPane, "Patient");
+					try {
+						patientPage(db);
+					} catch (ParseException e1) {
+						e1.printStackTrace();
+					}
+				} else{
+					JOptionPane.showMessageDialog(null, "Patient cannot be found.","Search", JOptionPane.ERROR_MESSAGE);
 				}
-			});
-			B_search.setFont(new Font("Arial", Font.PLAIN, 25));
-			B_search.setBounds(230, 366, 142, 70);
-			p_searchPane.add(B_search);
-			
-			JButton B_menu = new JButton("Menu");
-			B_menu.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					T_HKID.setText("");
-					cardLayout.show(contentPane, "Menu");
+			}
+		});
+		B_search.setFont(new Font("Arial", Font.PLAIN, 25));
+		B_search.setBounds(230, 366, 142, 70);
+		p_searchPane.add(B_search);
+		
+		JButton B_menu = new JButton("Menu");
+		B_menu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SPT_HKID.setText("");
+				try {
+					SPT_HKID.commitEdit();
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
-			});
-			B_menu.setFont(new Font("Arial", Font.PLAIN, 25));
-			B_menu.setBounds(602, 366, 142, 70);
-			p_searchPane.add(B_menu);
-
-		} catch (ParseException e) {
-			JOptionPane.showMessageDialog(null, "Unable to add ID Field","Failed", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
+				cardLayout.show(contentPane, "Menu");
+			}
+		});
+		B_menu.setFont(new Font("Arial", Font.PLAIN, 25));
+		B_menu.setBounds(602, 366, 142, 70);
+		p_searchPane.add(B_menu);
 	}
 	//*******************************************************************************
 	//******************************Patient Search Page******************************
@@ -364,7 +392,7 @@ public class MyWindow extends JFrame {
 		patientPane.add(lbl_patient);
 
 		//Upper frame
-		JPanel color1 = new JPanel();
+		color1 = new JPanel();
 		color1.setBackground(new Color(245, 222, 179));
 		color1.setBounds(25, 85, 924, 270);
 		patientPane.add(color1);
@@ -377,12 +405,6 @@ public class MyWindow extends JFrame {
 		lbl_name.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_name.setFont(new Font("Arial", Font.PLAIN, 20));
 
-		final JTextField T_name = new JTextField();
-		T_name.setBounds(179, 30, 501, 32);
-		color1.add(T_name);
-		T_name.setFont(new Font("Arial", Font.PLAIN, 20));
-		T_name.setColumns(10);
-
 		//*****HKID*****
 		JLabel lbl_HKID = new JLabel("HKID:");
 		lbl_HKID.setBounds(36, 112, 133, 32);
@@ -390,11 +412,8 @@ public class MyWindow extends JFrame {
 		lbl_HKID.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_HKID.setFont(new Font("Arial", Font.PLAIN, 20));
 		
-		final JTextField T_HKID = new JTextField();
-		T_HKID.setBounds(179,112,163,32);
-		color1.add(T_HKID);
-		T_HKID.setFont(new Font("Arial", Font.PLAIN, 25));
-		T_HKID.setColumns(10);
+		
+		
 
 		//*****Gender*****
 		JLabel lbl_gender = new JLabel("Gender:");
@@ -403,11 +422,8 @@ public class MyWindow extends JFrame {
 		lbl_gender.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_gender.setFont(new Font("Arial", Font.PLAIN, 20));
 
-		final JTextField T_gender = new JTextField();
-		T_gender.setBounds(547, 112, 133, 32);
-		color1.add(T_gender);
-		T_gender.setFont(new Font("Arial", Font.PLAIN, 20));
-		T_gender.setColumns(10);
+		
+		
 
 		//*****DOB*****
 		//upper label
@@ -423,11 +439,8 @@ public class MyWindow extends JFrame {
 		lbl_dmy.setBounds(36, 216, 133, 32);
 		color1.add(lbl_dmy);
 
-		final JTextField T_dob = new JTextField();
-		T_dob.setFont(new Font("Arial", Font.PLAIN, 25));
-		T_dob.setBounds(179,194,163,32);
-		color1.add(T_dob);
-		T_dob.setColumns(10);
+		
+		
 
 		//*****Tel*****
 		JLabel lbl_tel = new JLabel("Telephone:");
@@ -436,11 +449,8 @@ public class MyWindow extends JFrame {
 		lbl_tel.setBounds(373, 194, 133, 32);
 		color1.add(lbl_tel);
 
-		final JTextField T_tel = new JTextField();
-		T_tel.setFont(new Font("Arial", Font.PLAIN, 25));
-		T_tel.setBounds(516,194,164,32);
-		color1.add(T_tel);
-		T_tel.setColumns(10);
+		
+		
 
 		//*****B_save*****
 		JButton B_save = new JButton("Save");
@@ -449,44 +459,44 @@ public class MyWindow extends JFrame {
 		B_save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try{ //Saving or creating patient record
-					int index = Patient.patientSearch(db, T_HKID.getText());
+					int index = Patient.patientSearch(db, PT_HKID.getText());
 					boolean save = false; //used to toggle save message
-					if (T_HKID.getText().equals("       ( )")) throw new NullFieldException(); //primary key should not be null
+					if (PT_HKID.getText().equals("       ( )")) throw new NullFieldException(); //primary key should not be null
 					if (patient==null){
 						//need to create a new patient
 						if (index == -1){
-							patient = new Patient(T_name.getText(),T_HKID.getText(),T_tel.getText(),T_gender.getText().charAt(0),T_dob.getText());
+							patient = new Patient(PT_name.getText(),PT_HKID.getText(),PT_tel.getText(),PT_gender.getText().charAt(0),PT_dob.getText());
 							db.addPatient(patient);
 							save = true;
 						} else{
 							if (JOptionPane.showConfirmDialog(null, "Same patient found, amend record?","Patient record", JOptionPane.YES_NO_OPTION)==1){
-								patient = new Patient(T_name.getText(),T_HKID.getText(),T_tel.getText(),T_gender.getText().charAt(0),T_dob.getText());
+								patient = new Patient(PT_name.getText(),PT_HKID.getText(),PT_tel.getText(),PT_gender.getText().charAt(0),PT_dob.getText());
 								db.addPatient(patient);
 								save = true;
 							} else {
 								JOptionPane.showMessageDialog(null, "Original Patient record will be shown","Patient record", JOptionPane.PLAIN_MESSAGE);
 								patient = db.getPatient(index);
-								T_name.setText(patient.getName());
-								T_HKID.setText(patient.getHKID());
-								T_gender.setText(Character.toString(patient.getGender()));
-								T_dob.setText(patient.getDob_S());
+								PT_name.setText(patient.getName());
+								PT_HKID.setText(patient.getHKID());
+								PT_gender.setText(Character.toString(patient.getGender()));
+								PT_dob.setText(patient.getDob_S());
 							}
 						}
 					} else {
 						//amend current patient record
-						db.getPatient(index).setName(T_name.getText());
-						db.getPatient(index).setTelephone(T_tel.getText());
-						db.getPatient(index).setGender(T_gender.getText().charAt(0));
-						db.getPatient(index).setDob(T_dob.getText());
+						db.getPatient(index).setName(PT_name.getText());
+						db.getPatient(index).setTelephone(PT_tel.getText());
+						db.getPatient(index).setGender(PT_gender.getText().charAt(0));
+						db.getPatient(index).setDob(PT_dob.getText());
 						save = true;
 					}
 					if (save)
 						JOptionPane.showMessageDialog(null, "Patient records have been saved","Patient record", JOptionPane.PLAIN_MESSAGE);
-					T_name.setEditable(false);
-					T_HKID.setEditable(false);
-					T_gender.setEditable(false);
-					T_tel.setEditable(false);
-					T_dob.setEditable(false);
+					PT_name.setEditable(false);
+					PT_HKID.setEditable(false);
+					PT_gender.setEditable(false);
+					PT_tel.setEditable(false);
+					PT_dob.setEditable(false);
 				} catch (NullFieldException e1){
 					e1.error();
 				}
@@ -501,10 +511,10 @@ public class MyWindow extends JFrame {
 		B_update.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//**HKID cannot be changed**
-				T_name.setEditable(true);
-				T_gender.setEditable(true);
-				T_tel.setEditable(true);
-				T_dob.setEditable(true);
+				PT_name.setEditable(true);
+				PT_gender.setEditable(true);
+				PT_tel.setEditable(true);
+				PT_dob.setEditable(true);
 			}
 		});
 		B_update.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -544,16 +554,16 @@ public class MyWindow extends JFrame {
 		B_menu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				patient = null;
-				T_name.setEditable(true);
-				T_gender.setEditable(true);
-				T_tel.setEditable(true);
-				T_dob.setEditable(true);
-				T_HKID.setEditable(true);
-				T_name.setText("");
-				T_gender.setText("");
-				T_tel.setText("");
-				T_dob.setText("");
-				T_HKID.setText("");
+				PT_name.setEditable(true);
+				PT_gender.setEditable(true);
+				PT_tel.setEditable(true);
+				PT_dob.setEditable(true);
+				PT_HKID.setEditable(true);
+				PT_name.setText("");
+				PT_gender.setText("");
+				PT_tel.setText("");
+				PT_dob.setText("");
+				PT_HKID.setText("");
 				cardLayout.show(contentPane, "Menu");
 			}
 		});
@@ -563,16 +573,16 @@ public class MyWindow extends JFrame {
 
 		//after search patient, get and show the patient record
 		if (patient != null){
-			T_name.setText(patient.getName());
-			System.out.println("NAME:" + patient.getName());
-			T_HKID.setText(patient.getHKID());
-			T_gender.setText(Character.toString(patient.getGender()));
-			T_dob.setText(patient.getDob_S());
-			T_name.setEditable(false);
-			T_HKID.setEditable(false);
-			T_gender.setEditable(false);
-			T_tel.setEditable(false);
-			T_dob.setEditable(false);
+			PT_name.setText(patient.getName());
+			PT_HKID.setText(patient.getHKID());
+			PT_gender.setText(Character.toString(patient.getGender()));
+			PT_dob.setText(patient.getDob_S());
+			PT_tel.setText(patient.getTelephone());
+			PT_name.setEditable(false);
+			PT_HKID.setEditable(false);
+			PT_gender.setEditable(false);
+			PT_tel.setEditable(false);
+			PT_dob.setEditable(false);
 		}
 
 	}
@@ -720,6 +730,33 @@ public class MyWindow extends JFrame {
 	//***********************************************************************
 	//***********************Patient booking Page****************************
 	//***********************************************************************
+	
+	private void addToWindow(){
+		PT_name.setBounds(179, 30, 501, 32);
+		color1.add(PT_name);
+		PT_name.setFont(new Font("Arial", Font.PLAIN, 20));
+		PT_name.setColumns(10);
+		
+		PT_HKID.setBounds(179,112,163,32);
+		color1.add(PT_HKID);
+		PT_HKID.setFont(new Font("Arial", Font.PLAIN, 25));
+		PT_HKID.setColumns(10);
+		
+		PT_gender.setBounds(547, 112, 133, 32);
+		color1.add(PT_gender);
+		PT_gender.setFont(new Font("Arial", Font.PLAIN, 20));
+		PT_gender.setColumns(10);
+		
+		PT_dob.setFont(new Font("Arial", Font.PLAIN, 25));
+		PT_dob.setBounds(179,194,163,32);
+		color1.add(PT_dob);
+		PT_dob.setColumns(10);
+		
+		PT_tel.setFont(new Font("Arial", Font.PLAIN, 25));
+		PT_tel.setBounds(516,194,164,32);
+		color1.add(PT_tel);
+		PT_tel.setColumns(10);
+	}
 
 	
 	/**
@@ -744,6 +781,11 @@ public class MyWindow extends JFrame {
 		p_searchPage(db);
 		contentPane.add(p_searchPane, "Search");
 		patientPage(db);
+		
+		
+		addToWindow();
+		
+		
 		contentPane.add(patientPane, "Patient");
 		p_bookingPage();
 		contentPane.add(p_bookingPane, "Booking");
