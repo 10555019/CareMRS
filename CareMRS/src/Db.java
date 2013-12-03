@@ -18,6 +18,8 @@ public class Db implements Serializable{
 		while (index < getPatientSize()){
 			if (patient.getHKID().compareTo(this.patient.get(index).getHKID())>0)
 				index++;
+			else
+				break;
 		}
 		this.patient.add(index, patient);
 	}
