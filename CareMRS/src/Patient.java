@@ -99,8 +99,8 @@ public class Patient {
 		dob.set(year, month-1, day);
 	}
 
-	public LinkedList<PBooking> getBooking() {
-		return booking;
+	public PBooking getBooking(int index) {
+		return booking.get(index);
 	}
 
 	public void setBooking(LinkedList<PBooking> booking) {
@@ -114,5 +114,7 @@ public class Patient {
 	public void setRecord(LinkedList<TreatmentRec> record) {
 		this.record = record;
 	}
-
+	public void Book(){
+		
+	}
 }
