@@ -42,16 +42,8 @@ public class aaa extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton btnBooking = new JButton("Booking");
-		btnBooking.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		btnBooking.setBounds(100, 200, 282, 108);
-		contentPane.add(btnBooking);
-		
 		JButton btnModifyOpeningHour = new JButton("Modify Opening Hour");
-		btnModifyOpeningHour.setBounds(100, 367, 282, 108);
+		btnModifyOpeningHour.setBounds(103, 200, 282, 108);
 		contentPane.add(btnModifyOpeningHour);
 		
 		JButton btnModifyTreatmentsOf = new JButton("Modify Treatment(s) of Patient");
@@ -63,7 +55,7 @@ public class aaa extends JFrame {
 		contentPane.add(btnModifyTreatmentsOf);
 		
 		JButton btnModifySpecialCondition = new JButton("Modify Special Condition for Patient");
-		btnModifySpecialCondition.setBounds(498, 367, 282, 108);
+		btnModifySpecialCondition.setBounds(103, 367, 282, 108);
 		contentPane.add(btnModifySpecialCondition);
 		
 		JLabel lblAdminPage = new JLabel("Admin Page");
@@ -72,7 +64,7 @@ public class aaa extends JFrame {
 		contentPane.add(lblAdminPage);
 		
 		JButton btnMenu = new JButton("Menu");
-		btnMenu.setBounds(303, 526, 282, 108);
+		btnMenu.setBounds(500, 367, 282, 108);
 		contentPane.add(btnMenu);
 	}
 }
