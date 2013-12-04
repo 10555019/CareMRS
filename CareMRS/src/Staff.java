@@ -2,7 +2,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 
-public class Staff{
+public class Staff implements Serializable{
 	protected String name;
 	protected String userName; //used to login to the system, so needed to be UNIQUE
 	protected String password; //used to login to the system, can be same for different user
