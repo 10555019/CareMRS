@@ -12,10 +12,10 @@ public class Doctor extends Staff implements Serializable{
 		this.room = room;
 	}
 	
-	public static int doctorSearch(Db db, String Username){
+	public static int doctorSearch(Db db, LoginAccount loginAccount, String Username){
 		int i = 0;
-		while (db.getDoctor(i) != null){
-			if (Username.equals(db.getDoctor(i).userName))
+		while (loginAccount.getDoctor(i) != null){
+			if (Username.equals(loginAccount.getDoctor(i).userName))
 				return i;
 			i++;
 		}

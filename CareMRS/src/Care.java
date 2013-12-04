@@ -16,13 +16,14 @@ public class Care {
 		/************************************************************************/
 		
 		final Db db = new Db();
+		final LoginAccount loginAccount = new LoginAccount();
 		
 		//load login information
-		File file = new File("db.sav");
+		File file = new File("dat.sav");
 		if (!file.exists()){
 			//first time use
 			Admin admin = new Admin("Superusr","user","user");
-			db.addAdmin(admin);
+			loginAccount.addAdmin(admin);
 		}
 		
 		EventQueue.invokeLater(new Runnable() {

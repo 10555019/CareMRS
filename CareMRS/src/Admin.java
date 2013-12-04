@@ -8,11 +8,11 @@ public class Admin extends Staff implements Serializable{
 		this.password = password;
 	}
 	
-	public static int adminSearch(Db db,String Username){
+	public static int adminSearch(Db db, LoginAccount loginAccount, String Username){
 		int i = 0;
-		while (db.getAdmin(i) != null)
+		while (loginAccount.getAdmin(i) != null)
 		{
-			if (Username.equals(db.getAdmin(i).userName))
+			if (Username.equals(loginAccount.getAdmin(i).userName))
 				return i;
 			i++;
 		}
