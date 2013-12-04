@@ -98,6 +98,8 @@ public class Db implements Serializable{
 				
 				System.out.println("Load: " + inFile.length());
 				
+				System.out.println("Load: " + tmpDb.getAdmin(0).getUserName());
+				
 				inObjectStream.close();
 				return tmpDb;
 			}else{
