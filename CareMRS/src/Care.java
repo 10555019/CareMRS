@@ -18,7 +18,7 @@ public class Care {
 		final Db db = new Db();
 		
 		//load login information
-		File file = new File("dat.sav");
+		File file = new File("db.sav");
 		if (!file.exists()){
 			//first time use
 			Admin admin = new Admin("Superusr","user","user");

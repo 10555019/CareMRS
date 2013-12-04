@@ -107,7 +107,21 @@ public class Patient implements Serializable{
 	public void setRecord(LinkedList<TreatmentRec> record) {
 		this.record = record;
 	}
-	public void Book(){
+	public void book(){
+		
+		/*
+		
+		
+		
+		
+		Booking booking = new Booking()
+		
+		
+		*/
+		
+		
+		
+		
 		int cyear = current.get(Calendar.YEAR);
 		int diff1 = cyear-dob.get(1);
 		int cmonth = current.get(Calendar.MONTH);

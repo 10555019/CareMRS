@@ -13,6 +13,10 @@ public class Db implements Serializable{
 	private Clinic clinic = new Clinic();
 	private String filePath = "db.sav";
 	
+	public void addBooking(Booking booking){
+		this.booking.add(booking);
+	}
+	
 	public void addPatient(Patient patient){
 		int index = 0;
 		while (index < getPatientSize()){
@@ -83,7 +87,7 @@ public class Db implements Serializable{
 
 	}
 
-	public Db load(){
+	public Db load(Db db){
 		try{
 			File inFile = new File(filePath);
 
@@ -91,17 +95,20 @@ public class Db implements Serializable{
 				FileInputStream inFileStream = new FileInputStream(inFile);
 				ObjectInputStream inObjectStream = new ObjectInputStream(inFileStream);
 				Db tmpDb = (Db) inObjectStream.readObject();
+				
+				System.out.println("Load: " + inFile.length());
+				
 				inObjectStream.close();
 				return tmpDb;
 			}else{
-				return this;
+				return db;
 			}
 		} catch (IOException e){
 			System.out.println("inFile IOException");
-			return this;
+			return db;
 		} catch (ClassNotFoundException e){
 			System.out.println("ClassNotFoundException");
-			return this;
+			return db;
 		}
 	}
 
@@ -111,6 +118,11 @@ public class Db implements Serializable{
 			FileOutputStream outFileStream = new FileOutputStream(outFile);
 			ObjectOutputStream outObjectStream = new ObjectOutputStream(outFileStream);
 			outObjectStream.writeObject(db);
+			
+			System.out.println("Save: " + outFile.length());
+			
+			System.out.println("Save: " + db.getAdmin(0).getUserName());
+			
 			outObjectStream.close();
 		} catch (IOException e){
 			System.out.println("outFile IOException");

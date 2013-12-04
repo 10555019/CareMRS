@@ -53,6 +53,7 @@ public class MyWindow extends JFrame implements Serializable{
 	//**********Data Member of MyWindow**********//
 	
 	private Db db;
+	private String filePath = "db.sav";
 	
 	//private MaskFormatter idFormatter = new MaskFormatter("U######'(#')");
 	//private MaskFormatter telFormatter = new MaskFormatter("####' ####");
@@ -71,15 +72,14 @@ public class MyWindow extends JFrame implements Serializable{
 	private JTextField L_userNameField = new JTextField();
 	private JPasswordField L_passwordField = new JPasswordField();
 	
-	
 	private JTextField SPT_HKID = new JTextField();
 	//private JFormattedTextField SPT_HKID = new JFormattedTextField(idFormatter);
 	
+	private JButton PB_update = new JButton("Update");
+	private JButton PB_save = new JButton("Save");
 	
-	
-	int mode=0; //1:doctor 2:admin
-	
-	private String filePath = "db.sav";
+	private int mode=0; //1:doctor 2:admin
+	private boolean saveStatus = false;
 	
 	private JPanel color1;
 	private JPanel contentPane;
@@ -124,7 +124,7 @@ public class MyWindow extends JFrame implements Serializable{
 		account.add(logout);
 		class exitaction implements ActionListener{
 			public void actionPerformed (ActionEvent e){
-				logout(db);
+				logout();
 			}
 		}
 		logout.addActionListener(new exitaction());
@@ -138,7 +138,11 @@ public class MyWindow extends JFrame implements Serializable{
 		//temp record for testing..........
 		
 		if ((mode = Doctor.checkLogin(db,userName,password))!=0){ //when password match, saved mode : 1:Doctor 2:admin
-			db = db.load(); //load data from file
+			db = db.load(db);
+			
+			if (db.getPatientSize()>0)
+				System.out.println("login: " + db.getPatient(0).getName());
+			
 			cardLayout.show(contentPane, "Menu"); //change panel
 			setJMenuBar(menubar); //show the menu bar
 		}
@@ -147,7 +151,7 @@ public class MyWindow extends JFrame implements Serializable{
 	}
 
 	//Logout method
-	private void logout(Db db){
+	private void logout(){
 		db.save(db); //save data in db
 		cardLayout.show(contentPane, "Login");
 		setJMenuBar(null); //disable the menubar when logout
@@ -238,6 +242,8 @@ public class MyWindow extends JFrame implements Serializable{
 				} catch (ParseException e1) {
 					e1.printStackTrace();
 				}
+				PB_update.setEnabled(false);
+				PB_save.setEnabled(true);
 				cardLayout.show(contentPane, "Patient");
 			}
 		});
@@ -272,7 +278,7 @@ public class MyWindow extends JFrame implements Serializable{
 		JButton lbl_logOut = new JButton("Log out");
 		lbl_logOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				logout(db);
+				logout();
 			}
 		});
 		lbl_logOut.setFont(new Font("Arial", Font.PLAIN, 25));
@@ -318,6 +324,8 @@ public class MyWindow extends JFrame implements Serializable{
 				if (index != -1){
 					patient = db.getPatient(index);
 					SPT_HKID.setText(null);
+					PB_save.setEnabled(false);
+					PB_update.setEnabled(true);
 					cardLayout.show(contentPane, "Patient");
 					try {
 						patientPage();
@@ -411,73 +419,6 @@ public class MyWindow extends JFrame implements Serializable{
 		lbl_tel.setFont(new Font("Arial", Font.PLAIN, 20));
 		lbl_tel.setBounds(373, 194, 133, 32);
 		color1.add(lbl_tel);
-		
-		//*****B_save*****
-		JButton B_save = new JButton("Save");
-		B_save.setBounds(693, 227, 98, 32);
-		color1.add(B_save);
-		B_save.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try{ //Saving or creating patient record
-					int index = Patient.patientSearch(db, PT_HKID.getText());
-					boolean save = false; //used to toggle save message
-					if (PT_HKID.getText().equals("       ( )")) throw new NullFieldException(); //primary key should not be null
-					if (patient==null){
-						//need to create a new patient
-						if (index == -1){
-							patient = new Patient(PT_name.getText(),PT_HKID.getText(),PT_tel.getText(),PT_gender.getText().charAt(0),PT_dob.getText());
-							db.addPatient(patient);
-							save = true;
-						} else{
-							if (JOptionPane.showConfirmDialog(null, "Same patient found, amend record?","Patient record", JOptionPane.YES_NO_OPTION)==1){
-								patient = new Patient(PT_name.getText(),PT_HKID.getText(),PT_tel.getText(),PT_gender.getText().charAt(0),PT_dob.getText());
-								db.addPatient(patient);
-								save = true;
-							} else {
-								JOptionPane.showMessageDialog(null, "Original Patient record will be shown","Patient record", JOptionPane.PLAIN_MESSAGE);
-								patient = db.getPatient(index);
-								PT_name.setText(patient.getName());
-								PT_HKID.setText(patient.getHKID());
-								PT_gender.setText(Character.toString(patient.getGender()));
-								PT_dob.setText(patient.getDob_S());
-							}
-						}
-					} else {
-						//amend current patient record
-						db.getPatient(index).setName(PT_name.getText());
-						db.getPatient(index).setTelephone(PT_tel.getText());
-						db.getPatient(index).setGender(PT_gender.getText().charAt(0));
-						db.getPatient(index).setDob(PT_dob.getText());
-						save = true;
-					}
-					if (save)
-						JOptionPane.showMessageDialog(null, "Patient records have been saved","Patient record", JOptionPane.PLAIN_MESSAGE);
-					PT_name.setEditable(false);
-					PT_HKID.setEditable(false);
-					PT_gender.setEditable(false);
-					PT_tel.setEditable(false);
-					PT_dob.setEditable(false);
-				} catch (NullFieldException e1){
-					e1.error();
-				}
-			}
-		});
-		B_save.setFont(new Font("Arial", Font.PLAIN, 20));
-
-		//*****B_update*****
-		JButton B_update = new JButton("Update");
-		B_update.setBounds(816, 227, 98, 32);
-		color1.add(B_update);
-		B_update.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				//**HKID cannot be changed**
-				PT_name.setEditable(true);
-				PT_gender.setEditable(true);
-				PT_tel.setEditable(true);
-				PT_dob.setEditable(true);
-			}
-		});
-		B_update.setFont(new Font("Arial", Font.PLAIN, 20));
 
 		//*****action button*****
 		JButton B_booking = new JButton("Booking");
@@ -487,27 +428,17 @@ public class MyWindow extends JFrame implements Serializable{
 			}
 		});
 		B_booking.setFont(new Font("Arial", Font.PLAIN, 25));
-		B_booking.setBounds(101, 384, 190, 100);
+		B_booking.setBounds(201, 384, 190, 100);
 		patientPane.add(B_booking);
 
 		JButton B_treatment = new JButton("Treatment");
 		B_treatment.setFont(new Font("Arial", Font.PLAIN, 25));
-		B_treatment.setBounds(392, 384, 190, 100);
+		B_treatment.setBounds(592, 384, 190, 100);
 		patientPane.add(B_treatment);
-
-		JButton button_1 = new JButton("New button");
-		button_1.setFont(new Font("Arial", Font.PLAIN, 25));
-		button_1.setBounds(683, 384, 190, 100);
-		patientPane.add(button_1);
-
-		JButton button_2 = new JButton("New button");
-		button_2.setFont(new Font("Arial", Font.PLAIN, 25));
-		button_2.setBounds(101, 506, 190, 100);
-		patientPane.add(button_2);
 
 		JButton B_log = new JButton("Log");
 		B_log.setFont(new Font("Arial", Font.PLAIN, 25));
-		B_log.setBounds(392, 506, 190, 100);
+		B_log.setBounds(201, 506, 190, 100);
 		patientPane.add(B_log);
 
 		JButton B_menu = new JButton("Menu");
@@ -528,7 +459,7 @@ public class MyWindow extends JFrame implements Serializable{
 			}
 		});
 		B_menu.setFont(new Font("Arial", Font.PLAIN, 25));
-		B_menu.setBounds(683, 506, 190, 100);
+		B_menu.setBounds(592, 506, 190, 100);
 		patientPane.add(B_menu);
 
 		//after search patient, get and show the patient record
@@ -543,6 +474,7 @@ public class MyWindow extends JFrame implements Serializable{
 			PT_gender.setEditable(false);
 			PT_tel.setEditable(false);
 			PT_dob.setEditable(false);
+			saveStatus = true;
 		}
 
 	}
@@ -681,6 +613,11 @@ public class MyWindow extends JFrame implements Serializable{
 		p_bookingPane.add(btnNewButton);
 		
 		JButton btnBackToPatient = new JButton("Patient");
+		btnBackToPatient.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				cardLayout.show(contentPane, "Patient");
+			}
+		});
 		btnBackToPatient.setFont(new Font("Arial", Font.PLAIN, 20));
 		btnBackToPatient.setBounds(827, 585, 116, 47);
 		p_bookingPane.add(btnBackToPatient);
@@ -742,6 +679,79 @@ public class MyWindow extends JFrame implements Serializable{
 		L_passwordField.setFont(new Font("Arial", Font.PLAIN, 20));
 		L_passwordField.setBounds(439, 342, 253, 30);
 		loginPane.add(L_passwordField);
+		
+		//Patient page button
+		PB_save.setBounds(693, 227, 98, 32);
+		color1.add(PB_save);
+		PB_save.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try{ //Saving or creating patient record
+					int index = Patient.patientSearch(db, PT_HKID.getText());
+					boolean save = false; //used to toggle save message
+					if (PT_HKID.getText().equals("")) throw new NullFieldException(); //primary key should not be null
+					if (patient==null){
+						//need to create a new patient
+						if (index == -1){
+							patient = new Patient(PT_name.getText(),PT_HKID.getText(),PT_tel.getText(),PT_gender.getText().charAt(0),PT_dob.getText());
+							db.addPatient(patient);
+							save = true;
+						} else{
+							if (JOptionPane.showConfirmDialog(null, "Same patient found, amend record?","Patient record", JOptionPane.YES_NO_OPTION)==1){
+								patient = new Patient(PT_name.getText(),PT_HKID.getText(),PT_tel.getText(),PT_gender.getText().charAt(0),PT_dob.getText());
+								db.addPatient(patient);
+								save = true;
+							} else {
+								JOptionPane.showMessageDialog(null, "Original Patient record will be shown","Patient record", JOptionPane.PLAIN_MESSAGE);
+								patient = db.getPatient(index);
+								PT_name.setText(patient.getName());
+								PT_HKID.setText(patient.getHKID());
+								PT_gender.setText(Character.toString(patient.getGender()));
+								PT_dob.setText(patient.getDob_S());
+							}
+						}
+					} else {
+						//amend current patient record
+						db.getPatient(index).setName(PT_name.getText());
+						db.getPatient(index).setTelephone(PT_tel.getText());
+						db.getPatient(index).setGender(PT_gender.getText().charAt(0));
+						db.getPatient(index).setDob(PT_dob.getText());
+						save = true;
+					}
+					if (save)
+						JOptionPane.showMessageDialog(null, "Patient records have been saved","Patient record", JOptionPane.PLAIN_MESSAGE);
+					PT_name.setEditable(false);
+					PT_HKID.setEditable(false);
+					PT_gender.setEditable(false);
+					PT_tel.setEditable(false);
+					PT_dob.setEditable(false);
+					PB_save.setEnabled(false);
+					PB_update.setEnabled(true);
+				} catch (NullFieldException e1){
+					e1.error();
+				} 
+			}
+		});
+		PB_save.setFont(new Font("Arial", Font.PLAIN, 20));
+		
+		PB_update.setBounds(816, 227, 98, 32);
+		color1.add(PB_update);
+		PB_update.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//**HKID cannot be changed**
+				saveStatus = false;
+				PT_name.setEditable(true);
+				PT_gender.setEditable(true);
+				PT_tel.setEditable(true);
+				PT_dob.setEditable(true);
+				PB_update.setEnabled(false);
+				PB_save.setEnabled(true);
+			}
+		});
+		PB_update.setFont(new Font("Arial", Font.PLAIN, 20));
+		
+		
+		
+		
 	}
 
 	
@@ -768,11 +778,7 @@ public class MyWindow extends JFrame implements Serializable{
 		p_searchPage();
 		contentPane.add(p_searchPane, "Search");
 		patientPage();
-		
-		
 		addToWindow();
-		
-		
 		contentPane.add(patientPane, "Patient");
 		p_bookingPage();
 		contentPane.add(p_bookingPane, "Booking");
