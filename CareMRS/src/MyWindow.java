@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import java.awt.Font;
 
 import javax.swing.ButtonGroup;
+import javax.swing.Icon;
 import javax.swing.JFormattedTextField;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -267,6 +268,7 @@ public class MyWindow extends JFrame implements Serializable{
 
 		//*****Patient_New*****
 		JButton B_new = new JButton("New");
+		B_new.setIcon(new ImageIcon(getClass().getResource("plus.png")));
 		B_new.setBackground(new Color(245, 222, 179));
 		B_new.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -282,11 +284,12 @@ public class MyWindow extends JFrame implements Serializable{
 			}
 		});
 		B_new.setFont(new Font("Arial", Font.PLAIN, 25));
-		B_new.setBounds(158, 219, 136, 56);
+		B_new.setBounds(158, 219, 118, 56);
 		menuPane.add(B_new);
 
 		//*****Patient_Search*****
 		JButton B_search = new JButton("Search");
+		B_search.setIcon(new ImageIcon(getClass().getResource("search.png")));
 		B_search.setBackground(new Color(245, 222, 179));
 		B_search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -294,7 +297,7 @@ public class MyWindow extends JFrame implements Serializable{
 			}
 		});
 		B_search.setFont(new Font("Arial", Font.PLAIN, 25));
-		B_search.setBounds(304, 219, 136, 56);
+		B_search.setBounds(286, 219, 154, 56);
 		menuPane.add(B_search);
 
 		//*****Clinic*****
@@ -311,21 +314,24 @@ public class MyWindow extends JFrame implements Serializable{
 
 		//*****My Timetable*****
 		JButton B_myTimetable = new JButton("My Timetable");
+		B_myTimetable.setIcon(new ImageIcon(getClass().getResource("timetable.png")));
+		B_myTimetable.setBackground(new Color(224, 255, 255));
 		B_myTimetable.setFont(new Font("Arial", Font.PLAIN, 25));
 		B_myTimetable.setBounds(537, 167, 282, 108);
 		menuPane.add(B_myTimetable);
 
 		//*****Log out*****
-		JButton lbl_logOut = new JButton("Log out");
-		lbl_logOut.setBackground(new Color(255, 192, 203));
-		lbl_logOut.addActionListener(new ActionListener() {
+		JButton B_logOut = new JButton("Log out");
+		B_logOut.setIcon(new ImageIcon(getClass().getResource("logout.png")));
+		B_logOut.setBackground(new Color(255, 192, 203));
+		B_logOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				logout();
 			}
 		});
-		lbl_logOut.setFont(new Font("Arial", Font.PLAIN, 25));
-		lbl_logOut.setBounds(537, 352, 282, 108);
-		menuPane.add(lbl_logOut);
+		B_logOut.setFont(new Font("Arial", Font.PLAIN, 25));
+		B_logOut.setBounds(537, 352, 282, 108);
+		menuPane.add(B_logOut);
 	}
 	//*********************************************************************
 	//******************************Menu Page******************************
