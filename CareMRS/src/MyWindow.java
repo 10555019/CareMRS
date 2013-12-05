@@ -58,6 +58,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+import java.awt.Component;
 
 
 public class MyWindow extends JFrame implements Serializable{
@@ -66,7 +67,7 @@ public class MyWindow extends JFrame implements Serializable{
 	//**********Data Member of MyWindow**********//
 	//Database Variables
 	private Db db;
-	private LoginAccount loginAccount;
+	private LogAc logAc;
 	private String filePath = "db.sav";
 	
 	//MaskFormatter
@@ -92,6 +93,9 @@ public class MyWindow extends JFrame implements Serializable{
 	
 	//Patient Booking Page
 	private JFormattedTextField PBT_date = new JFormattedTextField(dateFormatter);
+	private JComboBox<String> PBCB_doctor = new JComboBox<String>();
+	private JButton PBB_myTimetable = new JButton("My Timetable");
+	private JButton PBB_account = new JButton("Account");
 	
 	//Clinic
 	private JTextField SCT_p50;
@@ -103,7 +107,7 @@ public class MyWindow extends JFrame implements Serializable{
 	private JTable MTTa_table;
 	
 	//Mode variables
-	private int mode=0; //1:doctor 2:admin
+	private int mode; //1:doctor 2:admin
 	private boolean saveStatus = false;
 	
 	//Window Panels
@@ -168,19 +172,11 @@ public class MyWindow extends JFrame implements Serializable{
 	private void login(String userName, char[] password){
 		
 		//load login information
-		File file = new File(filePath);
-		if (!file.exists()){
-			//first time use
-			Admin admin = new Admin("Superusr","user","user");
-			loginAccount.addAdmin(admin);
-		} else{
-			//read loginAccount information
-			loginAccount = loginAccount.load(loginAccount);
-		}
-		
-		if ((mode = Doctor.checkLogin(db,loginAccount,userName,password))!=0){
+		logAc = logAc.load(logAc);
+		if ((mode = Doctor.checkLogin(db,logAc,userName,password))!=0){
 			//when password match, saved mode : 1:Doctor 2:admin
 			db = db.load(db);
+			menuPage();
 			cardLayout.show(contentPane, "Menu"); //change panel
 			setJMenuBar(menubar); //show the menu bar
 		}
@@ -191,7 +187,7 @@ public class MyWindow extends JFrame implements Serializable{
 	//Logout method
 	private void logout(){
 		db.save(); //save data in db
-		loginAccount.save();
+		logAc.save();
 		cardLayout.show(contentPane, "Login");
 		setJMenuBar(null); //disable the menubar when logout
 	}
@@ -321,13 +317,19 @@ public class MyWindow extends JFrame implements Serializable{
 		B_clinic.setBounds(158, 352, 282, 108);
 		menuPane.add(B_clinic);
 
+		//only show Account or Timetable
+
 		//*****My Timetable*****
-		JButton B_myTimetable = new JButton("My Timetable");
-		B_myTimetable.setIcon(new ImageIcon(getClass().getResource("timetable.png")));
-		B_myTimetable.setBackground(new Color(224, 255, 255));
-		B_myTimetable.setFont(new Font("Arial", Font.PLAIN, 25));
-		B_myTimetable.setBounds(537, 167, 282, 108);
-		menuPane.add(B_myTimetable);
+		if (mode==1){
+			PBB_myTimetable.setVisible(true);
+			PBB_account.setVisible(false);
+		}
+
+		//*****Account*****
+		if (mode==2){
+			PBB_account.setVisible(true);
+			PBB_myTimetable.setVisible(false);
+		}
 
 		//*****Log out*****
 		JButton B_logOut = new JButton("Log out");
@@ -486,9 +488,10 @@ public class MyWindow extends JFrame implements Serializable{
 		B_booking.setIcon(new ImageIcon(getClass().getResource("booking.png")));
 		B_booking.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (saveStatus)
+				if (saveStatus){
+					p_bookingPage();
 					cardLayout.show(contentPane, "Booking");
-				else
+				} else
 					JOptionPane.showMessageDialog(null, "Please save the patient information first.","Patient", JOptionPane.ERROR_MESSAGE);
 			}
 		});
@@ -584,8 +587,14 @@ public class MyWindow extends JFrame implements Serializable{
 		JLabel lbl_date = new JLabel("Date:");
 		lbl_date.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_date.setFont(new Font("Arial", Font.PLAIN, 20));
-		lbl_date.setBounds(81, 103, 57, 24);
+		lbl_date.setBounds(83, 82, 57, 24);
 		p_bookingPane.add(lbl_date);
+		
+		JLabel lblDdmmyyyy = new JLabel("dd/mm/yyyy");
+		lblDdmmyyyy.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblDdmmyyyy.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblDdmmyyyy.setBounds(22, 104, 116, 24);
+		p_bookingPane.add(lblDdmmyyyy);
 		
 		JLabel lbl_doctor = new JLabel("Doctor:");
 		lbl_doctor.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -597,16 +606,9 @@ public class MyWindow extends JFrame implements Serializable{
 		B_update.setFont(new Font("Arial", Font.PLAIN, 20));
 		B_update.setBounds(428, 138, 101, 47);
 		p_bookingPane.add(B_update);
-		
-		PBT_date.setFont(new Font("Arial", Font.PLAIN, 20));
-		PBT_date.setBounds(148, 100, 127, 29);
-		p_bookingPane.add(PBT_date);
-		
-		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setFont(new Font("Arial", Font.PLAIN, 20));
-		comboBox.setBounds(150, 156, 206, 24);
-		p_bookingPane.add(comboBox);
+
+		PBCB_doctor.removeAllItems();
+		Doctor.addCombo(logAc, PBCB_doctor);
 		
 		JLabel lblNewLabel_1 = new JLabel("10:00     11:00     12:00     15:00     16:00     17:00     18:00     19:00");
 		lblNewLabel_1.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -687,10 +689,6 @@ public class MyWindow extends JFrame implements Serializable{
 		B_book.setBounds(782, 280, 109, 47);
 		p_bookingPane.add(B_book);
 		
-		JList list = new JList();
-		list.setBounds(62, 357, 828, 211);
-		p_bookingPane.add(list);
-		
 		JButton btnNewButton = new JButton("Delete");
 		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 20));
 		btnNewButton.setBounds(685, 585, 116, 47);
@@ -705,6 +703,10 @@ public class MyWindow extends JFrame implements Serializable{
 		btnBackToPatient.setFont(new Font("Arial", Font.PLAIN, 20));
 		btnBackToPatient.setBounds(827, 585, 116, 47);
 		p_bookingPane.add(btnBackToPatient);
+		
+		JPanel PBP_pane = new JPanel();
+		PBP_pane.setBounds(33, 342, 879, 225);
+		p_bookingPane.add(PBP_pane);
 		
 		
 	}
@@ -914,6 +916,7 @@ public class MyWindow extends JFrame implements Serializable{
 			}});
 
 		JScrollPane MTjp = new JScrollPane(MTTa_table);
+		MTjp.setFont(new Font("Arial", Font.PLAIN, 18));
 		MTP_pane.add(MTjp);
 
 		
@@ -995,6 +998,23 @@ public class MyWindow extends JFrame implements Serializable{
 		c_OHPane = new JPanel();
 		c_OHPane.setBackground(SystemColor.activeCaption);
 		c_OHPane.setLayout(null);
+		
+		JLabel lbl_OpeningHour = new JLabel("Opening Hour");
+		lbl_OpeningHour.setHorizontalAlignment(SwingConstants.CENTER);
+		lbl_OpeningHour.setFont(new Font("Arial", Font.BOLD, 30));
+		lbl_OpeningHour.setBounds(372, 20, 240, 47);
+		c_OHPane.add(lbl_OpeningHour);
+		
+		JButton B_clinic = new JButton("Clinic");
+		B_clinic.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(contentPane, "Clinic");
+			}
+		});
+		B_clinic.setFont(new Font("Arial", Font.PLAIN, 20));
+		B_clinic.setBackground(new Color(255, 192, 203));
+		B_clinic.setBounds(420, 307, 143, 47);
+		c_OHPane.add(B_clinic);
 	}
 	//***********************************************************************
 	//***************************C OH Page***********************************
@@ -1010,6 +1030,7 @@ public class MyWindow extends JFrame implements Serializable{
 	
 	//*******************Construct Label and Button**************************
 	private void addToWindow(){
+		//Patient page
 		PT_name.setBounds(179, 30, 501, 32);
 		color1.add(PT_name);
 		PT_name.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -1109,6 +1130,7 @@ public class MyWindow extends JFrame implements Serializable{
 					PT_dob.setEditable(false);
 					PB_save.setEnabled(false);
 					PB_update.setEnabled(true);
+					saveStatus = true;
 				} catch (NullFieldException e1){
 					e1.error();
 				} 
@@ -1132,6 +1154,27 @@ public class MyWindow extends JFrame implements Serializable{
 			}
 		});
 		PB_update.setFont(new Font("Arial", Font.PLAIN, 20));
+		
+		//Patient Booking
+		PBT_date.setFont(new Font("Arial", Font.PLAIN, 20));
+		PBT_date.setBounds(150, 79, 127, 29);
+		p_bookingPane.add(PBT_date);
+		
+		PBCB_doctor.setFont(new Font("Arial", Font.PLAIN, 20));
+		PBCB_doctor.setBounds(150, 156, 206, 24);
+		p_bookingPane.add(PBCB_doctor);
+		
+		PBB_myTimetable.setIcon(new ImageIcon(getClass().getResource("timetable.png")));
+		PBB_myTimetable.setBackground(new Color(224, 255, 255));
+		PBB_myTimetable.setFont(new Font("Arial", Font.PLAIN, 25));
+		PBB_myTimetable.setBounds(537, 167, 282, 108);
+		menuPane.add(PBB_myTimetable);
+		
+		PBB_account.setIcon(new ImageIcon(getClass().getResource("account.png")));
+		PBB_account.setFont(new Font("Arial", Font.PLAIN, 25));
+		PBB_account.setBackground(new Color(224, 255, 255));
+		PBB_account.setBounds(537, 167, 282, 108);
+		menuPane.add(PBB_account);
 
 	}
 	//*******************Construct Label and Button**************************
@@ -1141,10 +1184,9 @@ public class MyWindow extends JFrame implements Serializable{
 	 * Create the frame.
 	 * @throws ParseException 
 	 */
-	public MyWindow(Db db, LoginAccount loginAccount) throws ParseException {
+	public MyWindow(Db db, LogAc logAc) throws ParseException {
 		this.db = db;
-		this.loginAccount = loginAccount;
-		String filePath = "dat.sav";
+		this.logAc = logAc;
 		setResizable(false);
 		setTitle("CareMRS");
 		setIconImage(new ImageIcon(getClass().getResource("C.png")).getImage());
@@ -1162,7 +1204,6 @@ public class MyWindow extends JFrame implements Serializable{
 		p_searchPage();
 		contentPane.add(p_searchPane, "Search");
 		patientPage();
-		addToWindow();
 		contentPane.add(patientPane, "Patient");
 		p_bookingPage();
 		contentPane.add(p_bookingPane, "Booking");
@@ -1175,22 +1216,7 @@ public class MyWindow extends JFrame implements Serializable{
 		timetablePage();
 		contentPane.add(timetablePane, "Timetable");
 		
-		JLabel lbl_OpeningHour = new JLabel("Opening Hour");
-		lbl_OpeningHour.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_OpeningHour.setFont(new Font("Arial", Font.BOLD, 30));
-		lbl_OpeningHour.setBounds(372, 20, 240, 47);
-		c_OHPane.add(lbl_OpeningHour);
-		
-		JButton B_clinic = new JButton("Clinic");
-		B_clinic.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				cardLayout.show(contentPane, "Clinic");
-			}
-		});
-		B_clinic.setFont(new Font("Arial", Font.PLAIN, 20));
-		B_clinic.setBackground(new Color(255, 192, 203));
-		B_clinic.setBounds(420, 307, 143, 47);
-		c_OHPane.add(B_clinic);
+		addToWindow();
 		
 		login("user","user".toCharArray()); //temp login
 		cardLayout.show(contentPane, "Menu");

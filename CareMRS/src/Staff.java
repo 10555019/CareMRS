@@ -31,19 +31,19 @@ public class Staff implements Serializable{
 		this.password = password;
 	}
 	
-	public static int checkLogin(Db db, LoginAccount loginAccount, String userName, char[] password){
+	public static int checkLogin(Db db, LogAc logAc, String userName, char[] password){
 		int i = 0;
-		while (loginAccount.getDoctor(i)!=null){
-			if (loginAccount.getDoctor(i).getUserName().equals(userName)){
-				if (Arrays.equals(loginAccount.getDoctor(i).getPassword().toCharArray(),password))
+		while (logAc.getDoctor(i)!=null){
+			if (logAc.getDoctor(i).getUserName().equals(userName)){
+				if (Arrays.equals(logAc.getDoctor(i).getPassword().toCharArray(),password))
 					return 1;
 			}
 			i++;
 		}
 		i = 0;
-		while (loginAccount.getAdmin(i)!=null){
-			if (loginAccount.getAdmin(i).getUserName().equals(userName)){
-				if (Arrays.equals(loginAccount.getAdmin(i).getPassword().toCharArray(),password))
+		while (logAc.getAdmin(i)!=null){
+			if (logAc.getAdmin(i).getUserName().equals(userName)){
+				if (Arrays.equals(logAc.getAdmin(i).getPassword().toCharArray(),password))
 					return 2;
 			}
 			i++;

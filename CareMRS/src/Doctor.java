@@ -1,6 +1,8 @@
 import java.io.Serializable;
 import java.util.LinkedList;
 
+import javax.swing.JComboBox;
+
 public class Doctor extends Staff implements Serializable{
 	private int room; // which room the doctor is using
 	
@@ -12,10 +14,10 @@ public class Doctor extends Staff implements Serializable{
 		this.room = room;
 	}
 	
-	public static int doctorSearch(Db db, LoginAccount loginAccount, String Username){
+	public static int doctorSearch(Db db, LogAc logAc, String Username){
 		int i = 0;
-		while (loginAccount.getDoctor(i) != null){
-			if (Username.equals(loginAccount.getDoctor(i).userName))
+		while (logAc.getDoctor(i) != null){
+			if (Username.equals(logAc.getDoctor(i).userName))
 				return i;
 			i++;
 		}
@@ -28,6 +30,14 @@ public class Doctor extends Staff implements Serializable{
 
 	public void setRoom(int room) {
 		this.room = room;
+	}
+	
+	public static void addCombo(LogAc logAc, JComboBox<String> comboBox){
+		int index = 0;
+		while (logAc.getDoctor(index)!=null){
+			comboBox.addItem(logAc.getDoctor(index).getName());
+			index++;
+		}
 	}
 }
 

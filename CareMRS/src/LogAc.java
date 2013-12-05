@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import javax.swing.JOptionPane;
 
 
-public class LoginAccount implements Serializable{
+public class LogAc implements Serializable{
 	private LinkedList<Doctor> doctor = new LinkedList<Doctor>();
 	private LinkedList<Admin> admin = new LinkedList<Admin>();
 	
@@ -54,25 +54,30 @@ public class LoginAccount implements Serializable{
 			JOptionPane.showMessageDialog(null, "There should be at least one Admin user, user is not deleted","Delete", JOptionPane.ERROR_MESSAGE);
 	}
 	
-	public LoginAccount load(LoginAccount loginAccount){
+	public LogAc load(LogAc logAc){
 		try{
 			File inFile = new File(filePath);
 
 			if (inFile.exists()){
 				FileInputStream inFileStream = new FileInputStream(inFile);
 				ObjectInputStream inObjectStream = new ObjectInputStream(inFileStream);
-				LoginAccount tmplogin = (LoginAccount) inObjectStream.readObject();
+				LogAc tmplogin = (LogAc) inObjectStream.readObject();
 				inObjectStream.close();
 				return tmplogin;
 			}else{
-				return loginAccount;
+				//first time use
+				Admin admin = new Admin("Superusr","user","user");
+				Doctor doctor = new Doctor("Doctor A","doctor","doctor",1);
+				logAc.addAdmin(admin);
+				logAc.addDoctor(doctor);
+				return logAc;
 			}
 		} catch (IOException e){
 			System.out.println("inFile IOException");
-			return loginAccount;
+			return logAc;
 		} catch (ClassNotFoundException e){
 			System.out.println("ClassNotFoundException");
-			return loginAccount;
+			return logAc;
 		}
 	}
 

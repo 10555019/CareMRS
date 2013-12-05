@@ -63,6 +63,7 @@ public class Db implements Serializable{
 				inObjectStream.close();
 				return tmpDb;
 			}else{
+				//first time use
 				return db;
 			}
 		} catch (IOException e){

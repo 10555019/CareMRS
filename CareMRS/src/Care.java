@@ -16,12 +16,12 @@ public class Care {
 		/************************************************************************/
 		
 		final Db db = new Db();
-		final LoginAccount loginAccount = new LoginAccount();
+		final LogAc logAc = new LogAc();
 		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MyWindow frame = new MyWindow(db,loginAccount);
+					MyWindow frame = new MyWindow(db,logAc);
 					
 					frame.setVisible(true);
 				} catch (Exception e) {
