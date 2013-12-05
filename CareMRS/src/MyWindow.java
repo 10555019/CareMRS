@@ -123,6 +123,7 @@ public class MyWindow extends JFrame implements Serializable{
 	private JPanel c_MTPane;
 	private JPanel c_OHPane;
 	private JPanel timetablePane;
+	private JPanel accountPane;
 
 	//Card Layout
 	CardLayout cardLayout = new CardLayout(); //cardLayout, used for different panel
@@ -212,7 +213,8 @@ public class MyWindow extends JFrame implements Serializable{
 		JButton B_login = new JButton("Login");
 		B_login.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				login(L_userNameField.getText(),L_passwordField.getPassword());
+				login("user","user".toCharArray());
+				//login(L_userNameField.getText(),L_passwordField.getPassword());
 				L_userNameField.setText(null);
 				L_passwordField.setText(null);
 			}
@@ -1020,13 +1022,48 @@ public class MyWindow extends JFrame implements Serializable{
 	//***************************C OH Page***********************************
 	//***********************************************************************
 	
+	
+	//***********************************************************************
+	//**************************Account Page*********************************
+	//***********************************************************************	
+	private void accountPage(){
+		accountPane = new JPanel();
+		accountPane.setBackground(SystemColor.activeCaption);
+		accountPane.setLayout(null);
+		
+		JLabel lblAccountSetting = new JLabel("Account Setting");
+		lblAccountSetting.setHorizontalAlignment(SwingConstants.CENTER);
+		lblAccountSetting.setFont(new Font("Arial", Font.BOLD, 30));
+		lblAccountSetting.setBounds(349, 20, 286, 47);
+		accountPane.add(lblAccountSetting);
+		
+		JPanel ACP_panel = new JPanel();
+		ACP_panel.setBackground(SystemColor.activeCaption);
+		ACP_panel.setBounds(478, 107, 448, 390);
+		accountPane.add(ACP_panel);
+	}
+	//***********************************************************************
+	//**************************Account Page*********************************
+	//***********************************************************************	
+	
+	
+	//***********************************************************************
+	//*************************Timetable Page********************************
+	//***********************************************************************	
 	private void timetablePage(){
 		timetablePane = new JPanel();
 		timetablePane.setBackground(SystemColor.activeCaption);
 		timetablePane.setLayout(null);
 		
+		JLabel lblTimetable = new JLabel("Timetable");
+		lblTimetable.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTimetable.setFont(new Font("Arial", Font.BOLD, 30));
+		lblTimetable.setBounds(349, 20, 286, 47);
+		timetablePane.add(lblTimetable);
 	}
-	
+	//***********************************************************************
+	//*************************Timetable Page********************************
+	//***********************************************************************	
 	
 	//*******************Construct Label and Button**************************
 	private void addToWindow(){
@@ -1081,6 +1118,23 @@ public class MyWindow extends JFrame implements Serializable{
 		L_passwordField.setFont(new Font("Arial", Font.PLAIN, 20));
 		L_passwordField.setBounds(439, 342, 253, 30);
 		loginPane.add(L_passwordField);
+		
+		JButton btnLogindoctor = new JButton("Doctor");
+		btnLogindoctor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				login("doctor","doctor".toCharArray());
+			}
+		});
+		btnLogindoctor.setFont(new Font("Arial", Font.PLAIN, 20));
+		btnLogindoctor.setBounds(327, 537, 110, 60);
+		loginPane.add(btnLogindoctor);
+		
+		JLabel lblNewLabel_2 = new JLabel("Just press Login or Doctor, no need to type username and password");
+		lblNewLabel_2.setForeground(Color.RED);
+		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 22));
+		lblNewLabel_2.setBounds(159, 294, 725, 48);
+		loginPane.add(lblNewLabel_2);
 		
 		//Patient page button
 		//B_save
@@ -1164,17 +1218,27 @@ public class MyWindow extends JFrame implements Serializable{
 		PBCB_doctor.setBounds(150, 156, 206, 24);
 		p_bookingPane.add(PBCB_doctor);
 		
-		PBB_myTimetable.setIcon(new ImageIcon(getClass().getResource("timetable.png")));
-		PBB_myTimetable.setBackground(new Color(224, 255, 255));
-		PBB_myTimetable.setFont(new Font("Arial", Font.PLAIN, 25));
-		PBB_myTimetable.setBounds(537, 167, 282, 108);
-		menuPane.add(PBB_myTimetable);
-		
 		PBB_account.setIcon(new ImageIcon(getClass().getResource("account.png")));
 		PBB_account.setFont(new Font("Arial", Font.PLAIN, 25));
 		PBB_account.setBackground(new Color(224, 255, 255));
 		PBB_account.setBounds(537, 167, 282, 108);
 		menuPane.add(PBB_account);
+		PBB_account.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(contentPane, "Account");
+			}
+		});
+		
+		PBB_myTimetable.setIcon(new ImageIcon(getClass().getResource("timetable.png")));
+		PBB_myTimetable.setBackground(new Color(224, 255, 255));
+		PBB_myTimetable.setFont(new Font("Arial", Font.PLAIN, 25));
+		PBB_myTimetable.setBounds(537, 167, 282, 108);
+		menuPane.add(PBB_myTimetable);
+		PBB_myTimetable.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				//
+			}
+		});
 
 	}
 	//*******************Construct Label and Button**************************
@@ -1215,10 +1279,11 @@ public class MyWindow extends JFrame implements Serializable{
 		contentPane.add(c_MTPane, "c_MT");
 		timetablePage();
 		contentPane.add(timetablePane, "Timetable");
+		accountPage();
+		contentPane.add(accountPane, "Account");
 		
 		addToWindow();
-		
-		login("user","user".toCharArray()); //temp login
-		cardLayout.show(contentPane, "Menu");
+
+		cardLayout.show(contentPane, "Login");
 	}
 }

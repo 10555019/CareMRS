@@ -35,6 +35,7 @@ public class Doctor extends Staff implements Serializable{
 	public static void addCombo(LogAc logAc, JComboBox<String> comboBox){
 		int index = 0;
 		while (logAc.getDoctor(index)!=null){
+			System.out.println("+1: " + index);
 			comboBox.addItem(logAc.getDoctor(index).getName());
 			index++;
 		}
