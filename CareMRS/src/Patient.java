@@ -3,6 +3,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
+import javax.swing.JOptionPane;
+
 public class Patient implements Serializable{
 	private String name;
 	private String HKID;
@@ -25,6 +27,10 @@ public class Patient implements Serializable{
 		int min=0;
 		int max=db.getPatientSize() - 1;
 		int mid;
+		if (inputHKID.length()!=10){
+			JOptionPane.showMessageDialog(null, "Wrong HKID format, input again.","Search", JOptionPane.ERROR_MESSAGE);
+			return -1;
+		}
 		while(min <= max)
 		{
 			mid = (int) ((min+max)/2);

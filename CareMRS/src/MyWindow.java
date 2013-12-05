@@ -268,6 +268,7 @@ public class MyWindow extends JFrame implements Serializable{
 
 		//*****Patient_New*****
 		JButton B_new = new JButton("New");
+		B_new.setHorizontalAlignment(SwingConstants.LEFT);
 		B_new.setIcon(new ImageIcon(getClass().getResource("plus.png")));
 		B_new.setBackground(new Color(245, 222, 179));
 		B_new.addActionListener(new ActionListener() {
@@ -289,6 +290,7 @@ public class MyWindow extends JFrame implements Serializable{
 
 		//*****Patient_Search*****
 		JButton B_search = new JButton("Search");
+		B_search.setHorizontalAlignment(SwingConstants.LEFT);
 		B_search.setIcon(new ImageIcon(getClass().getResource("search.png")));
 		B_search.setBackground(new Color(245, 222, 179));
 		B_search.addActionListener(new ActionListener() {
@@ -302,6 +304,7 @@ public class MyWindow extends JFrame implements Serializable{
 
 		//*****Clinic*****
 		JButton B_clinic = new JButton("Clinic");
+		B_clinic.setIcon(new ImageIcon(getClass().getResource("setup.png")));
 		B_clinic.setBackground(new Color(152, 251, 152));
 		B_clinic.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -368,6 +371,7 @@ public class MyWindow extends JFrame implements Serializable{
 		JButton B_search = new JButton("Search");
 		B_search.setBackground(new Color(245, 222, 179));
 		B_search.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
 				int index = Patient.patientSearch(db, SPT_HKID.getText());
 				if (index != -1){
@@ -474,7 +478,10 @@ public class MyWindow extends JFrame implements Serializable{
 		JButton B_booking = new JButton("Booking");
 		B_booking.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cardLayout.show(contentPane, "Booking");
+				if (saveStatus)
+					cardLayout.show(contentPane, "Booking");
+				else
+					JOptionPane.showMessageDialog(null, "Please save the patient information first.","Patient", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 		B_booking.setFont(new Font("Arial", Font.PLAIN, 25));
@@ -482,11 +489,27 @@ public class MyWindow extends JFrame implements Serializable{
 		patientPane.add(B_booking);
 
 		JButton B_treatment = new JButton("Treatment");
+		B_treatment.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (saveStatus)
+					;//cardLayout.show(contentPane, "Booking");
+				else
+					JOptionPane.showMessageDialog(null, "Please save the patient information first.","Patient", JOptionPane.ERROR_MESSAGE);
+			}
+		});
 		B_treatment.setFont(new Font("Arial", Font.PLAIN, 25));
 		B_treatment.setBounds(592, 384, 190, 100);
 		patientPane.add(B_treatment);
 
 		JButton B_log = new JButton("Log");
+		B_log.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (saveStatus)
+					;//cardLayout.show(contentPane, "Booking");
+				else
+					JOptionPane.showMessageDialog(null, "Please save the patient information first.","Patient", JOptionPane.ERROR_MESSAGE);
+			}
+		});
 		B_log.setFont(new Font("Arial", Font.PLAIN, 25));
 		B_log.setBounds(201, 506, 190, 100);
 		patientPane.add(B_log);
@@ -777,25 +800,28 @@ public class MyWindow extends JFrame implements Serializable{
 		lbl_np.setBounds(228, 374, 185, 47);
 		c_SCPane.add(lbl_np);
 		
-		JLabel lbl_Discount = new JLabel("Discount");
-		lbl_Discount.setHorizontalAlignment(SwingConstants.RIGHT);
+		JLabel lbl_Discount = new JLabel("Discount (%)");
+		lbl_Discount.setHorizontalAlignment(SwingConstants.CENTER);
 		lbl_Discount.setFont(new Font("Arial", Font.PLAIN, 20));
-		lbl_Discount.setBounds(480, 160, 81, 47);
+		lbl_Discount.setBounds(458, 160, 143, 47);
 		c_SCPane.add(lbl_Discount);
 		
 		SCT_p50 = new JTextField();
+		SCT_p50.setHorizontalAlignment(SwingConstants.CENTER);
 		SCT_p50.setFont(new Font("Arial", Font.PLAIN, 20));
 		SCT_p50.setBounds(458, 237, 143, 47);
 		c_SCPane.add(SCT_p50);
 		SCT_p50.setColumns(10);
 		
 		SCT_p18 = new JTextField();
+		SCT_p18.setHorizontalAlignment(SwingConstants.CENTER);
 		SCT_p18.setFont(new Font("Arial", Font.PLAIN, 20));
 		SCT_p18.setColumns(10);
 		SCT_p18.setBounds(458, 307, 143, 47);
 		c_SCPane.add(SCT_p18);
 		
 		SCT_np = new JTextField();
+		SCT_np.setHorizontalAlignment(SwingConstants.CENTER);
 		SCT_np.setFont(new Font("Arial", Font.PLAIN, 20));
 		SCT_np.setColumns(10);
 		SCT_np.setBounds(458, 374, 143, 47);
@@ -1013,9 +1039,9 @@ public class MyWindow extends JFrame implements Serializable{
 		PB_save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try{ //Saving or creating patient record
+					if (PT_HKID.getText().equals("")) throw new NullFieldException(); //primary key should not be null
 					int index = Patient.patientSearch(db, PT_HKID.getText());
 					boolean save = false; //used to toggle save message
-					if (PT_HKID.getText().equals("")) throw new NullFieldException(); //primary key should not be null
 					if (patient==null){
 						//need to create a new patient
 						if (index == -1){
