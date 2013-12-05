@@ -1,10 +1,14 @@
 import java.awt.CardLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.text.MaskFormatter;
 import javax.swing.JTextField;
 
@@ -17,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import javax.swing.JScrollPane;
 
 import java.awt.Color;
 import java.text.ParseException;
@@ -46,6 +51,12 @@ import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 import javax.swing.JList;
+import javax.swing.UIManager;
+import javax.swing.JCheckBox;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 
 
 public class MyWindow extends JFrame implements Serializable{
@@ -89,12 +100,23 @@ public class MyWindow extends JFrame implements Serializable{
 	private JPanel p_searchPane;
 	private JPanel patientPane;
 	private JPanel p_bookingPane;
+	private JPanel clinicPane;
+	private JPanel c_SCPane;
+	private JPanel c_MTPane;
+	private JPanel c_OHPane;
 
 	CardLayout cardLayout = new CardLayout(); //cardLayout, used for different panel
 
 	private JMenuBar menubar = new JMenuBar(); //top menu bar (not shown on login page)
 
 	private Patient patient = null; //pointer pointing accessing which patient 
+	private JTextField SCT_p50;
+	private JTextField SCT_p18;
+	private JTextField SCT_np;
+	private JTextField MTT_treat;
+	private JTextField MTT_fpp;
+	private JCheckBox MTC_bp;
+	private JTable MTTa_table;
 	//**********Data Member of MyWindow**********//
 
 	private void menubar(){
@@ -197,6 +219,7 @@ public class MyWindow extends JFrame implements Serializable{
 		loginPane.add(B_login);
 		//Button, Exit
 		JButton B_exit = new JButton("Exit");
+		B_exit.setBackground(new Color(255, 192, 203));
 		B_exit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.exit(0);
@@ -244,6 +267,7 @@ public class MyWindow extends JFrame implements Serializable{
 
 		//*****Patient_New*****
 		JButton B_new = new JButton("New");
+		B_new.setBackground(new Color(245, 222, 179));
 		B_new.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				patient = null;
@@ -263,6 +287,7 @@ public class MyWindow extends JFrame implements Serializable{
 
 		//*****Patient_Search*****
 		JButton B_search = new JButton("Search");
+		B_search.setBackground(new Color(245, 222, 179));
 		B_search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				cardLayout.show(contentPane, "Search");
@@ -274,6 +299,12 @@ public class MyWindow extends JFrame implements Serializable{
 
 		//*****Clinic*****
 		JButton B_clinic = new JButton("Clinic");
+		B_clinic.setBackground(new Color(152, 251, 152));
+		B_clinic.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(contentPane, "Clinic");
+			}
+		});
 		B_clinic.setFont(new Font("Arial", Font.PLAIN, 25));
 		B_clinic.setBounds(158, 352, 282, 108);
 		menuPane.add(B_clinic);
@@ -286,6 +317,7 @@ public class MyWindow extends JFrame implements Serializable{
 
 		//*****Log out*****
 		JButton lbl_logOut = new JButton("Log out");
+		lbl_logOut.setBackground(new Color(255, 192, 203));
 		lbl_logOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				logout();
@@ -328,6 +360,7 @@ public class MyWindow extends JFrame implements Serializable{
 		p_searchPane.add(B_clear);
 		
 		JButton B_search = new JButton("Search");
+		B_search.setBackground(new Color(245, 222, 179));
 		B_search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int index = Patient.patientSearch(db, SPT_HKID.getText());
@@ -352,6 +385,7 @@ public class MyWindow extends JFrame implements Serializable{
 		p_searchPane.add(B_search);
 		
 		JButton B_menu = new JButton("Menu");
+		B_menu.setBackground(new Color(255, 192, 203));
 		B_menu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SPT_HKID.setText(null);
@@ -452,6 +486,7 @@ public class MyWindow extends JFrame implements Serializable{
 		patientPane.add(B_log);
 
 		JButton B_menu = new JButton("Menu");
+		B_menu.setBackground(new Color(255, 192, 203));
 		B_menu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				patient = null;
@@ -638,6 +673,281 @@ public class MyWindow extends JFrame implements Serializable{
 	//***********************Patient booking Page****************************
 	//***********************************************************************
 	
+	
+	//***********************************************************************
+	//***************************Clinic Page*********************************
+	//***********************************************************************
+	private void clinicPage(){
+		clinicPane = new JPanel();
+		clinicPane.setBackground(SystemColor.activeCaption);
+		clinicPane.setLayout(null);
+		
+		JLabel lblClinic = new JLabel("Clinic Setup");
+		lblClinic.setHorizontalAlignment(SwingConstants.CENTER);
+		lblClinic.setFont(new Font("Arial", Font.BOLD, 30));
+		lblClinic.setBounds(399, 20, 185, 47);
+		clinicPane.add(lblClinic);
+		
+		JButton B_MT = new JButton("Medical Treatment");
+		B_MT.setBackground(new Color(152, 251, 152));
+		B_MT.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(contentPane, "c_MT");
+			}
+		});
+		B_MT.setFont(new Font("Arial", Font.PLAIN, 25));
+		B_MT.setBounds(537, 167, 282, 108);
+		clinicPane.add(B_MT);
+		
+		JButton B_SC = new JButton("Special Condition");
+		B_SC.setBackground(new Color(152, 251, 152));
+		B_SC.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(contentPane, "c_SC");
+			}
+		});
+		B_SC.setFont(new Font("Arial", Font.PLAIN, 25));
+		B_SC.setBounds(158, 352, 282, 108);
+		clinicPane.add(B_SC);
+		
+		JButton B_OH = new JButton("Opening Hour");
+		B_OH.setBackground(new Color(152, 251, 152));
+		B_OH.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(contentPane, "c_OH");
+			}
+		});
+		B_OH.setFont(new Font("Arial", Font.PLAIN, 25));
+		B_OH.setBounds(158, 167, 282, 108);
+		clinicPane.add(B_OH);
+		
+		JButton B_M = new JButton("Menu");
+		B_M.setBackground(new Color(255, 192, 203));
+		B_M.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				cardLayout.show(contentPane, "Menu");
+			}
+		});
+		B_M.setFont(new Font("Arial", Font.PLAIN, 25));
+		B_M.setBounds(537, 352, 282, 108);
+		clinicPane.add(B_M);
+		
+		
+	}
+	//***********************************************************************
+	//***************************Clinic Page*********************************
+	//***********************************************************************
+	
+	
+	//***********************************************************************
+	//***************************C SC Page***********************************
+	//***********************************************************************
+	private void c_SCPage(){
+		c_SCPane = new JPanel();
+		c_SCPane.setBackground(SystemColor.activeCaption);
+		c_SCPane.setLayout(null);
+		
+		JLabel lbl_SpecialCondition = new JLabel("Special Condition");
+		lbl_SpecialCondition.setHorizontalAlignment(SwingConstants.CENTER);
+		lbl_SpecialCondition.setFont(new Font("Arial", Font.BOLD, 30));
+		lbl_SpecialCondition.setBounds(357, 20, 269, 47);
+		c_SCPane.add(lbl_SpecialCondition);
+		
+		JLabel lbl_PatientAtAge50 = new JLabel("Patient at age > 50 :");
+		lbl_PatientAtAge50.setHorizontalAlignment(SwingConstants.RIGHT);
+		lbl_PatientAtAge50.setFont(new Font("Arial", Font.PLAIN, 20));
+		lbl_PatientAtAge50.setBounds(228, 237, 185, 47);
+		c_SCPane.add(lbl_PatientAtAge50);
+		
+		JLabel lbl_PatientAtAge18 = new JLabel("Patient at age <18 :");
+		lbl_PatientAtAge18.setHorizontalAlignment(SwingConstants.RIGHT);
+		lbl_PatientAtAge18.setFont(new Font("Arial", Font.PLAIN, 20));
+		lbl_PatientAtAge18.setBounds(228, 307, 185, 47);
+		c_SCPane.add(lbl_PatientAtAge18);
+		
+		JLabel lbl_np = new JLabel("Non-Peak hour :");
+		lbl_np.setHorizontalAlignment(SwingConstants.RIGHT);
+		lbl_np.setFont(new Font("Arial", Font.PLAIN, 20));
+		lbl_np.setBounds(228, 374, 185, 47);
+		c_SCPane.add(lbl_np);
+		
+		JLabel lbl_Discount = new JLabel("Discount");
+		lbl_Discount.setHorizontalAlignment(SwingConstants.RIGHT);
+		lbl_Discount.setFont(new Font("Arial", Font.PLAIN, 20));
+		lbl_Discount.setBounds(480, 160, 81, 47);
+		c_SCPane.add(lbl_Discount);
+		
+		SCT_p50 = new JTextField();
+		SCT_p50.setFont(new Font("Arial", Font.PLAIN, 20));
+		SCT_p50.setBounds(458, 237, 143, 47);
+		c_SCPane.add(SCT_p50);
+		SCT_p50.setColumns(10);
+		
+		SCT_p18 = new JTextField();
+		SCT_p18.setFont(new Font("Arial", Font.PLAIN, 20));
+		SCT_p18.setColumns(10);
+		SCT_p18.setBounds(458, 307, 143, 47);
+		c_SCPane.add(SCT_p18);
+		
+		SCT_np = new JTextField();
+		SCT_np.setFont(new Font("Arial", Font.PLAIN, 20));
+		SCT_np.setColumns(10);
+		SCT_np.setBounds(458, 374, 143, 47);
+		c_SCPane.add(SCT_np);
+		
+		JButton SCB_update = new JButton("Update");
+		SCB_update.setFont(new Font("Arial", Font.PLAIN, 20));
+		SCB_update.setBounds(419, 489, 143, 47);
+		c_SCPane.add(SCB_update);
+		
+		JButton SCB_save = new JButton("Save");
+		SCB_save.setFont(new Font("Arial", Font.PLAIN, 20));
+		SCB_save.setBounds(138, 489, 143, 47);
+		c_SCPane.add(SCB_save);
+		
+		JButton B_clinic = new JButton("Clinic");
+		B_clinic.setFont(new Font("Arial", Font.PLAIN, 20));
+		B_clinic.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(contentPane, "Clinic");
+			}
+		});
+		B_clinic.setBackground(new Color(255, 192, 203));
+		B_clinic.setBounds(700, 489, 143, 47);
+		c_SCPane.add(B_clinic);
+	}
+	//***********************************************************************
+	//***************************C SC Page***********************************
+	//***********************************************************************
+	
+	
+	//***********************************************************************
+	//***************************C MT Page***********************************
+	//***********************************************************************
+	private void c_MTPage(){
+		c_MTPane = new JPanel();
+		c_MTPane.setBackground(SystemColor.activeCaption);
+		c_MTPane.setLayout(null);
+		
+		JLabel lbl_MedicalTreatment = new JLabel("Medical Treatment");
+		lbl_MedicalTreatment.setHorizontalAlignment(SwingConstants.CENTER);
+		lbl_MedicalTreatment.setFont(new Font("Arial", Font.BOLD, 30));
+		lbl_MedicalTreatment.setBounds(349, 20, 286, 47);
+		c_MTPane.add(lbl_MedicalTreatment);
+		
+		String[] columns = {"Type of treatment", "Fee ($) per part", "Body parts"};
+		
+		String[][] data = {{"Herbal", "250", "N/A"},
+				{"acupuncture", "350", "Y"},
+				{"cupping", "300", "Y"}
+				
+		
+		
+		};
+
+		JPanel MTP_pane = new JPanel();
+		MTP_pane.setBackground(SystemColor.activeCaption);
+		MTP_pane.setBounds(479, 107, 448, 390);
+		MTP_pane.setLayout(new FlowLayout());
+		c_MTPane.add(MTP_pane);
+
+		MTTa_table = new JTable(data, columns);
+		MTTa_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		MTTa_table.setFont(new Font("Arial", Font.PLAIN, 18));
+		MTTa_table.setBackground(SystemColor.activeCaption);
+		MTTa_table.setPreferredScrollableViewportSize(new Dimension(400, 350));
+		MTTa_table.setFillsViewportHeight(true);
+		
+		
+		MTTa_table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+
+			@Override
+			public void valueChanged(ListSelectionEvent arg0) {
+				MTT_treat.setText((String) MTTa_table.getValueAt(MTTa_table.getSelectedRow(),0).toString());
+				MTT_fpp.setText((String) MTTa_table.getValueAt(MTTa_table.getSelectedRow(),1).toString());
+				if (MTTa_table.getValueAt(MTTa_table.getSelectedRow(),2).toString()=="Y")
+					MTC_bp.setSelected(true);
+				else
+					MTC_bp.setSelected(false);
+			}});
+
+		JScrollPane MTjp = new JScrollPane(MTTa_table);
+		MTP_pane.add(MTjp);
+
+		
+		
+		
+		JLabel lbl_Treatment = new JLabel("Treatment :");
+		lbl_Treatment.setHorizontalAlignment(SwingConstants.RIGHT);
+		lbl_Treatment.setFont(new Font("Arial", Font.PLAIN, 20));
+		lbl_Treatment.setBounds(63, 131, 112, 47);
+		c_MTPane.add(lbl_Treatment);
+		
+		JLabel lbl_FeePerPart = new JLabel("Fee per part :");
+		lbl_FeePerPart.setHorizontalAlignment(SwingConstants.RIGHT);
+		lbl_FeePerPart.setFont(new Font("Arial", Font.PLAIN, 20));
+		lbl_FeePerPart.setBounds(40, 237, 137, 47);
+		c_MTPane.add(lbl_FeePerPart);
+		
+		JLabel lbl_BodyParts = new JLabel("Body parts :");
+		lbl_BodyParts.setHorizontalAlignment(SwingConstants.RIGHT);
+		lbl_BodyParts.setFont(new Font("Arial", Font.PLAIN, 20));
+		lbl_BodyParts.setBounds(40, 350, 137, 47);
+		c_MTPane.add(lbl_BodyParts);
+		
+		MTT_treat = new JTextField();
+		MTT_treat.setFont(new Font("Arial", Font.PLAIN, 20));
+		MTT_treat.setColumns(10);
+		MTT_treat.setBounds(185, 131, 240, 47);
+		c_MTPane.add(MTT_treat);
+		
+		MTT_fpp = new JTextField();
+		MTT_fpp.setFont(new Font("Arial", Font.PLAIN, 20));
+		MTT_fpp.setColumns(10);
+		MTT_fpp.setBounds(187, 237, 238, 47);
+		c_MTPane.add(MTT_fpp);
+		
+		MTC_bp = new JCheckBox("");
+		MTC_bp.setBackground(SystemColor.activeCaption);
+		MTC_bp.setHorizontalAlignment(SwingConstants.CENTER);
+		MTC_bp.setBounds(187, 350, 240, 47);
+		c_MTPane.add(MTC_bp);
+		
+		JButton B_save = new JButton("Save");
+		B_save.setFont(new Font("Arial", Font.PLAIN, 20));
+		B_save.setBounds(63, 548, 143, 47);
+		c_MTPane.add(B_save);
+		
+		JButton B_clinic = new JButton("Clinic");
+		B_clinic.setFont(new Font("Arial", Font.PLAIN, 20));
+		B_clinic.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(contentPane, "Clinic");
+			}
+		});
+		B_clinic.setBackground(new Color(255, 192, 203));
+		B_clinic.setBounds(797, 576, 143, 47);
+		c_MTPane.add(B_clinic);
+	}
+	//***********************************************************************
+	//***************************C MT Page***********************************
+	//***********************************************************************
+	
+	
+	//***********************************************************************
+	//***************************C OH Page***********************************
+	//***********************************************************************
+	private void c_OHPage(){
+		c_OHPane = new JPanel();
+		c_OHPane.setBackground(SystemColor.activeCaption);
+		c_OHPane.setLayout(null);
+	}
+	//***********************************************************************
+	//***************************C OH Page***********************************
+	//***********************************************************************
+	
+	
+	//*******************Construct Label and Button**************************
 	private void addToWindow(){
 		PT_name.setBounds(179, 30, 501, 32);
 		color1.add(PT_name);
@@ -760,11 +1070,9 @@ public class MyWindow extends JFrame implements Serializable{
 			}
 		});
 		PB_update.setFont(new Font("Arial", Font.PLAIN, 20));
-		
-		
-		
-		
+
 	}
+	//*******************Construct Label and Button**************************
 
 	
 	/**
@@ -796,8 +1104,43 @@ public class MyWindow extends JFrame implements Serializable{
 		contentPane.add(patientPane, "Patient");
 		p_bookingPage();
 		contentPane.add(p_bookingPane, "Booking");
-
-		login("user","user".toCharArray());
+		clinicPage();
+		contentPane.add(clinicPane, "Clinic");
+		c_SCPage();
+		contentPane.add(c_SCPane, "c_SC");
+		c_MTPage();
+		contentPane.add(c_MTPane, "c_MT");
+		
+		JButton B_new = new JButton("New");
+		B_new.setFont(new Font("Arial", Font.PLAIN, 20));
+		B_new.setBounds(232, 548, 143, 47);
+		c_MTPane.add(B_new);
+		
+		JButton btnDelete = new JButton("Delete");
+		btnDelete.setFont(new Font("Arial", Font.PLAIN, 20));
+		btnDelete.setBounds(405, 548, 143, 47);
+		c_MTPane.add(btnDelete);
+		c_OHPage();
+		contentPane.add(c_OHPane, "c_OH");
+		
+		JLabel lbl_OpeningHour = new JLabel("Opening Hour");
+		lbl_OpeningHour.setHorizontalAlignment(SwingConstants.CENTER);
+		lbl_OpeningHour.setFont(new Font("Arial", Font.BOLD, 30));
+		lbl_OpeningHour.setBounds(372, 20, 240, 47);
+		c_OHPane.add(lbl_OpeningHour);
+		
+		JButton B_clinic = new JButton("Clinic");
+		B_clinic.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(contentPane, "Clinic");
+			}
+		});
+		B_clinic.setFont(new Font("Arial", Font.PLAIN, 20));
+		B_clinic.setBackground(new Color(255, 192, 203));
+		B_clinic.setBounds(420, 307, 143, 47);
+		c_OHPane.add(B_clinic);
+		
+		login("user","user".toCharArray()); //temp login
 		cardLayout.show(contentPane, "Menu");
 	}
 }
