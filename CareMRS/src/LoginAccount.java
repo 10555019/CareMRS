@@ -54,34 +54,34 @@ public class LoginAccount implements Serializable{
 			JOptionPane.showMessageDialog(null, "There should be at least one Admin user, user is not deleted","Delete", JOptionPane.ERROR_MESSAGE);
 	}
 	
-	public Db load(Db db){
+	public LoginAccount load(LoginAccount loginAccount){
 		try{
 			File inFile = new File(filePath);
 
 			if (inFile.exists()){
 				FileInputStream inFileStream = new FileInputStream(inFile);
 				ObjectInputStream inObjectStream = new ObjectInputStream(inFileStream);
-				Db tmpDb = (Db) inObjectStream.readObject();
+				LoginAccount tmplogin = (LoginAccount) inObjectStream.readObject();
 				inObjectStream.close();
-				return tmpDb;
+				return tmplogin;
 			}else{
-				return db;
+				return loginAccount;
 			}
 		} catch (IOException e){
 			System.out.println("inFile IOException");
-			return db;
+			return loginAccount;
 		} catch (ClassNotFoundException e){
 			System.out.println("ClassNotFoundException");
-			return db;
+			return loginAccount;
 		}
 	}
 
-	public void save(Db db){
+	public void save(){
 		try{
 			File outFile = new File(filePath);
 			FileOutputStream outFileStream = new FileOutputStream(outFile);
 			ObjectOutputStream outObjectStream = new ObjectOutputStream(outFileStream);
-			outObjectStream.writeObject(db);
+			outObjectStream.writeObject(this);
 			outObjectStream.close();
 		} catch (IOException e){
 			System.out.println("outFile IOException");

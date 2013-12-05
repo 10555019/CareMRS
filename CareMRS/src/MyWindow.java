@@ -53,6 +53,7 @@ public class MyWindow extends JFrame implements Serializable{
 	//**********Data Member of MyWindow**********//
 	
 	private Db db;
+	private LoginAccount loginAccount;
 	private String filePath = "db.sav";
 	
 	//private MaskFormatter idFormatter = new MaskFormatter("U######'(#')");
@@ -137,12 +138,20 @@ public class MyWindow extends JFrame implements Serializable{
 		//db.addPatient(new Patient("Chan","A000001(1)","12345678",'M',"01/01/2013"));
 		//temp record for testing..........
 		
-		if ((mode = Doctor.checkLogin(db,userName,password))!=0){ //when password match, saved mode : 1:Doctor 2:admin
+		//load login information
+		File file = new File(filePath);
+		if (!file.exists()){
+			//first time use
+			Admin admin = new Admin("Superusr","user","user");
+			loginAccount.addAdmin(admin);
+		} else{
+			//read loginAccount information
+			loginAccount = loginAccount.load(loginAccount);
+		}
+		
+		if ((mode = Doctor.checkLogin(db,loginAccount,userName,password))!=0){
+			//when password match, saved mode : 1:Doctor 2:admin
 			db = db.load(db);
-			
-			if (db.getPatientSize()>0)
-				System.out.println("login: " + db.getPatient(0).getName());
-			
 			cardLayout.show(contentPane, "Menu"); //change panel
 			setJMenuBar(menubar); //show the menu bar
 		}
@@ -152,7 +161,8 @@ public class MyWindow extends JFrame implements Serializable{
 
 	//Logout method
 	private void logout(){
-		db.save(db); //save data in db
+		db.save(); //save data in db
+		loginAccount.save();
 		cardLayout.show(contentPane, "Login");
 		setJMenuBar(null); //disable the menubar when logout
 	}
@@ -681,6 +691,7 @@ public class MyWindow extends JFrame implements Serializable{
 		loginPane.add(L_passwordField);
 		
 		//Patient page button
+		//B_save
 		PB_save.setBounds(693, 227, 98, 32);
 		color1.add(PB_save);
 		PB_save.addActionListener(new ActionListener() {
@@ -733,6 +744,7 @@ public class MyWindow extends JFrame implements Serializable{
 		});
 		PB_save.setFont(new Font("Arial", Font.PLAIN, 20));
 		
+		//B_update
 		PB_update.setBounds(816, 227, 98, 32);
 		color1.add(PB_update);
 		PB_update.addActionListener(new ActionListener() {
@@ -759,8 +771,10 @@ public class MyWindow extends JFrame implements Serializable{
 	 * Create the frame.
 	 * @throws ParseException 
 	 */
-	public MyWindow(Db db) throws ParseException {
+	public MyWindow(Db db, LoginAccount loginAccount) throws ParseException {
 		this.db = db;
+		this.loginAccount = loginAccount;
+		String filePath = "dat.sav";
 		setResizable(false);
 		setTitle("CareMRS");
 		setIconImage(new ImageIcon(getClass().getResource("C.png")).getImage());

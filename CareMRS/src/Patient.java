@@ -89,7 +89,15 @@ public class Patient implements Serializable{
 	}
 
 	public String getDob_S(){
-		return Integer.toString(dob.get(5)) + "/" + Integer.toString(dob.get(2)+1) + "/" + Integer.toString(dob.get(1));
+		String day, month, year;
+		day = Integer.toString(dob.get(5));
+		if (day.length()==1)
+			day = "0" + day;
+		month = Integer.toString(dob.get(2)+1);
+		if (month.length()==1)
+			month = "0" + month;
+		year = Integer.toString(dob.get(1));
+		return day + "/" + month + "/" + year;
 	}
 
 	public void setDob(String date) {
