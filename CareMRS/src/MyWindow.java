@@ -68,25 +68,25 @@ public class MyWindow extends JFrame implements Serializable{
 	private LoginAccount loginAccount;
 	private String filePath = "db.sav";
 	
-	//private MaskFormatter idFormatter = new MaskFormatter("U######'(#')");
-	//private MaskFormatter telFormatter = new MaskFormatter("####' ####");
-	//private MaskFormatter dateFormatter = new MaskFormatter("##'/##'/####");
+	private MaskFormatter idFormatter = new MaskFormatter("U######'(#')");
+	private MaskFormatter telFormatter = new MaskFormatter("####' ####");
+	private MaskFormatter dateFormatter = new MaskFormatter("##'/##'/####");
 	
 	private JTextField PT_name = new JTextField();
-	private JTextField PT_HKID = new JTextField();
+	//private JTextField PT_HKID = new JTextField();
 	private JTextField PT_gender = new JTextField();
-	private JTextField PT_dob = new JTextField();
-	private JTextField PT_tel = new JTextField();
+	//private JTextField PT_dob = new JTextField();
+	//private JTextField PT_tel = new JTextField();
 	
-	//private JFormattedTextField PT_HKID = new JFormattedTextField(idFormatter);
-	//private JFormattedTextField PT_dob = new JFormattedTextField(dateFormatter);
-	//private JFormattedTextField PT_tel = new JFormattedTextField(telFormatter);
+	private JFormattedTextField PT_HKID = new JFormattedTextField(idFormatter);
+	private JFormattedTextField PT_dob = new JFormattedTextField(dateFormatter);
+	private JFormattedTextField PT_tel = new JFormattedTextField(telFormatter);
 	
 	private JTextField L_userNameField = new JTextField();
 	private JPasswordField L_passwordField = new JPasswordField();
 	
-	private JTextField SPT_HKID = new JTextField();
-	//private JFormattedTextField SPT_HKID = new JFormattedTextField(idFormatter);
+	//private JTextField SPT_HKID = new JTextField();
+	private JFormattedTextField SPT_HKID = new JFormattedTextField(idFormatter);
 	
 	private JButton PB_update = new JButton("Update");
 	private JButton PB_save = new JButton("Save");
@@ -361,7 +361,7 @@ public class MyWindow extends JFrame implements Serializable{
 		JButton B_clear = new JButton("Clear");
 		B_clear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				SPT_HKID.setText(null);
+				SPT_HKID.setValue(null);
 			}
 		});
 		B_clear.setFont(new Font("Arial", Font.PLAIN, 25));
@@ -373,10 +373,10 @@ public class MyWindow extends JFrame implements Serializable{
 		B_search.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				int index = Patient.patientSearch(db, SPT_HKID.getText());
+				int index = Patient.patientSearch(db, (String) SPT_HKID.getValue());
 				if (index != -1){
 					patient = db.getPatient(index);
-					SPT_HKID.setText(null);
+					SPT_HKID.setValue(null);
 					PB_save.setEnabled(false);
 					PB_update.setEnabled(true);
 					cardLayout.show(contentPane, "Patient");
@@ -398,7 +398,7 @@ public class MyWindow extends JFrame implements Serializable{
 		B_menu.setBackground(new Color(255, 192, 203));
 		B_menu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SPT_HKID.setText(null);
+				SPT_HKID.setValue(null);
 				cardLayout.show(contentPane, "Menu");
 			}
 		});
@@ -526,9 +526,9 @@ public class MyWindow extends JFrame implements Serializable{
 				PT_HKID.setEditable(true);
 				PT_name.setText("");
 				PT_gender.setText("");
-				PT_tel.setText("");
-				PT_dob.setText("");
-				PT_HKID.setText("");
+				PT_tel.setValue("");
+				PT_dob.setValue("");
+				PT_HKID.setValue("");
 				cardLayout.show(contentPane, "Menu");
 			}
 		});
@@ -539,10 +539,10 @@ public class MyWindow extends JFrame implements Serializable{
 		//after search patient, get and show the patient record
 		if (patient != null){
 			PT_name.setText(patient.getName());
-			PT_HKID.setText(patient.getHKID());
+			PT_HKID.setValue(patient.getHKID());
 			PT_gender.setText(Character.toString(patient.getGender()));
-			PT_dob.setText(patient.getDob_S());
-			PT_tel.setText(patient.getTelephone());
+			PT_dob.setValue(patient.getDob_S());
+			PT_tel.setValue(patient.getTelephone());
 			PT_name.setEditable(false);
 			PT_HKID.setEditable(false);
 			PT_gender.setEditable(false);
@@ -1039,35 +1039,36 @@ public class MyWindow extends JFrame implements Serializable{
 		PB_save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try{ //Saving or creating patient record
-					if (PT_HKID.getText().equals("")) throw new NullFieldException(); //primary key should not be null
-					int index = Patient.patientSearch(db, PT_HKID.getText());
+					if (PT_HKID.getValue().equals("")) throw new NullFieldException(); //primary key should not be null
+					int index = Patient.patientSearch(db, (String) PT_HKID.getValue());
 					boolean save = false; //used to toggle save message
 					if (patient==null){
 						//need to create a new patient
 						if (index == -1){
-							patient = new Patient(PT_name.getText(),PT_HKID.getText(),PT_tel.getText(),PT_gender.getText().charAt(0),PT_dob.getText());
+							patient = new Patient(PT_name.getText(),(String)PT_HKID.getValue(),(String)PT_tel.getValue(),PT_gender.getText().charAt(0),(String)PT_dob.getValue());
 							db.addPatient(patient);
 							save = true;
 						} else{
 							if (JOptionPane.showConfirmDialog(null, "Same patient found, amend record?","Patient record", JOptionPane.YES_NO_OPTION)==1){
-								patient = new Patient(PT_name.getText(),PT_HKID.getText(),PT_tel.getText(),PT_gender.getText().charAt(0),PT_dob.getText());
+								patient = new Patient(PT_name.getText(),(String)PT_HKID.getValue(),(String)PT_tel.getValue(),PT_gender.getText().charAt(0),(String)PT_dob.getValue());
+								//patient = new Patient(PT_name.getText(),PT_HKID.getText(),PT_tel.getText(),PT_gender.getText().charAt(0),PT_dob.getText());
 								db.addPatient(patient);
 								save = true;
 							} else {
 								JOptionPane.showMessageDialog(null, "Original Patient record will be shown","Patient record", JOptionPane.PLAIN_MESSAGE);
 								patient = db.getPatient(index);
 								PT_name.setText(patient.getName());
-								PT_HKID.setText(patient.getHKID());
+								PT_HKID.setValue(patient.getHKID());
 								PT_gender.setText(Character.toString(patient.getGender()));
-								PT_dob.setText(patient.getDob_S());
+								PT_dob.setValue(patient.getDob_S());
 							}
 						}
 					} else {
 						//amend current patient record
 						db.getPatient(index).setName(PT_name.getText());
-						db.getPatient(index).setTelephone(PT_tel.getText());
+						db.getPatient(index).setTelephone((String)PT_tel.getValue());
 						db.getPatient(index).setGender(PT_gender.getText().charAt(0));
-						db.getPatient(index).setDob(PT_dob.getText());
+						db.getPatient(index).setDob((String)PT_dob.getValue());
 						save = true;
 					}
 					if (save)
