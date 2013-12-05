@@ -137,23 +137,54 @@ public class MyWindow extends JFrame implements Serializable{
 
 	private void menubar(){
 		//construct the menubar
-		JMenu patient = new JMenu("Patient");
-		menubar.add(patient);
+		JMenu M_patient = new JMenu("Patient");
+		menubar.add(M_patient);
 		JMenuItem newpatient = new JMenuItem("New");
 		JMenuItem searchpatient = new JMenuItem("Search");
-		patient.add(newpatient);
-		patient.add(searchpatient);
+		M_patient.add(newpatient);
+		newpatient.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				patient = null;
+				try {
+					patientPage();
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				}
+				PB_save.setEnabled(true);
+				PB_update.setEnabled(false);
+				cardLayout.show(contentPane, "Patient");
+			}});
+		M_patient.add(searchpatient);
+		searchpatient.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(contentPane, "Search");
+			}});
 
 		JMenu clinic = new JMenu("Clinic");
 		menubar.add(clinic);
-		JMenuItem openinghr = new JMenuItem("Opening hour");
+		JMenuItem openinghr = new JMenuItem("Opening Hour");
 		JMenuItem medicTreat = new JMenuItem("Medical Treatment");
 		JMenuItem specCond = new JMenuItem("Special Condition");
-		JMenuItem backup = new JMenuItem("Backup data");
 		clinic.add(openinghr);
+		openinghr.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(contentPane, "c_OH");
+			}});
 		clinic.add(medicTreat);
+		medicTreat.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(contentPane, "c_MT");
+			}});
 		clinic.add(specCond);
-		clinic.add(backup);
+		specCond.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(contentPane, "c_SC");
+			}});
 
 		JMenu account = new JMenu("Account");
 		menubar.add(account);
@@ -161,12 +192,11 @@ public class MyWindow extends JFrame implements Serializable{
 		JMenuItem logout = new JMenuItem("Log out");
 		account.add(changePassword);
 		account.add(logout);
-		class exitaction implements ActionListener{
-			public void actionPerformed (ActionEvent e){
+		logout.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
 				logout();
-			}
-		}
-		logout.addActionListener(new exitaction());
+			}});
 	}
 
 	//Login method
@@ -985,8 +1015,6 @@ public class MyWindow extends JFrame implements Serializable{
 		btnDelete.setFont(new Font("Arial", Font.PLAIN, 20));
 		btnDelete.setBounds(405, 548, 143, 47);
 		c_MTPane.add(btnDelete);
-		c_OHPage();
-		contentPane.add(c_OHPane, "c_OH");
 	}
 	//***********************************************************************
 	//***************************C MT Page***********************************
@@ -1129,11 +1157,11 @@ public class MyWindow extends JFrame implements Serializable{
 		btnLogindoctor.setBounds(327, 537, 110, 60);
 		loginPane.add(btnLogindoctor);
 		
-		JLabel lblNewLabel_2 = new JLabel("Just press Login or Doctor, no need to type username and password");
+		JLabel lblNewLabel_2 = new JLabel("Just press Login or Doctor, no need to type username and password, doctor just temp button");
 		lblNewLabel_2.setForeground(Color.RED);
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 22));
-		lblNewLabel_2.setBounds(159, 294, 725, 48);
+		lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblNewLabel_2.setBounds(51, 294, 878, 48);
 		loginPane.add(lblNewLabel_2);
 		
 		//Patient page button
@@ -1277,6 +1305,8 @@ public class MyWindow extends JFrame implements Serializable{
 		contentPane.add(c_SCPane, "c_SC");
 		c_MTPage();
 		contentPane.add(c_MTPane, "c_MT");
+		c_OHPage();
+		contentPane.add(c_OHPane, "c_OH");
 		timetablePage();
 		contentPane.add(timetablePane, "Timetable");
 		accountPage();
