@@ -122,28 +122,28 @@ public class Treatmentint1 extends JFrame {
 		txtpnFundamentalCost.setForeground(Color.BLUE);
 		txtpnFundamentalCost.setBackground(Color.ORANGE);
 		txtpnFundamentalCost.setText("Fundamental cost: $\r\nFee per part: $\r\nNumber of part(s): \r\nSubtotal: $");
-		txtpnFundamentalCost.setBounds(163, 398, 206, 66);
+		txtpnFundamentalCost.setBounds(163, 398, 206, 79);
 		contentPane.add(txtpnFundamentalCost);
 		
 		JTextPane txtpnFundamentalCost_1 = new JTextPane();
 		txtpnFundamentalCost_1.setForeground(Color.BLUE);
 		txtpnFundamentalCost_1.setText("Fundamental cost: $\r\nFee per part: $\r\nNumber of part(s): \r\nSubtotal: $");
 		txtpnFundamentalCost_1.setBackground(Color.ORANGE);
-		txtpnFundamentalCost_1.setBounds(163, 189, 206, 66);
+		txtpnFundamentalCost_1.setBounds(163, 189, 206, 79);
 		contentPane.add(txtpnFundamentalCost_1);
 		
 		JTextPane txtpnFundamentalCost_2 = new JTextPane();
 		txtpnFundamentalCost_2.setForeground(Color.BLUE);
 		txtpnFundamentalCost_2.setText("Fundamental cost: $\r\nFee per part: $\r\nNumber of part(s): \r\nSubtotal: $");
 		txtpnFundamentalCost_2.setBackground(Color.ORANGE);
-		txtpnFundamentalCost_2.setBounds(579, 189, 206, 66);
+		txtpnFundamentalCost_2.setBounds(579, 189, 206, 79);
 		contentPane.add(txtpnFundamentalCost_2);
 		
 		JTextPane txtpnFundamentalCost_3 = new JTextPane();
 		txtpnFundamentalCost_3.setForeground(Color.BLUE);
 		txtpnFundamentalCost_3.setText("Fundamental cost: $\r\nFee per part: $\r\nNumber of part(s): \r\nSubtotal: $");
 		txtpnFundamentalCost_3.setBackground(Color.ORANGE);
-		txtpnFundamentalCost_3.setBounds(579, 398, 206, 66);
+		txtpnFundamentalCost_3.setBounds(579, 398, 206, 79);
 		contentPane.add(txtpnFundamentalCost_3);
 		
 		JLabel lblTotal = new JLabel("Total: $");
