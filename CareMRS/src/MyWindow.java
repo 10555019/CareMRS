@@ -62,38 +62,51 @@ import javax.swing.table.DefaultTableModel;
 
 public class MyWindow extends JFrame implements Serializable{
 
-	//**********Data Member of MyWindow**********//
 	
+	//**********Data Member of MyWindow**********//
+	//Database Variables
 	private Db db;
 	private LoginAccount loginAccount;
 	private String filePath = "db.sav";
 	
+	//MaskFormatter
 	private MaskFormatter idFormatter = new MaskFormatter("U######'(#')");
 	private MaskFormatter telFormatter = new MaskFormatter("####' ####");
 	private MaskFormatter dateFormatter = new MaskFormatter("##'/##'/####");
 	
-	private JTextField PT_name = new JTextField();
-	//private JTextField PT_HKID = new JTextField();
-	private JTextField PT_gender = new JTextField();
-	//private JTextField PT_dob = new JTextField();
-	//private JTextField PT_tel = new JTextField();
-	
-	private JFormattedTextField PT_HKID = new JFormattedTextField(idFormatter);
-	private JFormattedTextField PT_dob = new JFormattedTextField(dateFormatter);
-	private JFormattedTextField PT_tel = new JFormattedTextField(telFormatter);
-	
+	//Login Page
 	private JTextField L_userNameField = new JTextField();
 	private JPasswordField L_passwordField = new JPasswordField();
 	
-	//private JTextField SPT_HKID = new JTextField();
+	//Patient Search Page
 	private JFormattedTextField SPT_HKID = new JFormattedTextField(idFormatter);
 	
+	//Patient Page
+	private JTextField PT_name = new JTextField();
+	private JTextField PT_gender = new JTextField();
+	private JFormattedTextField PT_HKID = new JFormattedTextField(idFormatter);
+	private JFormattedTextField PT_dob = new JFormattedTextField(dateFormatter);
+	private JFormattedTextField PT_tel = new JFormattedTextField(telFormatter);
 	private JButton PB_update = new JButton("Update");
-	private JButton PB_save = new JButton("Save");
+	private JButton PB_save = new JButton("Save");	
 	
+	//Patient Booking Page
+	private JFormattedTextField PBT_date = new JFormattedTextField(dateFormatter);
+	
+	//Clinic
+	private JTextField SCT_p50;
+	private JTextField SCT_p18;
+	private JTextField SCT_np;
+	private JTextField MTT_treat;
+	private JTextField MTT_fpp;
+	private JCheckBox MTC_bp;
+	private JTable MTTa_table;
+	
+	//Mode variables
 	private int mode=0; //1:doctor 2:admin
 	private boolean saveStatus = false;
 	
+	//Window Panels
 	private JPanel color1;
 	private JPanel contentPane;
 	private JPanel loginPane;
@@ -105,20 +118,17 @@ public class MyWindow extends JFrame implements Serializable{
 	private JPanel c_SCPane;
 	private JPanel c_MTPane;
 	private JPanel c_OHPane;
+	private JPanel timetablePane;
 
+	//Card Layout
 	CardLayout cardLayout = new CardLayout(); //cardLayout, used for different panel
 
+	//Menu Bar
 	private JMenuBar menubar = new JMenuBar(); //top menu bar (not shown on login page)
 
 	private Patient patient = null; //pointer pointing accessing which patient 
-	private JTextField SCT_p50;
-	private JTextField SCT_p18;
-	private JTextField SCT_np;
-	private JTextField MTT_treat;
-	private JTextField MTT_fpp;
-	private JCheckBox MTC_bp;
-	private JTable MTTa_table;
 	//**********Data Member of MyWindow**********//
+	
 
 	private void menubar(){
 		//construct the menubar
@@ -156,10 +166,6 @@ public class MyWindow extends JFrame implements Serializable{
 
 	//Login method
 	private void login(String userName, char[] password){
-		
-		//temp record for testing..........
-		//db.addPatient(new Patient("Chan","A000001(1)","12345678",'M',"01/01/2013"));
-		//temp record for testing..........
 		
 		//load login information
 		File file = new File(filePath);
@@ -374,7 +380,7 @@ public class MyWindow extends JFrame implements Serializable{
 			
 			public void actionPerformed(ActionEvent e) {
 				int index = Patient.patientSearch(db, (String) SPT_HKID.getValue());
-				if (index != -1){
+				if (index > -1){
 					patient = db.getPatient(index);
 					SPT_HKID.setValue(null);
 					PB_save.setEnabled(false);
@@ -385,7 +391,7 @@ public class MyWindow extends JFrame implements Serializable{
 					} catch (ParseException e1) {
 						e1.printStackTrace();
 					}
-				} else{
+				} else if (index == -1){
 					JOptionPane.showMessageDialog(null, "Patient cannot be found.","Search", JOptionPane.ERROR_MESSAGE);
 				}
 			}
@@ -476,6 +482,8 @@ public class MyWindow extends JFrame implements Serializable{
 
 		//*****action button*****
 		JButton B_booking = new JButton("Booking");
+		B_booking.setHorizontalAlignment(SwingConstants.LEFT);
+		B_booking.setIcon(new ImageIcon(getClass().getResource("booking.png")));
 		B_booking.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (saveStatus)
@@ -489,6 +497,8 @@ public class MyWindow extends JFrame implements Serializable{
 		patientPane.add(B_booking);
 
 		JButton B_treatment = new JButton("Treatment");
+		B_treatment.setHorizontalAlignment(SwingConstants.LEFT);
+		B_treatment.setIcon(new ImageIcon(getClass().getResource("treatment.png")));
 		B_treatment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (saveStatus)
@@ -502,6 +512,7 @@ public class MyWindow extends JFrame implements Serializable{
 		patientPane.add(B_treatment);
 
 		JButton B_log = new JButton("Log");
+		B_log.setIcon(new ImageIcon(getClass().getResource("log.png")));
 		B_log.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (saveStatus)
@@ -587,10 +598,9 @@ public class MyWindow extends JFrame implements Serializable{
 		B_update.setBounds(428, 138, 101, 47);
 		p_bookingPane.add(B_update);
 		
-		JFormattedTextField formattedTextField = new JFormattedTextField();
-		formattedTextField.setFont(new Font("Arial", Font.PLAIN, 20));
-		formattedTextField.setBounds(148, 100, 127, 29);
-		p_bookingPane.add(formattedTextField);
+		PBT_date.setFont(new Font("Arial", Font.PLAIN, 20));
+		PBT_date.setBounds(148, 100, 127, 29);
+		p_bookingPane.add(PBT_date);
 		
 		
 		JComboBox comboBox = new JComboBox();
@@ -960,6 +970,18 @@ public class MyWindow extends JFrame implements Serializable{
 		B_clinic.setBackground(new Color(255, 192, 203));
 		B_clinic.setBounds(797, 576, 143, 47);
 		c_MTPane.add(B_clinic);
+		
+		JButton B_new = new JButton("New");
+		B_new.setFont(new Font("Arial", Font.PLAIN, 20));
+		B_new.setBounds(232, 548, 143, 47);
+		c_MTPane.add(B_new);
+		
+		JButton btnDelete = new JButton("Delete");
+		btnDelete.setFont(new Font("Arial", Font.PLAIN, 20));
+		btnDelete.setBounds(405, 548, 143, 47);
+		c_MTPane.add(btnDelete);
+		c_OHPage();
+		contentPane.add(c_OHPane, "c_OH");
 	}
 	//***********************************************************************
 	//***************************C MT Page***********************************
@@ -977,6 +999,13 @@ public class MyWindow extends JFrame implements Serializable{
 	//***********************************************************************
 	//***************************C OH Page***********************************
 	//***********************************************************************
+	
+	private void timetablePage(){
+		timetablePane = new JPanel();
+		timetablePane.setBackground(SystemColor.activeCaption);
+		timetablePane.setLayout(null);
+		
+	}
 	
 	
 	//*******************Construct Label and Button**************************
@@ -1039,7 +1068,7 @@ public class MyWindow extends JFrame implements Serializable{
 		PB_save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try{ //Saving or creating patient record
-					if (PT_HKID.getValue().equals("")) throw new NullFieldException(); //primary key should not be null
+					if (PT_HKID.getValue() == null) throw new NullFieldException(); //primary key should not be null
 					int index = Patient.patientSearch(db, (String) PT_HKID.getValue());
 					boolean save = false; //used to toggle save message
 					if (patient==null){
@@ -1143,18 +1172,8 @@ public class MyWindow extends JFrame implements Serializable{
 		contentPane.add(c_SCPane, "c_SC");
 		c_MTPage();
 		contentPane.add(c_MTPane, "c_MT");
-		
-		JButton B_new = new JButton("New");
-		B_new.setFont(new Font("Arial", Font.PLAIN, 20));
-		B_new.setBounds(232, 548, 143, 47);
-		c_MTPane.add(B_new);
-		
-		JButton btnDelete = new JButton("Delete");
-		btnDelete.setFont(new Font("Arial", Font.PLAIN, 20));
-		btnDelete.setBounds(405, 548, 143, 47);
-		c_MTPane.add(btnDelete);
-		c_OHPage();
-		contentPane.add(c_OHPane, "c_OH");
+		timetablePage();
+		contentPane.add(timetablePane, "Timetable");
 		
 		JLabel lbl_OpeningHour = new JLabel("Opening Hour");
 		lbl_OpeningHour.setHorizontalAlignment(SwingConstants.CENTER);

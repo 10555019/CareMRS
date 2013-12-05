@@ -27,9 +27,12 @@ public class Patient implements Serializable{
 		int min=0;
 		int max=db.getPatientSize() - 1;
 		int mid;
-		if (inputHKID.length()!=10){
+		if (inputHKID == null){
+			JOptionPane.showMessageDialog(null, "Please input a HKID and try again","Search", JOptionPane.ERROR_MESSAGE);
+			return -2;
+		}else if (inputHKID.length()!=10){
 			JOptionPane.showMessageDialog(null, "Wrong HKID format, input again.","Search", JOptionPane.ERROR_MESSAGE);
-			return -1;
+			return -2;
 		}
 		while(min <= max)
 		{
