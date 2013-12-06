@@ -53,7 +53,7 @@ public class Treatmentint1 extends JFrame {
 		
 		JLabel lblTreatment = new JLabel("Treatment");
 		lblTreatment.setForeground(Color.BLUE);
-		lblTreatment.setBounds(383, 36, 174, 47);
+		lblTreatment.setBounds(383, 36, 279, 47);
 		lblTreatment.setFont(new Font("新細明體", Font.BOLD, 38));
 		contentPane.add(lblTreatment);
 		
@@ -119,13 +119,15 @@ public class Treatmentint1 extends JFrame {
 		contentPane.add(lblNewLabel);
 		
 		JTextPane txtpnFundamentalCost = new JTextPane();
+		txtpnFundamentalCost.setEditable(false);
 		txtpnFundamentalCost.setForeground(Color.BLUE);
 		txtpnFundamentalCost.setBackground(Color.ORANGE);
-		txtpnFundamentalCost.setText("Fundamental cost: $\r\nFee per part: $\r\nNumber of part(s): \r\nSubtotal: $");
+		txtpnFundamentalCost.setText("Fundamental cost: $0\r\nFee per part: $\r\nNumber of part(s): \r\nSubtotal: $");
 		txtpnFundamentalCost.setBounds(163, 398, 206, 66);
 		contentPane.add(txtpnFundamentalCost);
 		
 		JTextPane txtpnFundamentalCost_1 = new JTextPane();
+		txtpnFundamentalCost_1.setEditable(false);
 		txtpnFundamentalCost_1.setForeground(Color.BLUE);
 		txtpnFundamentalCost_1.setText("Fundamental cost: $\r\nFee per part: N/A\r\nNumber of part(s): N/A \r\nSubtotal: $");
 		txtpnFundamentalCost_1.setBackground(Color.ORANGE);
@@ -133,15 +135,17 @@ public class Treatmentint1 extends JFrame {
 		contentPane.add(txtpnFundamentalCost_1);
 		
 		JTextPane txtpnFundamentalCost_2 = new JTextPane();
+		txtpnFundamentalCost_2.setEditable(false);
 		txtpnFundamentalCost_2.setForeground(Color.BLUE);
-		txtpnFundamentalCost_2.setText("Fundamental cost: $\r\nFee per part: $\r\nNumber of part(s): \r\nSubtotal: $");
+		txtpnFundamentalCost_2.setText("Fundamental cost: $0\r\nFee per part: $\r\nNumber of part(s): \r\nSubtotal: $");
 		txtpnFundamentalCost_2.setBackground(Color.ORANGE);
 		txtpnFundamentalCost_2.setBounds(579, 189, 206, 66);
 		contentPane.add(txtpnFundamentalCost_2);
 		
 		JTextPane txtpnFundamentalCost_3 = new JTextPane();
+		txtpnFundamentalCost_3.setEditable(false);
 		txtpnFundamentalCost_3.setForeground(Color.BLUE);
-		txtpnFundamentalCost_3.setText("Fundamental cost: $\r\nFee per part: $\r\nNumber of part(s): \r\nSubtotal: $");
+		txtpnFundamentalCost_3.setText("Fundamental cost: $0\r\nFee per part: $\r\nNumber of part(s): \r\nSubtotal: $");
 		txtpnFundamentalCost_3.setBackground(Color.ORANGE);
 		txtpnFundamentalCost_3.setBounds(579, 398, 206, 66);
 		contentPane.add(txtpnFundamentalCost_3);
@@ -151,5 +155,11 @@ public class Treatmentint1 extends JFrame {
 		lblTotal.setFont(new Font("新細明體", Font.BOLD, 15));
 		lblTotal.setBounds(163, 474, 86, 31);
 		contentPane.add(lblTotal);
+		
+		JTextPane textPane = new JTextPane();
+		textPane.setEditable(false);
+		textPane.setBackground(Color.ORANGE);
+		textPane.setBounds(20, 527, 842, 124);
+		contentPane.add(textPane);
 	}
 }
