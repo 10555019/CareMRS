@@ -127,7 +127,7 @@ public class Treatmentint1 extends JFrame {
 		
 		JTextPane txtpnFundamentalCost_1 = new JTextPane();
 		txtpnFundamentalCost_1.setForeground(Color.BLUE);
-		txtpnFundamentalCost_1.setText("Fundamental cost: $\r\nFee per part: $\r\nNumber of part(s): \r\nSubtotal: $");
+		txtpnFundamentalCost_1.setText("Fundamental cost: $\r\nFee per part: N/A\r\nNumber of part(s): N/A \r\nSubtotal: $");
 		txtpnFundamentalCost_1.setBackground(Color.ORANGE);
 		txtpnFundamentalCost_1.setBounds(163, 189, 206, 66);
 		contentPane.add(txtpnFundamentalCost_1);
