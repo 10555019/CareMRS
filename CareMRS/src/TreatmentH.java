@@ -124,7 +124,7 @@ public class TreatmentH extends JFrame {
 		lblSubtotal.setBounds(541, 462, 191, 31);
 		contentPane.add(lblSubtotal);
 		
-		JLabel lblBodyParts = new JLabel("Entering new body part(s)");
+		JLabel lblBodyParts = new JLabel("Entering new body part");
 		lblBodyParts.setForeground(Color.BLUE);
 		lblBodyParts.setFont(new Font("·s²Ó©úÅé", Font.BOLD, 15));
 		lblBodyParts.setBounds(122, 228, 191, 31);
