@@ -123,6 +123,7 @@ public class MyWindow extends JFrame implements Serializable{
 	private JTextPane TTP_remark = new JTextPane();
 	private JPanel JP_fee = new JPanel();
 	private JLabel Tlbl_total = new JLabel();
+	private JLabel Tlbl_Sub_total = new JLabel();
 	private JComboBox<String> TtCB_text = new JComboBox<String>();
 	private DefaultListModel<String> TtL_model = new DefaultListModel<String>();
 	private DefaultListModel<String> TbL_model = new DefaultListModel<String>();
@@ -1113,62 +1114,104 @@ public class MyWindow extends JFrame implements Serializable{
 
 		TtCB_text.removeAllItems();
 		TreatmentMeta.addCombo(db, TtCB_text);
-		
+
 		TtL_model.removeAllElements();
 		TbL_model.removeAllElements();
 
 		TtL_list.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
-				TbL_model.removeAllElements();
-				if (TtL_list.getSelectedIndex()!=-1)
-					for (int i=0; i<patient.getTreatmentRec(patient.getTreatmentRecSize()-1).getTreatment(TtL_list.getSelectedIndex()).getPartsSize(); i++){
-						TbL_model.add(i, patient.getTreatmentRec(patient.getTreatmentRecSize()-1).getTreatment(TtL_list.getSelectedIndex()).getParts(i));
-					}
+				if (TtL_list.getSelectedIndex()!=-1){
+					Tlbl_total.setText(Float.toString(patient.getTreatmentRec(patient.getTreatmentRecSize()-1).getTreatment(TtL_list.getSelectedIndex()).getPrice()));
+					TbL_model.removeAllElements();
+					if (TtL_list.getSelectedIndex()!=-1)
+						for (int i=0; i<patient.getTreatmentRec(patient.getTreatmentRecSize()-1).getTreatment(TtL_list.getSelectedIndex()).getPartsSize(); i++){
+							TbL_model.add(i, patient.getTreatmentRec(patient.getTreatmentRecSize()-1).getTreatment(TtL_list.getSelectedIndex()).getParts(i));
+						}
+				}
 			}});
 
 		JButton TtB_save = new JButton("Save");
 		TtB_save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				int cur_rec = patient.getTreatmentRecSize()-1;
+				int cur_treat = TtL_list.getSelectedIndex();
+				float tmp_price;
+				float tmp_sub_price;
 				//add treatment
 				Treatment treatment = new Treatment();
 				treatment.setType(db.getClinic().getTreatmentMeta(TtCB_text.getSelectedIndex()).getType());
 				patient.getTreatmentRec(patient.getTreatmentRecSize()-1).addTreatment(treatment);
 				//update list
-				TtL_model.add(patient.getTreatmentRec(patient.getTreatmentRecSize()-1).getTreatmentSize()-1, patient.getTreatmentRec(patient.getTreatmentRecSize()-1).getTreatment(patient.getTreatmentRec(patient.getTreatmentRecSize()-1).getTreatmentSize()-1).getType());
+				TtL_model.add(patient.getTreatmentRec(patient.getTreatmentRecSize()-1).getTreatmentSize()-1,
+						patient.getTreatmentRec(patient.getTreatmentRecSize()-1).getTreatment(patient.getTreatmentRec(patient.getTreatmentRecSize()-1).getTreatmentSize()-1).getType());
+				if (!(db.getClinic().getTreatmentMeta(TtCB_text.getSelectedIndex()).isBodyPart())){
+					//calculate price
+					tmp_sub_price = patient.getTreatmentRec(cur_rec).getTotalPrice() + db.getClinic().getTreatmentMeta(TtCB_text.getSelectedIndex()).getFpp();
+					//System.out.println(tmp_sub_price);
+					patient.getTreatmentRec(cur_rec).setTotalPrice(tmp_sub_price);
+					tmp_price = db.getClinic().getTreatmentMeta(TtCB_text.getSelectedIndex()).getFpp();
+					//System.out.println(tmp_price);
+					patient.getTreatmentRec(cur_rec).getTreatment(patient.getTreatmentRec(cur_rec).getTreatmentSize()-1).setPrice(tmp_price);
+					//update price
+					Tlbl_total.setText(Float.toString(tmp_price));
+					Tlbl_Sub_total.setText(Float.toString(tmp_sub_price));
+				}
 			}
 		});
 		TtB_save.setFont(new Font("Arial", Font.PLAIN, 20));
 		TtB_save.setBounds(39, 90, 79, 33);
 		JP_treatmentType.add(TtB_save);
-		
+
 		JButton Ttb_clear = new JButton("Clear");
 		Ttb_clear.setFont(new Font("Arial", Font.PLAIN, 20));
 		Ttb_clear.setBounds(157, 90, 90, 33);
 		JP_treatmentType.add(Ttb_clear);
-		
 
-		
+
+
 		JLabel lbl_Tb = new JLabel("Enter Body part");
 		lbl_Tb.setFont(new Font("Arial", Font.PLAIN, 20));
 		lbl_Tb.setBounds(10, 10, 155, 24);
 		JP_bodyPart.add(lbl_Tb);
-		
+
 		JButton TbB_save = new JButton("Save");
 		TbB_save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int cur_rec = patient.getTreatmentRecSize()-1;
-				int cur_treat = TtL_list.getSelectedIndex();
+				if ((db.getClinic().getTreatmentMeta(TtCB_text.getSelectedIndex()).isBodyPart())){
+					if (!TbT_text.getText().equals("")){
+						int cur_rec = patient.getTreatmentRecSize()-1;
+						int cur_treat = TtL_list.getSelectedIndex();
+						float tmp_price;
+						float tmp_sub_price;
 
-				if (cur_treat!=-1){
-					//add parts
-					patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).addParts(TbT_text.getText());
-					//update list
-					TbL_model.add(patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).getPartsSize()-1, patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).getParts(patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).getPartsSize()-1));
-					//clear textField
+						if (cur_treat!=-1){
+							//add parts
+							patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).addParts(TbT_text.getText());
+							//update list
+							TbL_model.add(patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).getPartsSize()-1, patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).getParts(patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).getPartsSize()-1));
+							//clear textField
+							TbT_text.setText(null);
+							//calculate price
+							tmp_sub_price = patient.getTreatmentRec(cur_rec).getTotalPrice() + db.getClinic().getTreatmentMeta(db.getClinic().searchType(patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).getType())).getFpp();
+							patient.getTreatmentRec(cur_rec).setTotalPrice(tmp_sub_price);
+							tmp_price = patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).getPrice() + db.getClinic().getTreatmentMeta(db.getClinic().searchType(patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).getType())).getFpp();
+							patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).setPrice(tmp_price);
+							//update price
+							Tlbl_total.setText(Float.toString(tmp_price));
+							Tlbl_Sub_total.setText(Float.toString(tmp_sub_price));
+							
+							System.out.println("add " + patient.getTreatmentRecSize());
+							
+						} else{
+							JOptionPane.showMessageDialog(null, "Please select a Treatment type from the Type of treatment list","Body Parts", JOptionPane.WARNING_MESSAGE);
+						}
+					} else{
+						JOptionPane.showMessageDialog(null, "Please enter body part","Body Parts", JOptionPane.WARNING_MESSAGE);
+					}
+				}else{
+					JOptionPane.showMessageDialog(null, "No body parts should be entered.","Body Parts", JOptionPane.WARNING_MESSAGE);
 					TbT_text.setText(null);
-				} else{
-					JOptionPane.showMessageDialog(null, "Please select a Treatment type from the Type of treatment list","Body Parts", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
@@ -1209,8 +1252,15 @@ public class MyWindow extends JFrame implements Serializable{
 		
 		JLabel lbl_total = new JLabel("Total");
 		lbl_total.setFont(new Font("Arial", Font.PLAIN, 20));
-		lbl_total.setBounds(10, 23, 123, 24);
+		lbl_total.setBounds(10, 14, 123, 24);
 		JP_fee.add(lbl_total);
+		
+		JLabel lblSubtotal = new JLabel("Sub-Total");
+		lblSubtotal.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblSubtotal.setBounds(10, 52, 123, 24);
+		JP_fee.add(lblSubtotal);
+		
+		
 	}
 	//***********************************************************************
 	//*************************Treatment Page********************************
@@ -1231,11 +1281,32 @@ public class MyWindow extends JFrame implements Serializable{
 		lblTreatmentLog.setBounds(349, 20, 286, 47);
 		logPane.add(lblTreatmentLog);
 		
+		TLTa_table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+			@Override
+			public void valueChanged(ListSelectionEvent arg0) {
+				TLL_model.removeAllElements();
+				System.out.println("page: "+findRec());
+				if (TLTa_table.getSelectedRow()!=-1)
+					for (int i=0; i<patient.getTreatmentRec(findRec()).getTreatment(TLTa_table.getSelectedRow()).getPartsSize(); i++){
+						TLL_model.add(i, patient.getTreatmentRec(findRec()).getTreatment(TLTa_table.getSelectedRow()).getParts(i));
+					}
+			}});
 		if (patient!=null)
 			Patient.addTable(patient, TLTa_model);
 		
 		
 		
+	}
+	
+	private int findRec(){
+		int i = TLTa_table.getSelectedRow();
+		int x;
+		for (x = 0; i>0; x++){
+			i = i - patient.getTreatmentRec(x).getTreatmentSize();
+			if (i<0)
+				x--;
+		}
+		return x;
 	}
 	//***********************************************************************
 	//***************************log Page************************************
@@ -1431,8 +1502,12 @@ public class MyWindow extends JFrame implements Serializable{
 		JP_remark.add(TTP_remark);
 		
 		Tlbl_total.setFont(new Font("Arial", Font.PLAIN, 20));
-		Tlbl_total.setBounds(172, 23, 123, 24);
+		Tlbl_total.setBounds(172, 14, 123, 24);
 		JP_fee.add(Tlbl_total);
+		
+		Tlbl_Sub_total.setFont(new Font("Arial", Font.PLAIN, 20));
+		Tlbl_Sub_total.setBounds(172, 52, 123, 24);
+		JP_fee.add(Tlbl_Sub_total);
 		
 		JP_treatmentType.setBackground(new Color(255, 182, 193));
 		JP_treatmentType.setBounds(73, 118, 286, 133);
@@ -1478,9 +1553,10 @@ public class MyWindow extends JFrame implements Serializable{
 		JP_remark.setLayout(null);
 		
 		JP_fee.setBackground(new Color(255, 182, 193));
-		JP_fee.setBounds(558, 467, 392, 70);
+		JP_fee.setBounds(558, 453, 392, 90);
 		treatmentPane.add(JP_fee);
 		JP_fee.setLayout(null);
+		
 		
 		//MT
 		MTP_pane.setBackground(SystemColor.activeCaption);

@@ -26,6 +26,14 @@ public class Clinic implements Serializable{
 		}
 		return null;
 	}
+	
+	public int searchType(String type){
+		for (int i = 0; i<treatmentMeta.size(); i++){
+			if (type.equals(treatmentMeta.get(i).getType()))
+				return i;
+		}
+		return -1;
+	}
 
 	public int getTreatmentMetaSize(){
 		return treatmentMeta.size();

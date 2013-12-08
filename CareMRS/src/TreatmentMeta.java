@@ -14,7 +14,7 @@ public class TreatmentMeta implements Serializable{
 		this.fpp = fpp;
 		this.bodyPart = bodyPart;
 	}
-
+	
 	public String getType() {
 		return type;
 	}
