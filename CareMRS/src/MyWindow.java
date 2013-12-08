@@ -453,7 +453,13 @@ public class MyWindow extends JFrame implements Serializable{
 		B_search.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				int index = Patient.patientSearch(db, (String) SPT_HKID.getValue());
+				//int index = Patient.patientSearch(db, (String) SPT_HKID.getValue());
+				
+				
+				
+				int index = Patient.patientSearch(db, "A000001(1)");
+				
+				
 				if (index > -1){
 					patient = db.getPatient(index);
 					SPT_HKID.setValue(null);
@@ -1200,9 +1206,6 @@ public class MyWindow extends JFrame implements Serializable{
 							//update price
 							Tlbl_total.setText(Float.toString(tmp_price));
 							Tlbl_Sub_total.setText(Float.toString(tmp_sub_price));
-							
-							System.out.println("add " + patient.getTreatmentRecSize());
-							
 						} else{
 							JOptionPane.showMessageDialog(null, "Please select a Treatment type from the Type of treatment list","Body Parts", JOptionPane.WARNING_MESSAGE);
 						}
@@ -1280,22 +1283,29 @@ public class MyWindow extends JFrame implements Serializable{
 		lblTreatmentLog.setFont(new Font("Arial", Font.BOLD, 30));
 		lblTreatmentLog.setBounds(349, 20, 286, 47);
 		logPane.add(lblTreatmentLog);
-		
+
 		TLTa_table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
+				int beforehand=0;
 				TLL_model.removeAllElements();
-				System.out.println("page: "+findRec());
-				if (TLTa_table.getSelectedRow()!=-1)
-					for (int i=0; i<patient.getTreatmentRec(findRec()).getTreatment(TLTa_table.getSelectedRow()).getPartsSize(); i++){
-						TLL_model.add(i, patient.getTreatmentRec(findRec()).getTreatment(TLTa_table.getSelectedRow()).getParts(i));
+				if (TLTa_table.getSelectedRow()!=-1){
+					for (int x=findRec()-1;x>=0;x--){
+						beforehand += patient.getTreatmentRec(x).getTreatmentSize();
 					}
+					for (int i=0; i<patient.getTreatmentRec(findRec()).getTreatment(TLTa_table.getSelectedRow()-beforehand).getPartsSize(); i++){
+						TLL_model.add(i, patient.getTreatmentRec(findRec()).getTreatment(TLTa_table.getSelectedRow()-beforehand).getParts(i));
+					}
+				}
 			}});
-		if (patient!=null)
+
+		if (patient!=null){
+			int rowCount=TLTa_model.getRowCount();
+			for(int i=rowCount-1;i>=0;i--){
+				TLTa_model.removeRow(i);
+			}
 			Patient.addTable(patient, TLTa_model);
-		
-		
-		
+		}
 	}
 	
 	private int findRec(){

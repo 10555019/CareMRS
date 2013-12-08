@@ -139,6 +139,7 @@ public class Patient implements Serializable{
 		int subindex = 0;
 		if (patient.getTreatmentRecSize()>0)
 			while (patient.getTreatmentRec(index)!=null){
+				subindex=0;
 				while (patient.getTreatmentRec(index).getTreatment(subindex)!=null){
 					defaultTableModel.addRow(new Object[]{patient.getTreatmentRec(index).getDate(),patient.getTreatmentRec(index).getTime(),
 							patient.getTreatmentRec(index).getTreatment(subindex).getType(),
