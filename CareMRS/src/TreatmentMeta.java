@@ -48,11 +48,15 @@ public class TreatmentMeta implements Serializable{
 			}
 		}
 	}
-	
+
 	public static void addTable(Db db, DefaultTableModel defaultTableModel){
 		String tmpYN;
 		int index = 0;
 		if (db.getClinic().getTreatmentMetaSize()>0){
+			int rowCount = defaultTableModel.getRowCount();
+			for (int i = rowCount - 1; i >= 0; i--){
+				defaultTableModel.removeRow(i);
+			}
 			while (db.getClinic().getTreatmentMeta(index)!=null){
 				if (db.getClinic().getTreatmentMeta(index).isBodyPart())
 					tmpYN = "Y";

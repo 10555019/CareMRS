@@ -959,16 +959,18 @@ public class MyWindow extends JFrame implements Serializable{
 		lbl_MedicalTreatment.setFont(new Font("Arial", Font.BOLD, 30));
 		lbl_MedicalTreatment.setBounds(349, 20, 286, 47);
 		c_MTPane.add(lbl_MedicalTreatment);
-		
+
 		MTTa_table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
-				MTT_treat.setText((String) MTTa_table.getValueAt(MTTa_table.getSelectedRow(),0).toString());
-				MTT_fpp.setText((String) MTTa_table.getValueAt(MTTa_table.getSelectedRow(),1).toString());
-				if (MTTa_table.getValueAt(MTTa_table.getSelectedRow(),2).toString()=="Y")
-					MTC_bp.setSelected(true);
-				else
-					MTC_bp.setSelected(false);
+				if (MTTa_table.getSelectedRow()>=0){
+					MTT_treat.setText((String) MTTa_table.getValueAt(MTTa_table.getSelectedRow(),0).toString());
+					MTT_fpp.setText((String) MTTa_table.getValueAt(MTTa_table.getSelectedRow(),1).toString());
+					if (MTTa_table.getValueAt(MTTa_table.getSelectedRow(),2).toString()=="Y")
+						MTC_bp.setSelected(true);
+					else
+						MTC_bp.setSelected(false);
+				}
 			}});
 		TreatmentMeta.addTable(db, MTTa_model);
 		
