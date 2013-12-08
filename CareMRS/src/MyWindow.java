@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import java.awt.Font;
 
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
 import javax.swing.Icon;
 import javax.swing.JFormattedTextField;
 import javax.swing.JMenuItem;
@@ -26,6 +27,7 @@ import javax.swing.JScrollPane;
 
 import java.awt.Color;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import javax.swing.ImageIcon;
@@ -58,7 +60,6 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
-import java.awt.Component;
 import javax.swing.JTextPane;
 
 
@@ -105,7 +106,12 @@ public class MyWindow extends JFrame implements Serializable{
 	private JTextField MTT_treat;
 	private JTextField MTT_fpp;
 	private JCheckBox MTC_bp;
-	private JTable MTTa_table;
+	
+	//MT
+	private JPanel MTP_pane = new JPanel();
+	private DefaultTableModel MTTa_model;
+	private String[] MTTa_columns = {"Type of treatment", "Fee ($) per part", "Body parts"};
+	private JTable MTTa_table = new JTable(new DefaultTableModel(null,MTTa_columns));
 	
 	//Treatment
 	private JTextField TbT_text;
@@ -118,10 +124,15 @@ public class MyWindow extends JFrame implements Serializable{
 	private JPanel JP_fee = new JPanel();
 	private JLabel Tlbl_total = new JLabel();
 	private JComboBox<String> TtCB_text = new JComboBox<String>();
+	private DefaultListModel<String> TtL_model = new DefaultListModel<String>();
+	private DefaultListModel<String> TbL_model = new DefaultListModel<String>();
+	private JList<String> TtL_list = new JList<String>(TtL_model);
+	private JList<String> TbL_list = new JList<String>(TbL_model);
 	
 	//Mode variables
 	private int mode; //1:doctor 2:admin
 	private boolean saveStatus = false;
+	private String doctorID;
 	
 	//Window Panels
 	private JPanel color1;
@@ -147,7 +158,6 @@ public class MyWindow extends JFrame implements Serializable{
 	private JMenuBar menubar = new JMenuBar(); //top menu bar (not shown on login page)
 
 	private Patient patient = null; //pointer pointing accessing which patient 
-
 	//**********Data Member of MyWindow**********//
 	
 
@@ -193,6 +203,7 @@ public class MyWindow extends JFrame implements Serializable{
 		medicTreat.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				c_MTPage();
 				cardLayout.show(contentPane, "c_MT");
 			}});
 		clinic.add(specCond);
@@ -222,6 +233,7 @@ public class MyWindow extends JFrame implements Serializable{
 		logAc = logAc.load(logAc);
 		if ((mode = Doctor.checkLogin(db,logAc,userName,password))!=0){
 			//when password match, saved mode : 1:Doctor 2:admin
+			doctorID = userName;
 			db = db.load(db);
 			menuPage();
 			cardLayout.show(contentPane, "Menu"); //change panel
@@ -782,6 +794,7 @@ public class MyWindow extends JFrame implements Serializable{
 		B_MT.setBackground(new Color(152, 251, 152));
 		B_MT.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				c_MTPage();
 				cardLayout.show(contentPane, "c_MT");
 			}
 		});
@@ -928,32 +941,7 @@ public class MyWindow extends JFrame implements Serializable{
 		lbl_MedicalTreatment.setBounds(349, 20, 286, 47);
 		c_MTPane.add(lbl_MedicalTreatment);
 		
-		String[] columns = {"Type of treatment", "Fee ($) per part", "Body parts"};
-		
-		String[][] data = {{"Herbal", "250", "N/A"},
-				{"acupuncture", "350", "Y"},
-				{"cupping", "300", "Y"}
-				
-		
-		
-		};
-
-		JPanel MTP_pane = new JPanel();
-		MTP_pane.setBackground(SystemColor.activeCaption);
-		MTP_pane.setBounds(479, 107, 448, 390);
-		MTP_pane.setLayout(new FlowLayout());
-		c_MTPane.add(MTP_pane);
-
-		MTTa_table = new JTable(data, columns);
-		MTTa_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		MTTa_table.setFont(new Font("Arial", Font.PLAIN, 18));
-		MTTa_table.setBackground(SystemColor.activeCaption);
-		MTTa_table.setPreferredScrollableViewportSize(new Dimension(400, 350));
-		MTTa_table.setFillsViewportHeight(true);
-		
-		
 		MTTa_table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
-
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
 				MTT_treat.setText((String) MTTa_table.getValueAt(MTTa_table.getSelectedRow(),0).toString());
@@ -963,13 +951,7 @@ public class MyWindow extends JFrame implements Serializable{
 				else
 					MTC_bp.setSelected(false);
 			}});
-
-		JScrollPane MTjp = new JScrollPane(MTTa_table);
-		MTjp.setFont(new Font("Arial", Font.PLAIN, 18));
-		MTP_pane.add(MTjp);
-
-		
-		
+		TreatmentMeta.addTable(db, MTTa_model);
 		
 		JLabel lbl_Treatment = new JLabel("Treatment :");
 		lbl_Treatment.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -988,24 +970,6 @@ public class MyWindow extends JFrame implements Serializable{
 		lbl_BodyParts.setFont(new Font("Arial", Font.PLAIN, 20));
 		lbl_BodyParts.setBounds(40, 350, 137, 47);
 		c_MTPane.add(lbl_BodyParts);
-		
-		MTT_treat = new JTextField();
-		MTT_treat.setFont(new Font("Arial", Font.PLAIN, 20));
-		MTT_treat.setColumns(10);
-		MTT_treat.setBounds(185, 131, 240, 47);
-		c_MTPane.add(MTT_treat);
-		
-		MTT_fpp = new JTextField();
-		MTT_fpp.setFont(new Font("Arial", Font.PLAIN, 20));
-		MTT_fpp.setColumns(10);
-		MTT_fpp.setBounds(187, 237, 238, 47);
-		c_MTPane.add(MTT_fpp);
-		
-		MTC_bp = new JCheckBox("");
-		MTC_bp.setBackground(SystemColor.activeCaption);
-		MTC_bp.setHorizontalAlignment(SwingConstants.CENTER);
-		MTC_bp.setBounds(187, 350, 240, 47);
-		c_MTPane.add(MTC_bp);
 		
 		JButton B_save = new JButton("Save");
 		B_save.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -1115,6 +1079,11 @@ public class MyWindow extends JFrame implements Serializable{
 	//*************************Treatment Page********************************
 	//***********************************************************************
 	private void treatmentPage(){
+		
+		TreatmentRec treatmentRec = new TreatmentRec(doctorID);
+		if (patient != null)
+			patient.addTreatmentRec(treatmentRec);
+		
 		treatmentPane = new JPanel();
 		treatmentPane.setBackground(SystemColor.activeCaption);
 		treatmentPane.setLayout(null);
@@ -1129,23 +1098,41 @@ public class MyWindow extends JFrame implements Serializable{
 		lbl_Tt.setFont(new Font("Arial", Font.PLAIN, 20));
 		lbl_Tt.setBounds(10, 10, 193, 24);
 		JP_treatmentType.add(lbl_Tt);
-		
+
 		TtCB_text.removeAllItems();
 		TreatmentMeta.addCombo(db, TtCB_text);
 		
-		JButton TtB_add = new JButton("Add");
-		TtB_add.setFont(new Font("Arial", Font.PLAIN, 20));
-		TtB_add.setBounds(9, 90, 79, 33);
-		JP_treatmentType.add(TtB_add);
-		
+		TtL_model.removeAllElements();
+		TbL_model.removeAllElements();
+
+		TtL_list.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+			@Override
+			public void valueChanged(ListSelectionEvent arg0) {
+				TbL_model.removeAllElements();
+				if (TtL_list.getSelectedIndex()!=-1)
+					for (int i=0; i<patient.getTreatmentRec(patient.getTreatmentRecSize()-1).getTreatment(TtL_list.getSelectedIndex()).getPartsSize(); i++){
+						TbL_model.add(i, patient.getTreatmentRec(patient.getTreatmentRecSize()-1).getTreatment(TtL_list.getSelectedIndex()).getParts(i));
+					}
+			}});
+
 		JButton TtB_save = new JButton("Save");
+		TtB_save.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//add treatment
+				Treatment treatment = new Treatment();
+				treatment.setType(db.getClinic().getTreatmentMeta(TtCB_text.getSelectedIndex()).getType());
+				patient.getTreatmentRec(patient.getTreatmentRecSize()-1).addTreatment(treatment);
+				//update list
+				TtL_model.add(patient.getTreatmentRec(patient.getTreatmentRecSize()-1).getTreatmentSize()-1, patient.getTreatmentRec(patient.getTreatmentRecSize()-1).getTreatment(patient.getTreatmentRec(patient.getTreatmentRecSize()-1).getTreatmentSize()-1).getType());
+			}
+		});
 		TtB_save.setFont(new Font("Arial", Font.PLAIN, 20));
-		TtB_save.setBounds(97, 90, 79, 33);
+		TtB_save.setBounds(39, 90, 79, 33);
 		JP_treatmentType.add(TtB_save);
 		
 		JButton Ttb_clear = new JButton("Clear");
 		Ttb_clear.setFont(new Font("Arial", Font.PLAIN, 20));
-		Ttb_clear.setBounds(185, 90, 90, 33);
+		Ttb_clear.setBounds(157, 90, 90, 33);
 		JP_treatmentType.add(Ttb_clear);
 		
 
@@ -1155,19 +1142,31 @@ public class MyWindow extends JFrame implements Serializable{
 		lbl_Tb.setBounds(10, 10, 155, 24);
 		JP_bodyPart.add(lbl_Tb);
 		
-		JButton TbB_add = new JButton("Add");
-		TbB_add.setFont(new Font("Arial", Font.PLAIN, 20));
-		TbB_add.setBounds(9, 90, 79, 33);
-		JP_bodyPart.add(TbB_add);
-		
 		JButton TbB_save = new JButton("Save");
+		TbB_save.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int cur_rec = patient.getTreatmentRecSize()-1;
+				int cur_treat = TtL_list.getSelectedIndex();
+
+				if (cur_treat!=-1){
+					//add parts
+					patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).addParts(TbT_text.getText());
+					//update list
+					TbL_model.add(patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).getPartsSize()-1, patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).getParts(patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).getPartsSize()-1));
+					//clear textField
+					TbT_text.setText(null);
+				} else{
+					JOptionPane.showMessageDialog(null, "Please select a Treatment type from the Type of treatment list","Body Parts", JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
 		TbB_save.setFont(new Font("Arial", Font.PLAIN, 20));
-		TbB_save.setBounds(97, 90, 79, 33);
+		TbB_save.setBounds(39, 90, 79, 33);
 		JP_bodyPart.add(TbB_save);
 		
 		JButton TbB_clear = new JButton("Clear");
 		TbB_clear.setFont(new Font("Arial", Font.PLAIN, 20));
-		TbB_clear.setBounds(185, 90, 90, 33);
+		TbB_clear.setBounds(157, 90, 90, 33);
 		JP_bodyPart.add(TbB_clear);
 		
 		JLabel lbl_remark = new JLabel("Remark:");
@@ -1187,13 +1186,18 @@ public class MyWindow extends JFrame implements Serializable{
 		treatmentPane.add(TB_patient);
 		
 		JButton TB_save = new JButton("Save");
+		TB_save.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				patient.getTreatmentRec(patient.getTreatmentRecSize()-1).setRemarks(TTP_remark.getText());
+			}
+		});
 		TB_save.setFont(new Font("Arial", Font.PLAIN, 20));
-		TB_save.setBounds(638, 565, 143, 48);
+		TB_save.setBounds(529, 565, 143, 48);
 		treatmentPane.add(TB_save);
 		
 		JLabel lbl_total = new JLabel("Total");
 		lbl_total.setFont(new Font("Arial", Font.PLAIN, 20));
-		lbl_total.setBounds(10, 54, 123, 24);
+		lbl_total.setBounds(10, 23, 123, 24);
 		JP_fee.add(lbl_total);
 	}
 	//***********************************************************************
@@ -1403,7 +1407,7 @@ public class MyWindow extends JFrame implements Serializable{
 		JP_remark.add(TTP_remark);
 		
 		Tlbl_total.setFont(new Font("Arial", Font.PLAIN, 20));
-		Tlbl_total.setBounds(172, 54, 123, 24);
+		Tlbl_total.setBounds(172, 23, 123, 24);
 		JP_fee.add(Tlbl_total);
 		
 		JP_treatmentType.setBackground(new Color(255, 182, 193));
@@ -1416,11 +1420,33 @@ public class MyWindow extends JFrame implements Serializable{
 		JP_bodyPart.setBounds(73, 318, 286, 133);
 		treatmentPane.add(JP_bodyPart);
 		
-		JP_treatTable.setBounds(410, 94, 254, 281);
+		JP_treatTable.setBounds(410, 94, 254, 285);
 		treatmentPane.add(JP_treatTable);
+		JP_treatTable.setLayout(null);
+		TtL_list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		JP_bodyTable.setBounds(697, 94, 254, 281);
+		
+		
+		TtL_list.setBounds(10, 44, 234, 227);
+		JP_treatTable.add(TtL_list);
+		
+		JLabel lbl_type = new JLabel("Type of Treatment");
+		lbl_type.setFont(new Font("Arial", Font.PLAIN, 20));
+		lbl_type.setBounds(10, 10, 170, 24);
+		JP_treatTable.add(lbl_type);
+		
+		JP_bodyTable.setBounds(697, 94, 254, 285);
 		treatmentPane.add(JP_bodyTable);
+		JP_bodyTable.setLayout(null);
+		
+		JLabel lbl_bodyPart = new JLabel("Body Parts");
+		lbl_bodyPart.setFont(new Font("Arial", Font.PLAIN, 20));
+		lbl_bodyPart.setBounds(10, 10, 170, 24);
+		JP_bodyTable.add(lbl_bodyPart);
+		TbL_list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		TbL_list.setBounds(10, 44, 234, 227);
+		JP_bodyTable.add(TbL_list);
 		
 		JP_remark.setBackground(new Color(255, 182, 193));
 		JP_remark.setBounds(73, 483, 446, 133);
@@ -1428,9 +1454,42 @@ public class MyWindow extends JFrame implements Serializable{
 		JP_remark.setLayout(null);
 		
 		JP_fee.setBackground(new Color(255, 182, 193));
-		JP_fee.setBounds(558, 404, 392, 133);
+		JP_fee.setBounds(558, 467, 392, 70);
 		treatmentPane.add(JP_fee);
 		JP_fee.setLayout(null);
+		
+		//MT
+		MTP_pane.setBackground(SystemColor.activeCaption);
+		MTP_pane.setBounds(479, 107, 448, 390);
+		MTP_pane.setLayout(new FlowLayout());
+		c_MTPane.add(MTP_pane);
+		MTTa_model = (DefaultTableModel) MTTa_table.getModel();
+		MTTa_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		MTTa_table.setFont(new Font("Arial", Font.PLAIN, 18));
+		MTTa_table.setBackground(SystemColor.activeCaption);
+		MTTa_table.setPreferredScrollableViewportSize(new Dimension(400, 350));
+		MTTa_table.setFillsViewportHeight(true);
+		JScrollPane MTjp = new JScrollPane(MTTa_table);
+		MTjp.setFont(new Font("Arial", Font.PLAIN, 18));
+		MTP_pane.add(MTjp);
+		
+		MTT_treat = new JTextField();
+		MTT_treat.setFont(new Font("Arial", Font.PLAIN, 20));
+		MTT_treat.setColumns(10);
+		MTT_treat.setBounds(185, 131, 240, 47);
+		c_MTPane.add(MTT_treat);
+		
+		MTT_fpp = new JTextField();
+		MTT_fpp.setFont(new Font("Arial", Font.PLAIN, 20));
+		MTT_fpp.setColumns(10);
+		MTT_fpp.setBounds(187, 237, 238, 47);
+		c_MTPane.add(MTT_fpp);
+		
+		MTC_bp = new JCheckBox("");
+		MTC_bp.setBackground(SystemColor.activeCaption);
+		MTC_bp.setHorizontalAlignment(SwingConstants.CENTER);
+		MTC_bp.setBounds(187, 350, 240, 47);
+		c_MTPane.add(MTC_bp);
 
 	}
 	//*******************Construct Label and Button**************************

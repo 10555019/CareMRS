@@ -11,7 +11,7 @@ public class Patient implements Serializable{
 	private String telephone;
 	private char gender;
 	private GregorianCalendar dob = new GregorianCalendar();
-	private LinkedList<TreatmentRec> record = new LinkedList<TreatmentRec>(); //store the treatment records
+	private LinkedList<TreatmentRec> treatmentRec = new LinkedList<TreatmentRec>(); //store the treatment records
 	private Calendar current ;
 	//constructor - to create patient object
 	public Patient(String name, String HKID, String telephone, char gender, String date){
@@ -116,29 +116,24 @@ public class Patient implements Serializable{
 		year = Integer.parseInt(date.substring(6,10));
 		dob.set(year, month-1, day);
 	}
-
-	public LinkedList<TreatmentRec> getRecord() {
-		return record;
+	
+	public TreatmentRec getTreatmentRec(int index){
+		try{
+			return treatmentRec.get(index);
+		} catch (IndexOutOfBoundsException e){
+		}
+		return null;
 	}
-
-	public void setRecord(LinkedList<TreatmentRec> record) {
-		this.record = record;
+	
+	public void addTreatmentRec(TreatmentRec treatmentRec){
+		this.treatmentRec.add(treatmentRec);
 	}
+	
+	public int getTreatmentRecSize(){
+		return treatmentRec.size();
+	}
+	
 	public void book(){
-		
-		/*
-		
-		
-		
-		
-		Booking booking = new Booking()
-		
-		
-		*/
-		
-		
-		
-		
 		int cyear = current.get(Calendar.YEAR);
 		int diff1 = cyear-dob.get(1);
 		int cmonth = current.get(Calendar.MONTH);

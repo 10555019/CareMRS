@@ -29,7 +29,11 @@ public class Db implements Serializable{
 
 	
 	public Patient getPatient(int index){
-		return patient.get(index);
+		try{
+			return patient.get(index);
+		} catch (IndexOutOfBoundsException e){
+		}
+		return null;
 	}
 	
 	public int getPatientSize(){

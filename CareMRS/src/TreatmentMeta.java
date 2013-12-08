@@ -1,6 +1,7 @@
 import java.io.Serializable;
 
 import javax.swing.JComboBox;
+import javax.swing.table.DefaultTableModel;
 
 
 public class TreatmentMeta implements Serializable{
@@ -44,9 +45,21 @@ public class TreatmentMeta implements Serializable{
 			while (db.getClinic().getTreatmentMeta(index)!=null){
 				comboBox.addItem(db.getClinic().getTreatmentMeta(index).getType());
 				index++;
-				
-				System.out.println(index);
-				
+			}
+		}
+	}
+	
+	public static void addTable(Db db, DefaultTableModel defaultTableModel){
+		String tmpYN;
+		int index = 0;
+		if (db.getClinic().getTreatmentMetaSize()>0){
+			while (db.getClinic().getTreatmentMeta(index)!=null){
+				if (db.getClinic().getTreatmentMeta(index).isBodyPart())
+					tmpYN = "Y";
+				else
+					tmpYN = "N/A";
+				defaultTableModel.addRow(new Object[]{db.getClinic().getTreatmentMeta(index).getType(),db.getClinic().getTreatmentMeta(index).getFpp(),tmpYN});
+				index++;
 			}
 		}
 	}
