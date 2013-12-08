@@ -22,20 +22,20 @@ public class Admin extends Staff implements Serializable{
 	private void setOpenHour(){
 		int a=0,b=0;
 		boolean c=true;
-		Clinic.setOpenHour(a,b,c);
+		//Clinic.setOpenHour(a,b,c);
 		
 	}
 	
 	private void setTypeOfTreatment(){
 		int a=0;
 		String b="123";
-		Clinic.setTypeOfTreatment(a,b);
+		//Clinic.setTypeOfTreatment(a,b);
 	}
 	
 	private void setSpecialArrangement(){
 		int a=0;
 		String b="123";
-		Clinic.setSpecialArrangement(a,b);
+		//Clinic.setSpecialArrangement(a,b);
 		
 	}
 

@@ -1,26 +1,37 @@
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedList;
 
 public class Clinic implements Serializable{
-	private static boolean[][] openHr = new boolean[7][2];
-	private static String[] typeOfTreatment = new String[4];
-	private float[] feePerPart = new float[4];
-	private boolean[] bodyParts = new boolean[4];
+	private boolean[][] openHr = new boolean[7][2];
+	private LinkedList<TreatmentMeta> treatmentMeta = new LinkedList<TreatmentMeta>();
 	private String[] description = new String[3];
 	private int[] requirement = new int[2];
-	private static String[] specialArrangement = new String[3];
+	private String[] specialArrangement = new String[3];
 	private float[] discount = new float[3];
 	private Date[] nonPeakHr = new Date[4];
 	
-	public static void setOpenHour(int i, int j, boolean k){
+	public void setOpenHour(int i, int j, boolean k){
 		openHr[i][j]=k;
 	}
-	
-	public static void setTypeOfTreatment(int i, String tot){
-		typeOfTreatment[i]=tot;
+
+	public void addTreatmentMeta(TreatmentMeta treatmentMeta){
+		this.treatmentMeta.add(treatmentMeta);
+	}
+
+	public TreatmentMeta getTreatmentMeta(int index){
+		try{
+			return treatmentMeta.get(index);
+		} catch (IndexOutOfBoundsException e){
+		}
+		return null;
+	}
+
+	public int getTreatmentMetaSize(){
+		return treatmentMeta.size();
 	}
 	
-	public static void setSpecialArrangement(int i, String sa){
+	public void setSpecialArrangement(int i, String sa){
 		specialArrangement[i]=sa;
 	}
 }

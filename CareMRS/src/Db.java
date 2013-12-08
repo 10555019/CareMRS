@@ -64,6 +64,19 @@ public class Db implements Serializable{
 				return tmpDb;
 			}else{
 				//first time use
+				
+				//temp
+				addPatient(new Patient("Chan", "A000001(1)", "1234 5678", 'M', "01/01/2013"));
+				//temp
+				
+				TreatmentMeta treatmentMeta1 = new TreatmentMeta("Herbal",250,false);
+				TreatmentMeta treatmentMeta2 = new TreatmentMeta("Acupuncture",350,true);
+				TreatmentMeta treatmentMeta3 = new TreatmentMeta("Cupping",300,true);
+				TreatmentMeta treatmentMeta4 = new TreatmentMeta("Bone-setting",500,true);
+				clinic.addTreatmentMeta(treatmentMeta1);
+				clinic.addTreatmentMeta(treatmentMeta2);
+				clinic.addTreatmentMeta(treatmentMeta3);
+				clinic.addTreatmentMeta(treatmentMeta4);
 				return db;
 			}
 		} catch (IOException e){

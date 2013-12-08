@@ -59,6 +59,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Component;
+import javax.swing.JTextPane;
 
 
 public class MyWindow extends JFrame implements Serializable{
@@ -106,6 +107,18 @@ public class MyWindow extends JFrame implements Serializable{
 	private JCheckBox MTC_bp;
 	private JTable MTTa_table;
 	
+	//Treatment
+	private JTextField TbT_text;
+	private JPanel JP_treatmentType = new JPanel();
+	private JPanel JP_bodyPart = new JPanel();
+	private JPanel JP_treatTable = new JPanel();
+	private JPanel JP_bodyTable = new JPanel();	
+	private JPanel JP_remark = new JPanel();
+	private JTextPane TTP_remark = new JTextPane();
+	private JPanel JP_fee = new JPanel();
+	private JLabel Tlbl_total = new JLabel();
+	private JComboBox<String> TtCB_text = new JComboBox<String>();
+	
 	//Mode variables
 	private int mode; //1:doctor 2:admin
 	private boolean saveStatus = false;
@@ -124,6 +137,8 @@ public class MyWindow extends JFrame implements Serializable{
 	private JPanel c_OHPane;
 	private JPanel timetablePane;
 	private JPanel accountPane;
+	private JPanel treatmentPane;
+	private JPanel logPane;
 
 	//Card Layout
 	CardLayout cardLayout = new CardLayout(); //cardLayout, used for different panel
@@ -132,6 +147,7 @@ public class MyWindow extends JFrame implements Serializable{
 	private JMenuBar menubar = new JMenuBar(); //top menu bar (not shown on login page)
 
 	private Patient patient = null; //pointer pointing accessing which patient 
+
 	//**********Data Member of MyWindow**********//
 	
 
@@ -536,9 +552,10 @@ public class MyWindow extends JFrame implements Serializable{
 		B_treatment.setIcon(new ImageIcon(getClass().getResource("treatment.png")));
 		B_treatment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (saveStatus)
-					;//cardLayout.show(contentPane, "Booking");
-				else
+				if (saveStatus){
+					treatmentPage();
+					cardLayout.show(contentPane, "Treatment");
+				}else
 					JOptionPane.showMessageDialog(null, "Please save the patient information first.","Patient", JOptionPane.ERROR_MESSAGE);
 			}
 		});
@@ -1091,7 +1108,111 @@ public class MyWindow extends JFrame implements Serializable{
 	}
 	//***********************************************************************
 	//*************************Timetable Page********************************
-	//***********************************************************************	
+	//***********************************************************************
+	
+	
+	//***********************************************************************
+	//*************************Treatment Page********************************
+	//***********************************************************************
+	private void treatmentPage(){
+		treatmentPane = new JPanel();
+		treatmentPane.setBackground(SystemColor.activeCaption);
+		treatmentPane.setLayout(null);
+		
+		JLabel lblTreatment = new JLabel("Treatment");
+		lblTreatment.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTreatment.setFont(new Font("Arial", Font.BOLD, 30));
+		lblTreatment.setBounds(349, 20, 286, 47);
+		treatmentPane.add(lblTreatment);
+		
+		JLabel lbl_Tt = new JLabel("Enter Treatment Type");
+		lbl_Tt.setFont(new Font("Arial", Font.PLAIN, 20));
+		lbl_Tt.setBounds(10, 10, 193, 24);
+		JP_treatmentType.add(lbl_Tt);
+		
+		TtCB_text.removeAllItems();
+		TreatmentMeta.addCombo(db, TtCB_text);
+		
+		JButton TtB_add = new JButton("Add");
+		TtB_add.setFont(new Font("Arial", Font.PLAIN, 20));
+		TtB_add.setBounds(9, 90, 79, 33);
+		JP_treatmentType.add(TtB_add);
+		
+		JButton TtB_save = new JButton("Save");
+		TtB_save.setFont(new Font("Arial", Font.PLAIN, 20));
+		TtB_save.setBounds(97, 90, 79, 33);
+		JP_treatmentType.add(TtB_save);
+		
+		JButton Ttb_clear = new JButton("Clear");
+		Ttb_clear.setFont(new Font("Arial", Font.PLAIN, 20));
+		Ttb_clear.setBounds(185, 90, 90, 33);
+		JP_treatmentType.add(Ttb_clear);
+		
+
+		
+		JLabel lbl_Tb = new JLabel("Enter Body part");
+		lbl_Tb.setFont(new Font("Arial", Font.PLAIN, 20));
+		lbl_Tb.setBounds(10, 10, 155, 24);
+		JP_bodyPart.add(lbl_Tb);
+		
+		JButton TbB_add = new JButton("Add");
+		TbB_add.setFont(new Font("Arial", Font.PLAIN, 20));
+		TbB_add.setBounds(9, 90, 79, 33);
+		JP_bodyPart.add(TbB_add);
+		
+		JButton TbB_save = new JButton("Save");
+		TbB_save.setFont(new Font("Arial", Font.PLAIN, 20));
+		TbB_save.setBounds(97, 90, 79, 33);
+		JP_bodyPart.add(TbB_save);
+		
+		JButton TbB_clear = new JButton("Clear");
+		TbB_clear.setFont(new Font("Arial", Font.PLAIN, 20));
+		TbB_clear.setBounds(185, 90, 90, 33);
+		JP_bodyPart.add(TbB_clear);
+		
+		JLabel lbl_remark = new JLabel("Remark:");
+		lbl_remark.setFont(new Font("Arial", Font.PLAIN, 20));
+		lbl_remark.setBounds(10, 10, 85, 24);
+		JP_remark.add(lbl_remark);
+		
+		JButton TB_patient = new JButton("Patient");
+		TB_patient.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				cardLayout.show(contentPane, "Patient");
+			}
+		});
+		TB_patient.setFont(new Font("Arial", Font.PLAIN, 20));
+		TB_patient.setBackground(new Color(255, 192, 203));
+		TB_patient.setBounds(808, 566, 143, 47);
+		treatmentPane.add(TB_patient);
+		
+		JButton TB_save = new JButton("Save");
+		TB_save.setFont(new Font("Arial", Font.PLAIN, 20));
+		TB_save.setBounds(638, 565, 143, 48);
+		treatmentPane.add(TB_save);
+		
+		JLabel lbl_total = new JLabel("Total");
+		lbl_total.setFont(new Font("Arial", Font.PLAIN, 20));
+		lbl_total.setBounds(10, 54, 123, 24);
+		JP_fee.add(lbl_total);
+	}
+	//***********************************************************************
+	//*************************Treatment Page********************************
+	//***********************************************************************
+	
+	
+	//***********************************************************************
+	//***************************log Page************************************
+	//***********************************************************************
+	private void logPage(){
+		logPane = new JPanel();
+		logPane.setBackground(SystemColor.activeCaption);
+		logPane.setLayout(null);
+	}
+	//***********************************************************************
+	//***************************log Page************************************
+	//***********************************************************************
+	
 	
 	//*******************Construct Label and Button**************************
 	private void addToWindow(){
@@ -1267,6 +1388,49 @@ public class MyWindow extends JFrame implements Serializable{
 				//
 			}
 		});
+		
+		//treatment
+		TtCB_text.setBounds(20, 44, 256, 24);
+		JP_treatmentType.add(TtCB_text);
+		
+		TbT_text = new JTextField();
+		TbT_text.setFont(new Font("Arial", Font.PLAIN, 20));
+		TbT_text.setColumns(10);
+		TbT_text.setBounds(20, 44, 256, 24);
+		JP_bodyPart.add(TbT_text);
+		
+		TTP_remark.setBounds(10, 37, 426, 86);
+		JP_remark.add(TTP_remark);
+		
+		Tlbl_total.setFont(new Font("Arial", Font.PLAIN, 20));
+		Tlbl_total.setBounds(172, 54, 123, 24);
+		JP_fee.add(Tlbl_total);
+		
+		JP_treatmentType.setBackground(new Color(255, 182, 193));
+		JP_treatmentType.setBounds(73, 118, 286, 133);
+		treatmentPane.add(JP_treatmentType);
+		JP_treatmentType.setLayout(null);
+		
+		JP_bodyPart.setBackground(new Color(255, 182, 193));
+		JP_bodyPart.setLayout(null);
+		JP_bodyPart.setBounds(73, 318, 286, 133);
+		treatmentPane.add(JP_bodyPart);
+		
+		JP_treatTable.setBounds(410, 94, 254, 281);
+		treatmentPane.add(JP_treatTable);
+		
+		JP_bodyTable.setBounds(697, 94, 254, 281);
+		treatmentPane.add(JP_bodyTable);
+		
+		JP_remark.setBackground(new Color(255, 182, 193));
+		JP_remark.setBounds(73, 483, 446, 133);
+		treatmentPane.add(JP_remark);
+		JP_remark.setLayout(null);
+		
+		JP_fee.setBackground(new Color(255, 182, 193));
+		JP_fee.setBounds(558, 404, 392, 133);
+		treatmentPane.add(JP_fee);
+		JP_fee.setLayout(null);
 
 	}
 	//*******************Construct Label and Button**************************
@@ -1311,6 +1475,10 @@ public class MyWindow extends JFrame implements Serializable{
 		contentPane.add(timetablePane, "Timetable");
 		accountPage();
 		contentPane.add(accountPane, "Account");
+		treatmentPage();
+		contentPane.add(treatmentPane, "Treatment");
+		logPage();
+		contentPane.add(logPane, "Log");
 		
 		addToWindow();
 
