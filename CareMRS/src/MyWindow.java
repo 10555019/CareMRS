@@ -129,6 +129,17 @@ public class MyWindow extends JFrame implements Serializable{
 	private JList<String> TtL_list = new JList<String>(TtL_model);
 	private JList<String> TbL_list = new JList<String>(TbL_model);
 	
+	//log
+	private JPanel TLP_treatmentRec = new JPanel();
+	private DefaultTableModel TLTa_model;
+	private String[] TLTa_columns = {"Date","Time","Type of Treatment","Price","Doctor"};
+	private JTable TLTa_table = new JTable(new DefaultTableModel(null,TLTa_columns));
+	private JPanel TLP_bodyParts = new JPanel();
+	private DefaultListModel<String> TLL_model = new DefaultListModel<String>();
+	private JList<String> TLL_list = new JList<String>(TLL_model);
+	private JPanel TLP_remarks = new JPanel();
+	private JLabel TLTP_remarks = new JLabel("");
+	
 	//Mode variables
 	private int mode; //1:doctor 2:admin
 	private boolean saveStatus = false;
@@ -579,9 +590,10 @@ public class MyWindow extends JFrame implements Serializable{
 		B_log.setIcon(new ImageIcon(getClass().getResource("log.png")));
 		B_log.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (saveStatus)
-					;//cardLayout.show(contentPane, "Booking");
-				else
+				if (saveStatus){
+					logPage();
+					cardLayout.show(contentPane, "Log");
+				}else
 					JOptionPane.showMessageDialog(null, "Please save the patient information first.","Patient", JOptionPane.ERROR_MESSAGE);
 			}
 		});
@@ -1212,6 +1224,18 @@ public class MyWindow extends JFrame implements Serializable{
 		logPane = new JPanel();
 		logPane.setBackground(SystemColor.activeCaption);
 		logPane.setLayout(null);
+		
+		JLabel lblTreatmentLog = new JLabel("Treatment Log");
+		lblTreatmentLog.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTreatmentLog.setFont(new Font("Arial", Font.BOLD, 30));
+		lblTreatmentLog.setBounds(349, 20, 286, 47);
+		logPane.add(lblTreatmentLog);
+		
+		if (patient!=null)
+			Patient.addTable(patient, TLTa_model);
+		
+		
+		
 	}
 	//***********************************************************************
 	//***************************log Page************************************
@@ -1490,6 +1514,58 @@ public class MyWindow extends JFrame implements Serializable{
 		MTC_bp.setHorizontalAlignment(SwingConstants.CENTER);
 		MTC_bp.setBounds(187, 350, 240, 47);
 		c_MTPane.add(MTC_bp);
+		TLP_treatmentRec.setBackground(SystemColor.activeCaption);
+		
+		//log
+		TLP_treatmentRec.setBounds(23, 90, 937, 260);
+		TLP_treatmentRec.setLayout(new FlowLayout());
+		logPane.add(TLP_treatmentRec);
+		TLTa_model = (DefaultTableModel) TLTa_table.getModel();
+		TLTa_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		TLTa_table.setFont(new Font("Arial", Font.PLAIN, 18));
+		TLTa_table.setBackground(SystemColor.activeCaption);
+		TLTa_table.setPreferredScrollableViewportSize(new Dimension(900, 220));
+		TLTa_table.setFillsViewportHeight(true);
+		JScrollPane TLjp = new JScrollPane(TLTa_table);
+		TLjp.setFont(new Font("Arial", Font.PLAIN, 18));
+		TLP_treatmentRec.add(TLjp);
+		
+		TLP_bodyParts.setBackground(SystemColor.activeCaption);
+		TLP_bodyParts.setBounds(37, 389, 229, 238);
+		logPane.add(TLP_bodyParts);
+		TLP_bodyParts.setLayout(null);
+		
+		JLabel lblBodyParts = new JLabel("Body Parts");
+		lblBodyParts.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblBodyParts.setBounds(10, 10, 98, 24);
+		TLP_bodyParts.add(lblBodyParts);
+		
+		TLL_list.setBounds(10, 44, 209, 184);
+		TLP_bodyParts.add(TLL_list);
+		
+		TLP_remarks.setLayout(null);
+		TLP_remarks.setBackground(SystemColor.activeCaption);
+		TLP_remarks.setBounds(316, 389, 229, 238);
+		logPane.add(TLP_remarks);
+		
+		JLabel lblRemarks = new JLabel("Remarks");
+		lblRemarks.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblRemarks.setBounds(10, 10, 98, 24);
+		TLP_remarks.add(lblRemarks);
+		
+		TLTP_remarks.setBounds(10, 44, 209, 184);
+		TLP_remarks.add(TLTP_remarks);
+		
+		JButton TLB_patient = new JButton("Patient");
+		TLB_patient.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				cardLayout.show(contentPane, "Patient");
+			}
+		});
+		TLB_patient.setFont(new Font("Arial", Font.PLAIN, 20));
+		TLB_patient.setBackground(new Color(255, 192, 203));
+		TLB_patient.setBounds(817, 580, 143, 47);
+		logPane.add(TLB_patient);
 
 	}
 	//*******************Construct Label and Button**************************

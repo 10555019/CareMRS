@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class Treatment {
+public class Treatment implements Serializable{
 	private String type;
 	private ArrayList<String> parts = new ArrayList<String>();
 	private float price;

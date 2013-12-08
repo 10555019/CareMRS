@@ -4,6 +4,7 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 public class Patient implements Serializable{
 	private String name;
@@ -116,7 +117,7 @@ public class Patient implements Serializable{
 		year = Integer.parseInt(date.substring(6,10));
 		dob.set(year, month-1, day);
 	}
-	
+
 	public TreatmentRec getTreatmentRec(int index){
 		try{
 			return treatmentRec.get(index);
@@ -124,15 +125,31 @@ public class Patient implements Serializable{
 		}
 		return null;
 	}
-	
+
 	public void addTreatmentRec(TreatmentRec treatmentRec){
 		this.treatmentRec.add(treatmentRec);
 	}
-	
+
 	public int getTreatmentRecSize(){
 		return treatmentRec.size();
 	}
-	
+
+	public static void addTable(Patient patient, DefaultTableModel defaultTableModel){
+		int index = 0;
+		int subindex = 0;
+		if (patient.getTreatmentRecSize()>0)
+			while (patient.getTreatmentRec(index)!=null){
+				while (patient.getTreatmentRec(index).getTreatment(subindex)!=null){
+					defaultTableModel.addRow(new Object[]{patient.getTreatmentRec(index).getDate(),patient.getTreatmentRec(index).getTime(),
+							patient.getTreatmentRec(index).getTreatment(subindex).getType(),
+							patient.getTreatmentRec(index).getTreatment(subindex).getPrice(),
+							patient.getTreatmentRec(index).getDoctorID()});
+					subindex++;
+				}
+				index++;
+			}
+	}
+
 	public void book(){
 		int cyear = current.get(Calendar.YEAR);
 		int diff1 = cyear-dob.get(1);
