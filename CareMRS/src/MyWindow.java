@@ -141,6 +141,13 @@ public class MyWindow extends JFrame implements Serializable{
 	private JPanel TLP_remarks = new JPanel();
 	private JLabel TLTP_remarks = new JLabel("");
 	
+	//account
+	private JTextField AST_name = new JTextField();
+	private JTextField AST_userName = new JTextField();
+	private JTextField AST_password = new JTextField();
+	private JTextField AST_room= new JTextField();
+	private JPanel ASP_pane = new JPanel();
+	
 	//Mode variables
 	private int mode; //1:doctor 2:admin
 	private boolean saveStatus = false;
@@ -162,6 +169,7 @@ public class MyWindow extends JFrame implements Serializable{
 	private JPanel accountPane;
 	private JPanel treatmentPane;
 	private JPanel logPane;
+	
 
 	//Card Layout
 	CardLayout cardLayout = new CardLayout(); //cardLayout, used for different panel
@@ -1067,10 +1075,66 @@ public class MyWindow extends JFrame implements Serializable{
 		lblAccountSetting.setBounds(349, 20, 286, 47);
 		accountPane.add(lblAccountSetting);
 		
-		JPanel ACP_panel = new JPanel();
-		ACP_panel.setBackground(SystemColor.activeCaption);
-		ACP_panel.setBounds(478, 107, 448, 390);
-		accountPane.add(ACP_panel);
+		JLabel lblNewLabel_3 = new JLabel("Name");
+		lblNewLabel_3.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblNewLabel_3.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblNewLabel_3.setBounds(70, 223, 111, 24);
+		accountPane.add(lblNewLabel_3);
+		
+		JLabel lblUsername = new JLabel("UserName");
+		lblUsername.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblUsername.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblUsername.setBounds(70, 285, 111, 24);
+		accountPane.add(lblUsername);
+		
+		JLabel lblPassword_1 = new JLabel("Password");
+		lblPassword_1.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblPassword_1.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblPassword_1.setBounds(70, 347, 111, 24);
+		accountPane.add(lblPassword_1);
+		
+		JLabel lblRoom = new JLabel("Room");
+		lblRoom.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblRoom.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblRoom.setBounds(70, 409, 111, 24);
+		accountPane.add(lblRoom);
+		
+		JRadioButton rdbtnNewRadioButton = new JRadioButton("Doctor");
+		rdbtnNewRadioButton.setFont(new Font("Arial", Font.PLAIN, 20));
+		rdbtnNewRadioButton.setBackground(SystemColor.activeCaption);
+		rdbtnNewRadioButton.setBounds(161, 128, 92, 41);
+		accountPane.add(rdbtnNewRadioButton);
+		
+		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("Admin");
+		rdbtnNewRadioButton_1.setFont(new Font("Arial", Font.PLAIN, 20));
+		rdbtnNewRadioButton_1.setBackground(SystemColor.activeCaption);
+		rdbtnNewRadioButton_1.setBounds(280, 128, 92, 41);
+		accountPane.add(rdbtnNewRadioButton_1);
+		
+		ButtonGroup ASRG_radiogp = new ButtonGroup();
+		ASRG_radiogp.add(rdbtnNewRadioButton);
+		ASRG_radiogp.add(rdbtnNewRadioButton_1);
+		
+		JButton ASB_add = new JButton("Add");
+		ASB_add.setFont(new Font("Arial", Font.PLAIN, 20));
+		ASB_add.setBounds(194, 494, 121, 47);
+		accountPane.add(ASB_add);
+		
+		ASP_pane.setBackground(SystemColor.activeCaption);
+		ASP_pane.setBounds(472, 128, 286, 426);
+		accountPane.add(ASP_pane);
+		ASP_pane.setLayout(null);
+		
+		JButton ASB_menu = new JButton("Menu");
+		ASB_menu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				cardLayout.show(contentPane, "Menu");
+			}
+		});
+		ASB_menu.setFont(new Font("Arial", Font.PLAIN, 25));
+		ASB_menu.setBackground(new Color(255, 192, 203));
+		ASB_menu.setBounds(799, 566, 121, 47);
+		accountPane.add(ASB_menu);
 	}
 	//***********************************************************************
 	//**************************Account Page*********************************
@@ -1100,6 +1164,8 @@ public class MyWindow extends JFrame implements Serializable{
 	//*************************Treatment Page********************************
 	//***********************************************************************
 	private void treatmentPage(){
+		
+		TTP_remark.setText(null);
 		
 		TreatmentRec treatmentRec = new TreatmentRec(doctorID);
 		if (patient != null)
@@ -1298,6 +1364,7 @@ public class MyWindow extends JFrame implements Serializable{
 					for (int i=0; i<patient.getTreatmentRec(findRec()).getTreatment(TLTa_table.getSelectedRow()-beforehand).getPartsSize(); i++){
 						TLL_model.add(i, patient.getTreatmentRec(findRec()).getTreatment(TLTa_table.getSelectedRow()-beforehand).getParts(i));
 					}
+					TLTP_remarks.setText(patient.getTreatmentRec(findRec()).getRemarks());
 				}
 			}});
 
@@ -1306,6 +1373,7 @@ public class MyWindow extends JFrame implements Serializable{
 			for(int i=rowCount-1;i>=0;i--){
 				TLTa_model.removeRow(i);
 			}
+			TLTP_remarks.setText(null);
 			Patient.addTable(patient, TLTa_model);
 		}
 	}
@@ -1640,6 +1708,8 @@ public class MyWindow extends JFrame implements Serializable{
 		lblRemarks.setFont(new Font("Arial", Font.PLAIN, 20));
 		lblRemarks.setBounds(10, 10, 98, 24);
 		TLP_remarks.add(lblRemarks);
+		TLTP_remarks.setFont(new Font("Arial", Font.PLAIN, 20));
+		TLTP_remarks.setVerticalAlignment(SwingConstants.TOP);
 		
 		TLTP_remarks.setBounds(10, 44, 209, 184);
 		TLP_remarks.add(TLTP_remarks);
@@ -1654,6 +1724,23 @@ public class MyWindow extends JFrame implements Serializable{
 		TLB_patient.setBackground(new Color(255, 192, 203));
 		TLB_patient.setBounds(817, 580, 143, 47);
 		logPane.add(TLB_patient);
+		
+		//account
+		AST_name.setBounds(191, 223, 181, 24);
+		accountPane.add(AST_name);
+		AST_name.setColumns(10);
+		
+		AST_userName.setColumns(10);
+		AST_userName.setBounds(191, 285, 181, 24);
+		accountPane.add(AST_userName);
+		
+		AST_password.setColumns(10);
+		AST_password.setBounds(191, 347, 181, 24);
+		accountPane.add(AST_password);
+		
+		AST_room.setColumns(10);
+		AST_room.setBounds(191, 409, 181, 24);
+		accountPane.add(AST_room);
 
 	}
 	//*******************Construct Label and Button**************************
