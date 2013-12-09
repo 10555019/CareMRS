@@ -11,12 +11,24 @@ public class Clinic implements Serializable{
 	private float[] discount = new float[3];
 	private Date[] nonPeakHr = new Date[4];
 	
+	public float getDiscount(int index){
+		return discount[index];
+	}
+	
+	public void setDiscount(int index, float discount){
+		this.discount[index]=discount;
+	}
+
 	public void setOpenHour(int i, int j, boolean k){
 		openHr[i][j]=k;
 	}
 
 	public void addTreatmentMeta(TreatmentMeta treatmentMeta){
 		this.treatmentMeta.add(treatmentMeta);
+	}
+	
+	public void deleteTreatmentMeta(int index){
+		treatmentMeta.remove(index);
 	}
 
 	public TreatmentMeta getTreatmentMeta(int index){

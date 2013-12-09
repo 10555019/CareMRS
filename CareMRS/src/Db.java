@@ -26,8 +26,6 @@ public class Db implements Serializable{
 		this.patient.add(index, patient);
 	}
 	
-
-	
 	public Patient getPatient(int index){
 		try{
 			return patient.get(index);
@@ -81,6 +79,7 @@ public class Db implements Serializable{
 				clinic.addTreatmentMeta(treatmentMeta2);
 				clinic.addTreatmentMeta(treatmentMeta3);
 				clinic.addTreatmentMeta(treatmentMeta4);
+				clinic.setDiscount(0,0.8);
 				return db;
 			}
 		} catch (IOException e){
