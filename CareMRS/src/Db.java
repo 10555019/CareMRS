@@ -79,7 +79,9 @@ public class Db implements Serializable{
 				clinic.addTreatmentMeta(treatmentMeta2);
 				clinic.addTreatmentMeta(treatmentMeta3);
 				clinic.addTreatmentMeta(treatmentMeta4);
-				clinic.setDiscount(0,0.8);
+				clinic.setDiscount(0,(float) 0.8);
+				clinic.setDiscount(1,(float) 0.5);
+				clinic.setDiscount(2,(float) 0.95);
 				return db;
 			}
 		} catch (IOException e){
