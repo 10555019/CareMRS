@@ -4,7 +4,7 @@ import java.util.GregorianCalendar;
 
 
 public class Booking implements Serializable{
-	private GregorianCalendar date = new GregorianCanlendar();
+	private GregorianCalendar date;
 	private String HKID;
 	private String userName; //DoctorID
 	
@@ -26,5 +26,7 @@ public class Booking implements Serializable{
 		year = Integer.toString(date.get(1));
 		hour = Integer.toString(date.get(11));
 		min = Integer.toString(date.get(12));
+		return (day+"/"+month+"/"+year+" "+hour+":"+min);
 	}
+	public 
 }
