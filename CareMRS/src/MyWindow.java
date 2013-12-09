@@ -61,6 +61,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JTextPane;
+import javax.swing.ListModel;
 
 
 public class MyWindow extends JFrame implements Serializable{
@@ -147,6 +148,16 @@ public class MyWindow extends JFrame implements Serializable{
 	private JTextField AST_password = new JTextField();
 	private JTextField AST_room= new JTextField();
 	private JPanel ASP_pane = new JPanel();
+	private JButton btnSave = new JButton("Save");
+	private JButton ASB_add = new JButton("Add");
+	private JRadioButton rdbtnNewRadioButton = new JRadioButton("Doctor");
+	private JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("Admin");
+	private ButtonGroup ASRG_radiogp = new ButtonGroup();
+	private DefaultListModel<String> ASL_model = new DefaultListModel<String>();
+	private JList<String> ASL_doctor= new JList<String>(ASL_model);
+	private DefaultListModel<String> ASL_adminmodel = new DefaultListModel<String>();
+	private JList<String> ASL_admin = new JList<String>(ASL_adminmodel);
+	private JButton ASB_menu = new JButton("Menu");
 	
 	//Mode variables
 	private int mode; //1:doctor 2:admin
@@ -1065,6 +1076,9 @@ public class MyWindow extends JFrame implements Serializable{
 	//**************************Account Page*********************************
 	//***********************************************************************	
 	private void accountPage(){
+		int index; //index for the user account in the LinkedList
+		int type; //type: 1 for doctor, 2 for admin
+		
 		accountPane = new JPanel();
 		accountPane.setBackground(SystemColor.activeCaption);
 		accountPane.setLayout(null);
@@ -1099,42 +1113,44 @@ public class MyWindow extends JFrame implements Serializable{
 		lblRoom.setBounds(70, 409, 111, 24);
 		accountPane.add(lblRoom);
 		
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("Doctor");
-		rdbtnNewRadioButton.setFont(new Font("Arial", Font.PLAIN, 20));
-		rdbtnNewRadioButton.setBackground(SystemColor.activeCaption);
-		rdbtnNewRadioButton.setBounds(161, 128, 92, 41);
-		accountPane.add(rdbtnNewRadioButton);
+		JLabel lblNameOfUser = new JLabel("Name of User");
+		lblNameOfUser.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblNameOfUser.setBounds(10, 11, 121, 24);
+		ASP_pane.add(lblNameOfUser);
+
+		ASL_model.removeAllElements();
+		for (int i = 0; i<logAc.getDoctorSize(); i++){
+			ASL_model.add(i, logAc.getDoctor(i).getName());
+		}
 		
-		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("Admin");
-		rdbtnNewRadioButton_1.setFont(new Font("Arial", Font.PLAIN, 20));
-		rdbtnNewRadioButton_1.setBackground(SystemColor.activeCaption);
-		rdbtnNewRadioButton_1.setBounds(280, 128, 92, 41);
-		accountPane.add(rdbtnNewRadioButton_1);
-		
-		ButtonGroup ASRG_radiogp = new ButtonGroup();
-		ASRG_radiogp.add(rdbtnNewRadioButton);
-		ASRG_radiogp.add(rdbtnNewRadioButton_1);
-		
-		JButton ASB_add = new JButton("Add");
-		ASB_add.setFont(new Font("Arial", Font.PLAIN, 20));
-		ASB_add.setBounds(194, 494, 121, 47);
-		accountPane.add(ASB_add);
-		
-		ASP_pane.setBackground(SystemColor.activeCaption);
-		ASP_pane.setBounds(472, 128, 286, 426);
-		accountPane.add(ASP_pane);
-		ASP_pane.setLayout(null);
-		
-		JButton ASB_menu = new JButton("Menu");
-		ASB_menu.addActionListener(new ActionListener() {
+		ASL_adminmodel.removeAllElements();
+		for (int i = 0; i<logAc.getAdminSize(); i++){
+			ASL_adminmodel.add(i, logAc.getAdmin(i).getName());
+		}
+
+		ASL_doctor.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+			@Override
+			public void valueChanged(ListSelectionEvent arg0) {
+
+				if (ASL_doctor.getSelectedIndex() != -1){
+					AST_name.setText(logAc.getDoctor(ASL_doctor.getSelectedIndex()).getName());
+					AST_userName.setText(logAc.getDoctor(ASL_doctor.getSelectedIndex()).getUserName());
+				}
+			}});
+
+		ASL_admin.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if (ASL_admin.getSelectedIndex() != -1){
+					AST_name.setText(logAc.getAdmin(ASL_admin.getSelectedIndex()).getName());
+					AST_userName.setText(logAc.getAdmin(ASL_admin.getSelectedIndex()).getUserName());
+				}
+			}});
+
+		ASB_add.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				cardLayout.show(contentPane, "Menu");
 			}
 		});
-		ASB_menu.setFont(new Font("Arial", Font.PLAIN, 25));
-		ASB_menu.setBackground(new Color(255, 192, 203));
-		ASB_menu.setBounds(799, 566, 121, 47);
-		accountPane.add(ASB_menu);
 	}
 	//***********************************************************************
 	//**************************Account Page*********************************
@@ -1741,6 +1757,49 @@ public class MyWindow extends JFrame implements Serializable{
 		AST_room.setColumns(10);
 		AST_room.setBounds(191, 409, 181, 24);
 		accountPane.add(AST_room);
+		
+		btnSave.setFont(new Font("Arial", Font.PLAIN, 20));
+		btnSave.setBounds(282, 495, 121, 47);
+		accountPane.add(btnSave);
+		
+		rdbtnNewRadioButton.setFont(new Font("Arial", Font.PLAIN, 20));
+		rdbtnNewRadioButton.setBackground(SystemColor.activeCaption);
+		rdbtnNewRadioButton.setBounds(161, 128, 92, 41);
+		accountPane.add(rdbtnNewRadioButton);
+		
+		rdbtnNewRadioButton_1.setFont(new Font("Arial", Font.PLAIN, 20));
+		rdbtnNewRadioButton_1.setBackground(SystemColor.activeCaption);
+		rdbtnNewRadioButton_1.setBounds(280, 128, 92, 41);
+		accountPane.add(rdbtnNewRadioButton_1);
+		
+		ASRG_radiogp.add(rdbtnNewRadioButton);
+		ASRG_radiogp.add(rdbtnNewRadioButton_1);
+		
+		ASB_add.setFont(new Font("Arial", Font.PLAIN, 20));
+		ASB_add.setBounds(97, 495, 121, 47);
+		accountPane.add(ASB_add);
+		
+		ASP_pane.setBackground(SystemColor.activeCaption);
+		ASP_pane.setBounds(472, 128, 286, 426);
+		accountPane.add(ASP_pane);
+		ASP_pane.setLayout(null);
+		
+		ASL_doctor.setBounds(10, 37, 266, 177);
+		ASP_pane.add(ASL_doctor);
+		
+		ASL_admin.setBounds(10, 225, 266, 190);
+		ASP_pane.add(ASL_admin);
+		
+		
+		ASB_menu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				cardLayout.show(contentPane, "Menu");
+			}
+		});
+		ASB_menu.setFont(new Font("Arial", Font.PLAIN, 25));
+		ASB_menu.setBackground(new Color(255, 192, 203));
+		ASB_menu.setBounds(799, 566, 121, 47);
+		accountPane.add(ASB_menu);
 
 	}
 	//*******************Construct Label and Button**************************

@@ -28,6 +28,10 @@ public class LogAc implements Serializable{
 		return admin.size();
 	}
 	
+	public int getDoctorSize(){
+		return doctor.size();
+	}
+	
 	public Doctor getDoctor(int index){
 		try{
 			return doctor.get(index);
@@ -52,6 +56,10 @@ public class LogAc implements Serializable{
 	public void deleteAdmin(int index){
 		if (getAdminSize()==1)
 			JOptionPane.showMessageDialog(null, "There should be at least one Admin user, user is not deleted","Delete", JOptionPane.ERROR_MESSAGE);
+		else{
+			admin.remove(index);
+			JOptionPane.showMessageDialog(null, "Admin is deleted","Delete", JOptionPane.PLAIN_MESSAGE);
+		}
 	}
 	
 	public LogAc load(LogAc logAc){
