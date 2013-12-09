@@ -28,5 +28,5 @@ public class Booking implements Serializable{
 		min = Integer.toString(date.get(12));
 		return (day+"/"+month+"/"+year+" "+hour+":"+min);
 	}
-	public 
+	
 }
