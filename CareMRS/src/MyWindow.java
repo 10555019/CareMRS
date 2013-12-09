@@ -34,6 +34,8 @@ import javax.swing.ImageIcon;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -148,8 +150,9 @@ public class MyWindow extends JFrame implements Serializable{
 	private JTextField AST_password = new JTextField();
 	private JTextField AST_room= new JTextField();
 	private JPanel ASP_pane = new JPanel();
-	private JButton btnSave = new JButton("Save");
+	private JButton ASB_save = new JButton("Save");
 	private JButton ASB_add = new JButton("Add");
+	private JButton ASB_delete = new JButton("Delete");
 	private JRadioButton rdbtnNewRadioButton = new JRadioButton("Doctor");
 	private JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("Admin");
 	private ButtonGroup ASRG_radiogp = new ButtonGroup();
@@ -1133,24 +1136,98 @@ public class MyWindow extends JFrame implements Serializable{
 			public void valueChanged(ListSelectionEvent arg0) {
 
 				if (ASL_doctor.getSelectedIndex() != -1){
+					rdbtnNewRadioButton.setSelected(true);
+					rdbtnNewRadioButton_1.setSelected(false);
+					AST_name.setText(logAc.getDoctor(ASL_doctor.getSelectedIndex()).getName());
+					AST_userName.setText(logAc.getDoctor(ASL_doctor.getSelectedIndex()).getUserName());
+					AST_room.setText(Integer.toString(logAc.getDoctor(ASL_doctor.getSelectedIndex()).getRoom()));
+				}
+			}});
+		
+		ASL_doctor.addFocusListener(new FocusListener(){
+
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				if (ASL_doctor.getSelectedIndex() != -1){
+					rdbtnNewRadioButton.setSelected(true);
+					rdbtnNewRadioButton_1.setSelected(false);
 					AST_name.setText(logAc.getDoctor(ASL_doctor.getSelectedIndex()).getName());
 					AST_userName.setText(logAc.getDoctor(ASL_doctor.getSelectedIndex()).getUserName());
 				}
+			}
+
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				ASL_doctor.clearSelection();
 			}});
 
 		ASL_admin.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				if (ASL_admin.getSelectedIndex() != -1){
+					rdbtnNewRadioButton.setSelected(false);
+					rdbtnNewRadioButton_1.setSelected(true);
 					AST_name.setText(logAc.getAdmin(ASL_admin.getSelectedIndex()).getName());
 					AST_userName.setText(logAc.getAdmin(ASL_admin.getSelectedIndex()).getUserName());
 				}
+			}});
+		
+		ASL_admin.addFocusListener(new FocusListener(){
+
+			@Override
+			public void focusGained(FocusEvent e) {
+				if (ASL_admin.getSelectedIndex() != -1){
+					rdbtnNewRadioButton.setSelected(false);
+					rdbtnNewRadioButton_1.setSelected(true);
+					AST_name.setText(logAc.getAdmin(ASL_admin.getSelectedIndex()).getName());
+					AST_userName.setText(logAc.getAdmin(ASL_admin.getSelectedIndex()).getUserName());
+				}
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				ASL_admin.clearSelection();
 			}});
 
 		ASB_add.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
+
 		});
+
+		ASB_save.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+
+				if (ASL_doctor.getSelectedIndex()!=-1){
+					//save to doctor
+					if (AST_userName.getText().equals(logAc.getDoctor(ASL_doctor.getSelectedIndex()).getName()) || (Doctor.doctorSearch(db,logAc,AST_userName.getText())==-1)){
+						logAc.getDoctor(ASL_doctor.getSelectedIndex()).setName(AST_name.getText());
+						logAc.getDoctor(ASL_doctor.getSelectedIndex()).setUserName(AST_userName.getText());
+						logAc.getDoctor(ASL_doctor.getSelectedIndex()).setRoom(Integer.parseInt(AST_room.getText()));
+					} else{
+						//
+						//warning message...
+					}
+						
+				} else if (ASL_admin.getSelectedIndex()!=-1){
+					//save to admin
+					if (AST_userName.getText().equals(logAc.getAdmin(ASL_admin.getSelectedIndex()).getName()) || (Admin.adminSearch(db,logAc,AST_userName.getText())==-1)){
+						logAc.getAdmin(ASL_admin.getSelectedIndex()).setName(AST_name.getText());
+						logAc.getAdmin(ASL_admin.getSelectedIndex()).setUserName(AST_userName.getText());
+					} else{
+						//
+						//warning message...
+					}
+
+				}
+			}});
+
+		ASB_delete.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+			}});
 	}
 	//***********************************************************************
 	//**************************Account Page*********************************
@@ -1569,6 +1646,7 @@ public class MyWindow extends JFrame implements Serializable{
 		menuPane.add(PBB_account);
 		PBB_account.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				accountPage();
 				cardLayout.show(contentPane, "Account");
 			}
 		});
@@ -1758,9 +1836,9 @@ public class MyWindow extends JFrame implements Serializable{
 		AST_room.setBounds(191, 409, 181, 24);
 		accountPane.add(AST_room);
 		
-		btnSave.setFont(new Font("Arial", Font.PLAIN, 20));
-		btnSave.setBounds(282, 495, 121, 47);
-		accountPane.add(btnSave);
+		ASB_save.setFont(new Font("Arial", Font.PLAIN, 20));
+		ASB_save.setBounds(172, 495, 121, 47);
+		accountPane.add(ASB_save);
 		
 		rdbtnNewRadioButton.setFont(new Font("Arial", Font.PLAIN, 20));
 		rdbtnNewRadioButton.setBackground(SystemColor.activeCaption);
@@ -1776,7 +1854,7 @@ public class MyWindow extends JFrame implements Serializable{
 		ASRG_radiogp.add(rdbtnNewRadioButton_1);
 		
 		ASB_add.setFont(new Font("Arial", Font.PLAIN, 20));
-		ASB_add.setBounds(97, 495, 121, 47);
+		ASB_add.setBounds(24, 495, 121, 47);
 		accountPane.add(ASB_add);
 		
 		ASP_pane.setBackground(SystemColor.activeCaption);
@@ -1800,6 +1878,10 @@ public class MyWindow extends JFrame implements Serializable{
 		ASB_menu.setBackground(new Color(255, 192, 203));
 		ASB_menu.setBounds(799, 566, 121, 47);
 		accountPane.add(ASB_menu);
+		
+		ASB_delete.setFont(new Font("Arial", Font.PLAIN, 20));
+		ASB_delete.setBounds(320, 495, 121, 47);
+		accountPane.add(ASB_delete);
 
 	}
 	//*******************Construct Label and Button**************************
