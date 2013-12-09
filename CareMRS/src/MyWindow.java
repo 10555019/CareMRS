@@ -117,6 +117,10 @@ public class MyWindow extends JFrame implements Serializable{
 	private DefaultTableModel MTTa_model;
 	private String[] MTTa_columns = {"Type of treatment", "Fee ($) per part", "Body parts"};
 	private JTable MTTa_table = new JTable(new DefaultTableModel(null,MTTa_columns));
+	private JButton MTB_save = new JButton("Save");
+	private JButton MTB_add = new JButton("Add");
+	private JButton MTB_delete = new JButton("Delete");
+	private JButton MTB_clinic = new JButton("Clinic");
 	
 	//Treatment
 	private JTextField TbT_text;
@@ -1017,38 +1021,58 @@ public class MyWindow extends JFrame implements Serializable{
 		lbl_FeePerPart.setFont(new Font("Arial", Font.PLAIN, 20));
 		lbl_FeePerPart.setBounds(40, 237, 137, 47);
 		c_MTPane.add(lbl_FeePerPart);
-		
+
 		JLabel lbl_BodyParts = new JLabel("Body parts :");
 		lbl_BodyParts.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_BodyParts.setFont(new Font("Arial", Font.PLAIN, 20));
 		lbl_BodyParts.setBounds(40, 350, 137, 47);
 		c_MTPane.add(lbl_BodyParts);
+
+		MTB_save.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (cnt){
+					cnt = false;
+				if (MTTa_table.getSelectedRow()!=-1){
+					//save
+					db.getClinic().getTreatmentMeta(MTTa_table.getSelectedRow()).setType(MTT_treat.getText());
+					db.getClinic().getTreatmentMeta(MTTa_table.getSelectedRow()).setFpp(Integer.parseInt(MTT_fpp.getText()));
+					db.getClinic().getTreatmentMeta(MTTa_table.getSelectedRow()).setBodyPart(MTC_bp.isSelected());
+					TreatmentMeta.addTable(db, MTTa_model);
+					JOptionPane.showMessageDialog(null, "Treatment record saved.", "Treatment Record",JOptionPane.PLAIN_MESSAGE);
+				} else{
+					//new
+					TreatmentMeta treatmentMeta = new TreatmentMeta(MTT_treat.getText(),Integer.parseInt(MTT_fpp.getText()),MTC_bp.isSelected());
+					db.getClinic().addTreatmentMeta(treatmentMeta);
+					TreatmentMeta.addTable(db, MTTa_model);
+					JOptionPane.showMessageDialog(null, "Treatment record saved.", "Treatment Record",JOptionPane.PLAIN_MESSAGE);
+				}
+				} else{
+					cnt = true;
+				}
+			}});
 		
-		JButton B_save = new JButton("Save");
-		B_save.setFont(new Font("Arial", Font.PLAIN, 20));
-		B_save.setBounds(63, 548, 143, 47);
-		c_MTPane.add(B_save);
+		MTB_add.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				MTTa_table.clearSelection();
+				MTT_treat.setText("");
+				MTT_fpp.setText("");
+				MTC_bp.setSelected(false);
+			}});
 		
-		JButton B_clinic = new JButton("Clinic");
-		B_clinic.setFont(new Font("Arial", Font.PLAIN, 20));
-		B_clinic.addActionListener(new ActionListener() {
+		MTB_delete.addActionListener(new ActionListener(){
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				cardLayout.show(contentPane, "Clinic");
-			}
-		});
-		B_clinic.setBackground(new Color(255, 192, 203));
-		B_clinic.setBounds(797, 576, 143, 47);
-		c_MTPane.add(B_clinic);
-		
-		JButton B_new = new JButton("New");
-		B_new.setFont(new Font("Arial", Font.PLAIN, 20));
-		B_new.setBounds(232, 548, 143, 47);
-		c_MTPane.add(B_new);
-		
-		JButton btnDelete = new JButton("Delete");
-		btnDelete.setFont(new Font("Arial", Font.PLAIN, 20));
-		btnDelete.setBounds(405, 548, 143, 47);
-		c_MTPane.add(btnDelete);
+				if (MTTa_table.getSelectedRow()!=-1){
+					db.getClinic().deleteTreatmentMeta(MTTa_table.getSelectedRow());
+					TreatmentMeta.addTable(db, MTTa_model);
+					MTT_treat.setText("");
+					MTT_fpp.setText("");
+					MTC_bp.setSelected(false);
+					JOptionPane.showMessageDialog(null, "Treatment record deleted.", "Treatment Record",JOptionPane.PLAIN_MESSAGE);
+				}
+			}});
 	}
 	//***********************************************************************
 	//***************************C MT Page***********************************
@@ -1884,6 +1908,29 @@ public class MyWindow extends JFrame implements Serializable{
 		MTC_bp.setBounds(187, 350, 240, 47);
 		c_MTPane.add(MTC_bp);
 		TLP_treatmentRec.setBackground(SystemColor.activeCaption);
+		
+		MTB_save.setFont(new Font("Arial", Font.PLAIN, 20));
+		MTB_save.setBounds(235, 548, 143, 47);
+		c_MTPane.add(MTB_save);
+		
+		MTB_add.setFont(new Font("Arial", Font.PLAIN, 20));
+		MTB_add.setBounds(63, 548, 143, 47);
+		c_MTPane.add(MTB_add);
+		
+		MTB_delete.setFont(new Font("Arial", Font.PLAIN, 20));
+		MTB_delete.setBounds(405, 548, 143, 47);
+		c_MTPane.add(MTB_delete);
+		
+		MTB_clinic.setFont(new Font("Arial", Font.PLAIN, 20));
+		MTB_clinic.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(contentPane, "Clinic");
+			}
+		});
+		MTB_clinic.setBackground(new Color(255, 192, 203));
+		MTB_clinic.setBounds(797, 576, 143, 47);
+		c_MTPane.add(MTB_clinic);
+		
 		
 		//log
 		TLP_treatmentRec.setBounds(23, 90, 937, 260);
