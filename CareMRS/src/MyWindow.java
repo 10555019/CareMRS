@@ -5,6 +5,8 @@ import java.awt.FlowLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
@@ -103,12 +105,12 @@ public class MyWindow extends JFrame implements Serializable{
 	private JButton PBB_account = new JButton("Account");
 	
 	//Clinic
-	private JTextField SCT_p50;
-	private JTextField SCT_p18;
-	private JTextField SCT_np;
-	private JTextField MTT_treat;
-	private JTextField MTT_fpp;
-	private JCheckBox MTC_bp;
+	private JTextField SCT_p50 = new JTextField();
+	private JTextField SCT_p18 = new JTextField();
+	private JTextField SCT_np = new JTextField();
+	private JTextField MTT_treat = new JTextField();
+	private JTextField MTT_fpp = new JTextField();
+	private JCheckBox MTC_bp = new JCheckBox();
 	
 	//MT
 	private JPanel MTP_pane = new JPanel();
@@ -147,14 +149,14 @@ public class MyWindow extends JFrame implements Serializable{
 	//account
 	private JTextField AST_name = new JTextField();
 	private JTextField AST_userName = new JTextField();
-	private JTextField AST_password = new JTextField();
+	private JPasswordField AST_password = new JPasswordField();
 	private JTextField AST_room= new JTextField();
 	private JPanel ASP_pane = new JPanel();
 	private JButton ASB_save = new JButton("Save");
 	private JButton ASB_add = new JButton("Add");
 	private JButton ASB_delete = new JButton("Delete");
-	private JRadioButton rdbtnNewRadioButton = new JRadioButton("Doctor");
-	private JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("Admin");
+	private JRadioButton ASR_doctor = new JRadioButton("Doctor");
+	private JRadioButton ASR_admin = new JRadioButton("Admin");
 	private ButtonGroup ASRG_radiogp = new ButtonGroup();
 	private DefaultListModel<String> ASL_model = new DefaultListModel<String>();
 	private JList<String> ASL_doctor= new JList<String>(ASL_model);
@@ -163,6 +165,7 @@ public class MyWindow extends JFrame implements Serializable{
 	private JButton ASB_menu = new JButton("Menu");
 	
 	//Mode variables
+	private boolean cnt=true;
 	private int mode; //1:doctor 2:admin
 	private boolean saveStatus = false;
 	private String doctorID;
@@ -191,7 +194,7 @@ public class MyWindow extends JFrame implements Serializable{
 	//Menu Bar
 	private JMenuBar menubar = new JMenuBar(); //top menu bar (not shown on login page)
 
-	private Patient patient = null; //pointer pointing accessing which patient 
+	private Patient patient = null; //pointer pointing accessing which patient
 	//**********Data Member of MyWindow**********//
 	
 
@@ -369,12 +372,12 @@ public class MyWindow extends JFrame implements Serializable{
 		B_new.setBackground(new Color(245, 222, 179));
 		B_new.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				patient = null;
 				try {
 					patientPage();
 				} catch (ParseException e1) {
 					e1.printStackTrace();
 				}
+				patient = null;
 				PB_update.setEnabled(false);
 				PB_save.setEnabled(true);
 				cardLayout.show(contentPane, "Patient");
@@ -526,6 +529,8 @@ public class MyWindow extends JFrame implements Serializable{
 		patientPane = new JPanel();
 		patientPane.setBackground(SystemColor.activeCaption);
 		patientPane.setLayout(null);
+		
+		saveStatus = false;
 
 		//*****Head Label*****
 		JLabel lbl_patient = new JLabel("Patient");
@@ -891,6 +896,10 @@ public class MyWindow extends JFrame implements Serializable{
 		c_SCPane.setBackground(SystemColor.activeCaption);
 		c_SCPane.setLayout(null);
 		
+		SCT_p50.setEnabled(false);
+		SCT_p18.setEnabled(false);
+		SCT_np.setEnabled(false);
+		
 		JLabel lbl_SpecialCondition = new JLabel("Special Condition");
 		lbl_SpecialCondition.setHorizontalAlignment(SwingConstants.CENTER);
 		lbl_SpecialCondition.setFont(new Font("Arial", Font.BOLD, 30));
@@ -921,21 +930,18 @@ public class MyWindow extends JFrame implements Serializable{
 		lbl_Discount.setBounds(458, 160, 143, 47);
 		c_SCPane.add(lbl_Discount);
 		
-		SCT_p50 = new JTextField();
 		SCT_p50.setHorizontalAlignment(SwingConstants.CENTER);
 		SCT_p50.setFont(new Font("Arial", Font.PLAIN, 20));
 		SCT_p50.setBounds(458, 237, 143, 47);
 		c_SCPane.add(SCT_p50);
 		SCT_p50.setColumns(10);
 		
-		SCT_p18 = new JTextField();
 		SCT_p18.setHorizontalAlignment(SwingConstants.CENTER);
 		SCT_p18.setFont(new Font("Arial", Font.PLAIN, 20));
 		SCT_p18.setColumns(10);
 		SCT_p18.setBounds(458, 307, 143, 47);
 		c_SCPane.add(SCT_p18);
 		
-		SCT_np = new JTextField();
 		SCT_np.setHorizontalAlignment(SwingConstants.CENTER);
 		SCT_np.setFont(new Font("Arial", Font.PLAIN, 20));
 		SCT_np.setColumns(10);
@@ -975,6 +981,10 @@ public class MyWindow extends JFrame implements Serializable{
 		c_MTPane = new JPanel();
 		c_MTPane.setBackground(SystemColor.activeCaption);
 		c_MTPane.setLayout(null);
+		
+		MTT_treat.setText("");
+		MTT_fpp.setText("");
+		MTC_bp.setSelected(false);
 		
 		JLabel lbl_MedicalTreatment = new JLabel("Medical Treatment");
 		lbl_MedicalTreatment.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1086,6 +1096,16 @@ public class MyWindow extends JFrame implements Serializable{
 		accountPane.setBackground(SystemColor.activeCaption);
 		accountPane.setLayout(null);
 		
+		AST_name.setText(null);
+		AST_userName.setText(null);
+		AST_password.setText(null);
+		AST_room.setText(null);
+		ASL_doctor.clearSelection();
+		ASL_admin.clearSelection();
+		ASR_doctor.setSelected(false);
+		ASR_admin.setSelected(false);
+		
+		
 		JLabel lblAccountSetting = new JLabel("Account Setting");
 		lblAccountSetting.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAccountSetting.setFont(new Font("Arial", Font.BOLD, 30));
@@ -1121,23 +1141,21 @@ public class MyWindow extends JFrame implements Serializable{
 		lblNameOfUser.setBounds(10, 11, 121, 24);
 		ASP_pane.add(lblNameOfUser);
 
-		ASL_model.removeAllElements();
-		for (int i = 0; i<logAc.getDoctorSize(); i++){
-			ASL_model.add(i, logAc.getDoctor(i).getName());
-		}
-		
-		ASL_adminmodel.removeAllElements();
-		for (int i = 0; i<logAc.getAdminSize(); i++){
-			ASL_adminmodel.add(i, logAc.getAdmin(i).getName());
-		}
+		renewASL();
 
 		ASL_doctor.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
 
 				if (ASL_doctor.getSelectedIndex() != -1){
-					rdbtnNewRadioButton.setSelected(true);
-					rdbtnNewRadioButton_1.setSelected(false);
+					ASL_admin.clearSelection();
+					ASR_doctor.setEnabled(false);
+					ASR_admin.setEnabled(false);
+					AST_room.setEnabled(true);
+					AST_password.setEnabled(false);
+					ASR_doctor.setSelected(true);
+					ASR_admin.setSelected(false);
+					AST_password.setText(logAc.getDoctor(ASL_doctor.getSelectedIndex()).getPassword());
 					AST_name.setText(logAc.getDoctor(ASL_doctor.getSelectedIndex()).getName());
 					AST_userName.setText(logAc.getDoctor(ASL_doctor.getSelectedIndex()).getUserName());
 					AST_room.setText(Integer.toString(logAc.getDoctor(ASL_doctor.getSelectedIndex()).getRoom()));
@@ -1149,8 +1167,14 @@ public class MyWindow extends JFrame implements Serializable{
 			@Override
 			public void focusGained(FocusEvent arg0) {
 				if (ASL_doctor.getSelectedIndex() != -1){
-					rdbtnNewRadioButton.setSelected(true);
-					rdbtnNewRadioButton_1.setSelected(false);
+					ASL_admin.clearSelection();
+					ASR_doctor.setEnabled(false);
+					ASR_admin.setEnabled(false);
+					AST_room.setEnabled(true);
+					AST_password.setEnabled(false);
+					ASR_doctor.setSelected(true);
+					ASR_admin.setSelected(false);
+					AST_password.setText(logAc.getDoctor(ASL_doctor.getSelectedIndex()).getPassword());
 					AST_name.setText(logAc.getDoctor(ASL_doctor.getSelectedIndex()).getName());
 					AST_userName.setText(logAc.getDoctor(ASL_doctor.getSelectedIndex()).getUserName());
 				}
@@ -1158,27 +1182,39 @@ public class MyWindow extends JFrame implements Serializable{
 
 			@Override
 			public void focusLost(FocusEvent arg0) {
-				ASL_doctor.clearSelection();
 			}});
 
 		ASL_admin.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				if (ASL_admin.getSelectedIndex() != -1){
-					rdbtnNewRadioButton.setSelected(false);
-					rdbtnNewRadioButton_1.setSelected(true);
+					ASL_doctor.clearSelection();
+					ASR_doctor.setEnabled(false);
+					ASR_admin.setEnabled(false);
+					AST_room.setText(null);
+					AST_room.setEnabled(false);
+					AST_password.setEnabled(false);
+					ASR_doctor.setSelected(false);
+					ASR_admin.setSelected(true);
+					AST_password.setText(logAc.getAdmin(ASL_admin.getSelectedIndex()).getPassword());
 					AST_name.setText(logAc.getAdmin(ASL_admin.getSelectedIndex()).getName());
 					AST_userName.setText(logAc.getAdmin(ASL_admin.getSelectedIndex()).getUserName());
 				}
 			}});
 		
 		ASL_admin.addFocusListener(new FocusListener(){
-
 			@Override
 			public void focusGained(FocusEvent e) {
 				if (ASL_admin.getSelectedIndex() != -1){
-					rdbtnNewRadioButton.setSelected(false);
-					rdbtnNewRadioButton_1.setSelected(true);
+					ASL_doctor.clearSelection();
+					ASR_doctor.setEnabled(false);
+					ASR_admin.setEnabled(false);
+					AST_room.setText(null);
+					AST_room.setEnabled(false);
+					AST_password.setEnabled(false);
+					ASR_doctor.setSelected(false);
+					ASR_admin.setSelected(true);
+					AST_password.setText(logAc.getAdmin(ASL_admin.getSelectedIndex()).getPassword());
 					AST_name.setText(logAc.getAdmin(ASL_admin.getSelectedIndex()).getName());
 					AST_userName.setText(logAc.getAdmin(ASL_admin.getSelectedIndex()).getUserName());
 				}
@@ -1186,48 +1222,139 @@ public class MyWindow extends JFrame implements Serializable{
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				ASL_admin.clearSelection();
 			}});
-
+		
+		ASR_doctor.addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				if (ASR_doctor.isSelected())
+					AST_room.setEnabled(true);
+			}});
+		
+		ASR_admin.addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				if (ASR_admin.isSelected())
+					AST_room.setEnabled(false);
+			}});
+		
 		ASB_add.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				ASR_doctor.setEnabled(true);
+				ASR_admin.setEnabled(true);
+				ASR_doctor.setSelected(false);
+				ASR_admin.setSelected(false);
+				AST_room.setEnabled(true);
+				AST_password.setEnabled(true);
+				AST_name.setText(null);
+				AST_userName.setText(null);
+				AST_password.setText(null);
+				AST_room.setText(null);
+				ASL_admin.clearSelection();
+				ASL_doctor.clearSelection();
 			}
 
 		});
-
+		
 		ASB_save.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				if (cnt){
+					cnt = false;
+					try{
+						if ((AST_name.getText().equals("")) || (AST_userName.getText().equals("")) || (AST_password.getText().equals("")))
+							throw new NullFieldException(2);
+						if (ASL_doctor.getSelectedIndex()!=-1){
+							//save to doctor
+							if (AST_room.getText().equals(""))
+								throw new NullFieldException(2);
+							if (AST_userName.getText().equals(logAc.getDoctor(ASL_doctor.getSelectedIndex()).getUserName()) ||
+									((Doctor.doctorSearch(db,logAc,AST_userName.getText())==-1) && (Admin.adminSearch(db,logAc,AST_userName.getText())==-1))){ //make sure userName is unique
+								logAc.getDoctor(ASL_doctor.getSelectedIndex()).setName(AST_name.getText());
+								logAc.getDoctor(ASL_doctor.getSelectedIndex()).setUserName(AST_userName.getText());
+								logAc.getDoctor(ASL_doctor.getSelectedIndex()).setRoom(Integer.parseInt(AST_room.getText()));
+								renewASL();
+								JOptionPane.showMessageDialog(null, "Doctor saved.", "Account",JOptionPane.PLAIN_MESSAGE);
+							} else{
+								JOptionPane.showMessageDialog(null, "User Name is not unique, please use another user name.", "Account",JOptionPane.ERROR_MESSAGE);
+							}
+						} else if (ASL_admin.getSelectedIndex()!=-1){
+							//save to admin
+							if (AST_userName.getText().equals(logAc.getAdmin(ASL_admin.getSelectedIndex()).getUserName()) ||
+									((Doctor.doctorSearch(db,logAc,AST_userName.getText())==-1) && (Admin.adminSearch(db,logAc,AST_userName.getText())==-1))){ //make sure userName is unique
+								logAc.getAdmin(ASL_admin.getSelectedIndex()).setName(AST_name.getText());
+								logAc.getAdmin(ASL_admin.getSelectedIndex()).setUserName(AST_userName.getText());
+								renewASL();
+								JOptionPane.showMessageDialog(null, "Admin saved.", "Account",JOptionPane.PLAIN_MESSAGE);
+							} else{
+								JOptionPane.showMessageDialog(null, "User Name is not unique, please use another user name.", "Account",JOptionPane.ERROR_MESSAGE);
+							}
 
-				if (ASL_doctor.getSelectedIndex()!=-1){
-					//save to doctor
-					if (AST_userName.getText().equals(logAc.getDoctor(ASL_doctor.getSelectedIndex()).getName()) || (Doctor.doctorSearch(db,logAc,AST_userName.getText())==-1)){
-						logAc.getDoctor(ASL_doctor.getSelectedIndex()).setName(AST_name.getText());
-						logAc.getDoctor(ASL_doctor.getSelectedIndex()).setUserName(AST_userName.getText());
-						logAc.getDoctor(ASL_doctor.getSelectedIndex()).setRoom(Integer.parseInt(AST_room.getText()));
-					} else{
-						//
-						//warning message...
-					}
-						
-				} else if (ASL_admin.getSelectedIndex()!=-1){
-					//save to admin
-					if (AST_userName.getText().equals(logAc.getAdmin(ASL_admin.getSelectedIndex()).getName()) || (Admin.adminSearch(db,logAc,AST_userName.getText())==-1)){
-						logAc.getAdmin(ASL_admin.getSelectedIndex()).setName(AST_name.getText());
-						logAc.getAdmin(ASL_admin.getSelectedIndex()).setUserName(AST_userName.getText());
-					} else{
-						//
-						//warning message...
+						}
+						else if ((ASL_doctor.getSelectedIndex()==-1) && (ASL_admin.getSelectedIndex()==-1)){
+							//add new account
+							if (ASR_doctor.isSelected()){
+								//add doctor
+								if (AST_room.getText().equals(""))
+									throw new NullFieldException(2);
+								String pass = new String(AST_password.getPassword());
+								logAc.addDoctor(new Doctor(AST_name.getText(),AST_userName.getText(),pass,Integer.parseInt(AST_room.getText())));
+								AST_password.setEnabled(false);
+								renewASL();
+								JOptionPane.showMessageDialog(null, "Doctor added.", "Account",JOptionPane.PLAIN_MESSAGE);
+							} else if (ASR_admin.isSelected()){
+								//add admin
+								String pass = new String(AST_password.getPassword());
+								logAc.addAdmin(new Admin(AST_name.getText(),AST_userName.getText(),pass));
+								AST_password.setEnabled(false);
+								renewASL();
+								JOptionPane.showMessageDialog(null, "Admin added.", "Account",JOptionPane.PLAIN_MESSAGE);
+							} else {
+								JOptionPane.showMessageDialog(null, "Please select Staff type.", "Account",JOptionPane.ERROR_MESSAGE);
+							}
+						}
+					} catch (NullFieldException e1){
+						e1.error();
 					}
 
+				} else {
+					cnt = true;
 				}
 			}});
-
+		
 		ASB_delete.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				if (ASL_doctor.getSelectedIndex()!=-1){
+					//delete doctor
+					logAc.deleteDoctor(ASL_doctor.getSelectedIndex());
+					ASL_doctor.clearSelection();
+					renewASL();
+				} else if (ASL_admin.getSelectedIndex()!=-1){
+					//delete admin
+					logAc.deleteAdmin(ASL_admin.getSelectedIndex());
+					ASL_admin.clearSelection();
+					renewASL();
+				}
 			}});
+	}
+
+	private void renewASL(){
+		ASL_model.removeAllElements();
+		for (int i = 0; i<logAc.getDoctorSize(); i++){
+			ASL_model.add(i, logAc.getDoctor(i).getName());
+		}
+		ASL_adminmodel.removeAllElements();
+		for (int i = 0; i<logAc.getAdminSize(); i++){
+			ASL_adminmodel.add(i, logAc.getAdmin(i).getName());
+		}
+		ASR_doctor.setEnabled(true);
+		ASR_admin.setEnabled(true);
+		AST_password.setEnabled(true);
+		AST_name.setText("");
+		AST_userName.setText("");
+		AST_password.setText("");
+		AST_room.setText("");
 	}
 	//***********************************************************************
 	//**************************Account Page*********************************
@@ -1550,13 +1677,6 @@ public class MyWindow extends JFrame implements Serializable{
 		btnLogindoctor.setBounds(327, 537, 110, 60);
 		loginPane.add(btnLogindoctor);
 		
-		JLabel lblNewLabel_2 = new JLabel("Just press Login or Doctor, no need to type username and password, doctor just temp button");
-		lblNewLabel_2.setForeground(Color.RED);
-		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 20));
-		lblNewLabel_2.setBounds(51, 294, 878, 48);
-		loginPane.add(lblNewLabel_2);
-		
 		//Patient page button
 		//B_save
 		PB_save.setBounds(693, 227, 98, 32);
@@ -1564,7 +1684,9 @@ public class MyWindow extends JFrame implements Serializable{
 		PB_save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try{ //Saving or creating patient record
-					if (PT_HKID.getValue() == null) throw new NullFieldException(); //primary key should not be null
+					if ((PT_name.getText().equals("")) || (PT_dob.getValue()==null) || (PT_gender.getText().equals("")) || (PT_tel.getText().equals("")))
+						throw new NullFieldException(2);
+					if (PT_HKID.getValue() == null) throw new NullFieldException(1); //primary key should not be null
 					int index = Patient.patientSearch(db, (String) PT_HKID.getValue());
 					boolean save = false; //used to toggle save message
 					if (patient==null){
@@ -1747,19 +1869,16 @@ public class MyWindow extends JFrame implements Serializable{
 		MTjp.setFont(new Font("Arial", Font.PLAIN, 18));
 		MTP_pane.add(MTjp);
 		
-		MTT_treat = new JTextField();
 		MTT_treat.setFont(new Font("Arial", Font.PLAIN, 20));
 		MTT_treat.setColumns(10);
 		MTT_treat.setBounds(185, 131, 240, 47);
 		c_MTPane.add(MTT_treat);
 		
-		MTT_fpp = new JTextField();
 		MTT_fpp.setFont(new Font("Arial", Font.PLAIN, 20));
 		MTT_fpp.setColumns(10);
 		MTT_fpp.setBounds(187, 237, 238, 47);
 		c_MTPane.add(MTT_fpp);
 		
-		MTC_bp = new JCheckBox("");
 		MTC_bp.setBackground(SystemColor.activeCaption);
 		MTC_bp.setHorizontalAlignment(SwingConstants.CENTER);
 		MTC_bp.setBounds(187, 350, 240, 47);
@@ -1840,18 +1959,18 @@ public class MyWindow extends JFrame implements Serializable{
 		ASB_save.setBounds(172, 495, 121, 47);
 		accountPane.add(ASB_save);
 		
-		rdbtnNewRadioButton.setFont(new Font("Arial", Font.PLAIN, 20));
-		rdbtnNewRadioButton.setBackground(SystemColor.activeCaption);
-		rdbtnNewRadioButton.setBounds(161, 128, 92, 41);
-		accountPane.add(rdbtnNewRadioButton);
+		ASR_doctor.setFont(new Font("Arial", Font.PLAIN, 20));
+		ASR_doctor.setBackground(SystemColor.activeCaption);
+		ASR_doctor.setBounds(161, 128, 92, 41);
+		accountPane.add(ASR_doctor);
 		
-		rdbtnNewRadioButton_1.setFont(new Font("Arial", Font.PLAIN, 20));
-		rdbtnNewRadioButton_1.setBackground(SystemColor.activeCaption);
-		rdbtnNewRadioButton_1.setBounds(280, 128, 92, 41);
-		accountPane.add(rdbtnNewRadioButton_1);
+		ASR_admin.setFont(new Font("Arial", Font.PLAIN, 20));
+		ASR_admin.setBackground(SystemColor.activeCaption);
+		ASR_admin.setBounds(280, 128, 92, 41);
+		accountPane.add(ASR_admin);
 		
-		ASRG_radiogp.add(rdbtnNewRadioButton);
-		ASRG_radiogp.add(rdbtnNewRadioButton_1);
+		ASRG_radiogp.add(ASR_doctor);
+		ASRG_radiogp.add(ASR_admin);
 		
 		ASB_add.setFont(new Font("Arial", Font.PLAIN, 20));
 		ASB_add.setBounds(24, 495, 121, 47);
