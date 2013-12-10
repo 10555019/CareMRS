@@ -167,9 +167,10 @@ public class Db implements Serializable{
 			String date = booking.get(i).getBookingTime();//search and check
 			String Doctor = booking.get(i).getDoctorID();
 			for(int j=0; j<booking.size(); j++){
-				String date1=booking.get(i).getBookingTime();
-				String Doctor1 = booking
-				if(date.equals(date1)){
+				String date1=booking.get(j).getBookingTime();
+				String Doctor1 = booking.get(j).getBookingTime();
+				if((date.equals(date1))&&(Doctor.equals(Doctor1))){
+					return 0;
 				}
 			}
 		}
