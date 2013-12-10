@@ -21,7 +21,6 @@ public class Patient implements Serializable{
 		this.telephone = telephone;
 		this.gender = gender;
 		setDob(date);
-		current = Calendar.getInstance();
 	}
 
 	public static int patientSearch(Db db, String inputHKID) {	
@@ -150,18 +149,32 @@ public class Patient implements Serializable{
 				index++;
 			}
 	}
-
-	public void book(){
+	
+	public int getAge(){
+		current = Calendar.getInstance();
 		int cyear = current.get(Calendar.YEAR);
 		int diff1 = cyear-dob.get(1);
 		int cmonth = current.get(Calendar.MONTH);
 		int diff = cmonth - dob.get(2);
+		int cday = current.get(Calendar.DAY_OF_MONTH);
+		int diff2 = cday - dob.get(5);
+		
 		if(diff<0){
-			diff1++;
-		}
-		else{
 			diff1--;
 		}
+		else if (diff==0){
+			if (diff2<0){
+				diff1--;
+			}
+		}
+		return diff1;
+	}
+
+	public void book(){
+		int diff1;
+		
+		diff1 = getAge();
+		
 		if(diff1>50){
 			int book = 2;
 		}

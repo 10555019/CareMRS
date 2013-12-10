@@ -78,7 +78,7 @@ public class MyWindow extends JFrame implements Serializable{
 	private String filePath = "db.sav";
 	
 	//MaskFormatter
-	private MaskFormatter idFormatter = new MaskFormatter("U######'(U')");
+	private MaskFormatter idFormatter = new MaskFormatter("U######'(A')");
 	private MaskFormatter telFormatter = new MaskFormatter("####' ####");
 	private MaskFormatter dateFormatter = new MaskFormatter("##'/##'/####");
 	
@@ -161,7 +161,7 @@ public class MyWindow extends JFrame implements Serializable{
 	private JPanel JP_treatTable = new JPanel();
 	private JPanel JP_bodyTable = new JPanel();	
 	private JPanel JP_remark = new JPanel();
-	private JTextPane TTP_remark = new JTextPane();
+	private JTextField TTP_remark = new JTextField();
 	private JPanel JP_fee = new JPanel();
 	private JLabel Tlbl_total = new JLabel();
 	private JLabel Tlbl_Sub_total = new JLabel();
@@ -1409,9 +1409,13 @@ public class MyWindow extends JFrame implements Serializable{
 		
 		TTP_remark.setText(null);
 		
-		TreatmentRec treatmentRec = new TreatmentRec(doctorID);
-		if (patient != null)
+		TreatmentRec treatmentRec = new TreatmentRec(db,patient,doctorID);
+		
+		if (patient != null){
 			patient.addTreatmentRec(treatmentRec);
+			TTP_remark.setText(patient.getTreatmentRec(patient.getTreatmentRecSize()-1).getCondition());
+			patient.getTreatmentRec(patient.getTreatmentRecSize()-1).setRemarks(TTP_remark.getText());
+		}
 		
 		treatmentPane = new JPanel();
 		treatmentPane.setBackground(SystemColor.activeCaption);
@@ -1447,6 +1451,14 @@ public class MyWindow extends JFrame implements Serializable{
 				}
 			}});
 
+		
+		
+		
+		if (patient!=null){
+			final float discount = patient.getTreatmentRec(patient.getTreatmentRecSize()-1).getDiscount();
+		
+			
+			
 		JButton TtB_save = new JButton("Save");
 		TtB_save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -1463,10 +1475,10 @@ public class MyWindow extends JFrame implements Serializable{
 						patient.getTreatmentRec(patient.getTreatmentRecSize()-1).getTreatment(patient.getTreatmentRec(patient.getTreatmentRecSize()-1).getTreatmentSize()-1).getType());
 				if (!(db.getClinic().getTreatmentMeta(TtCB_text.getSelectedIndex()).isBodyPart())){
 					//calculate price
-					tmp_sub_price = patient.getTreatmentRec(cur_rec).getTotalPrice() + db.getClinic().getTreatmentMeta(TtCB_text.getSelectedIndex()).getFpp();
+					tmp_sub_price = patient.getTreatmentRec(cur_rec).getTotalPrice() + db.getClinic().getTreatmentMeta(TtCB_text.getSelectedIndex()).getFpp()*discount;
 					//System.out.println(tmp_sub_price);
 					patient.getTreatmentRec(cur_rec).setTotalPrice(tmp_sub_price);
-					tmp_price = db.getClinic().getTreatmentMeta(TtCB_text.getSelectedIndex()).getFpp();
+					tmp_price = db.getClinic().getTreatmentMeta(TtCB_text.getSelectedIndex()).getFpp()*discount;
 					//System.out.println(tmp_price);
 					patient.getTreatmentRec(cur_rec).getTreatment(patient.getTreatmentRec(cur_rec).getTreatmentSize()-1).setPrice(tmp_price);
 					//update price
@@ -1509,9 +1521,11 @@ public class MyWindow extends JFrame implements Serializable{
 							//clear textField
 							TbT_text.setText(null);
 							//calculate price
-							tmp_sub_price = patient.getTreatmentRec(cur_rec).getTotalPrice() + db.getClinic().getTreatmentMeta(db.getClinic().searchType(patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).getType())).getFpp();
+							tmp_sub_price = patient.getTreatmentRec(cur_rec).getTotalPrice() +
+									db.getClinic().getTreatmentMeta(db.getClinic().searchType(patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).getType())).getFpp()*discount;
 							patient.getTreatmentRec(cur_rec).setTotalPrice(tmp_sub_price);
-							tmp_price = patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).getPrice() + db.getClinic().getTreatmentMeta(db.getClinic().searchType(patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).getType())).getFpp();
+							tmp_price = patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).getPrice() +
+									db.getClinic().getTreatmentMeta(db.getClinic().searchType(patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).getType())).getFpp()*discount;
 							patient.getTreatmentRec(cur_rec).getTreatment(cur_treat).setPrice(tmp_price);
 							//update price
 							Tlbl_total.setText(Float.toString(tmp_price));
@@ -1532,6 +1546,12 @@ public class MyWindow extends JFrame implements Serializable{
 		TbB_save.setBounds(39, 90, 79, 33);
 		JP_bodyPart.add(TbB_save);
 		
+		
+		
+		}
+		
+		
+		
 		JButton TbB_clear = new JButton("Clear");
 		TbB_clear.setFont(new Font("Arial", Font.PLAIN, 20));
 		TbB_clear.setBounds(157, 90, 90, 33);
@@ -1539,7 +1559,7 @@ public class MyWindow extends JFrame implements Serializable{
 		
 		JLabel lbl_remark = new JLabel("Remark:");
 		lbl_remark.setFont(new Font("Arial", Font.PLAIN, 20));
-		lbl_remark.setBounds(10, 10, 85, 24);
+		lbl_remark.setBounds(10, 15, 85, 24);
 		JP_remark.add(lbl_remark);
 		
 		JButton TB_patient = new JButton("Patient");
@@ -1881,7 +1901,8 @@ public class MyWindow extends JFrame implements Serializable{
 		TbT_text.setBounds(20, 44, 256, 24);
 		JP_bodyPart.add(TbT_text);
 		
-		TTP_remark.setBounds(10, 37, 426, 86);
+		TTP_remark.setBounds(10, 50, 426, 24);
+		TTP_remark.setColumns(10);
 		JP_remark.add(TTP_remark);
 		
 		Tlbl_total.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -1931,7 +1952,7 @@ public class MyWindow extends JFrame implements Serializable{
 		JP_bodyTable.add(TbL_list);
 		
 		JP_remark.setBackground(new Color(255, 182, 193));
-		JP_remark.setBounds(73, 483, 446, 133);
+		JP_remark.setBounds(73, 483, 446, 99);
 		treatmentPane.add(JP_remark);
 		JP_remark.setLayout(null);
 		

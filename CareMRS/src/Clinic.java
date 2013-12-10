@@ -31,6 +31,21 @@ public class Clinic implements Serializable{
 	public void setDiscount(int index, float discount){
 		this.discount[index]=discount;
 	}
+	
+	public void setNonPH(int i, String time){
+		int hr, min;
+		hr = Integer.parseInt(time.substring(0,2));
+		min = Integer.parseInt(time.substring(3,5));
+		nonPeakHr[i].set(0,0,0,hr,min);
+	}
+	
+	public int getNonHr(int i){
+		return nonPeakHr[i].get(11);
+	}
+	
+	public int getNonMin(int i){
+		return nonPeakHr[i].get(12);
+	}
 
 	public void setOpenHr(int i, int j, boolean k){
 		openHr[i][j]=k;

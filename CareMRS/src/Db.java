@@ -68,7 +68,7 @@ public class Db implements Serializable{
 				//first time use
 				
 				//temp
-				addPatient(new Patient("Chan", "A000001(1)", "1234 5678", 'M', "01/01/2013"));
+				addPatient(new Patient("Chan", "A000001(1)", "1234 5678", 'M', "01/01/1000"));
 				//temp
 				
 				TreatmentMeta treatmentMeta1 = new TreatmentMeta("Herbal",250,false);
@@ -100,6 +100,10 @@ public class Db implements Serializable{
 				clinic.setSession(1, "13:00");
 				clinic.setSession(2, "15:00");
 				clinic.setSession(3, "20:00");
+				clinic.setNonPH(0, "12:00");
+				clinic.setNonPH(1, "13:00");
+				clinic.setNonPH(2, "15:00");
+				clinic.setNonPH(3, "16:00");
 				return db;
 			}
 		} catch (IOException e){
