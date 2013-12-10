@@ -1,4 +1,6 @@
 import java.io.*;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
@@ -8,9 +10,11 @@ public class Db implements Serializable{
 	
 	private LinkedList<Patient> patient = new LinkedList<Patient>();
 	private LinkedList<Booking> booking = new LinkedList<Booking>();
+	private ArrayList<Integer> temp = new ArrayList<Integer>(); 
+	//storing the location of list
 	private Clinic clinic = new Clinic();
 	private String filePath = "db.sav";
-	
+
 	public void addBooking(Booking booking){
 		this.booking.add(booking);
 	}
@@ -104,5 +108,51 @@ public class Db implements Serializable{
 			System.out.println("outFile IOException");
 		}
 	}
-
+	public void searchinglist(String ID){
+		for(int i=0; i<booking.size();i++){
+			if (ID.equals(booking.get(i).getPatientID())){
+				adda(temp.size(),i);
+			}
+		}
+	}
+	public void adda(int size, int i) {
+		// TODO Auto-generated method stub
+	}
+	public void showBookDoc(){
+		int i=0;
+		while (i<temp.size()){
+			String PatientID = booking.get(i).getPatientID();
+			String date = booking.get(i).getBookingTime();
+		}
+	}
+	public void showBooking(String ID){//print out list
+		int i =0;
+		while(i<temp.size()){
+			String DoctorID = booking.get(i).getDoctorID();
+			String date = booking.get(i).getBookingTime();
+			i++;
+		}
+	}
+	public void cancelBooking(int i){
+		booking.remove(i);
+	}
+	public void createbooking(String ID, String DoctorID, GregorianCalendar date){
+		//add list
+		booking.addBooking(ID, DoctorID, date);
+	}
+	public void checkoverlap(){
+		for (int i=0; i<booking.size();i++){
+			String date = booking.get(i).getBookingTime();//search and check
+			String Doctor = booking.get(i).getDoctorID();
+			for(int j=0; j<booking.size(); j++){
+				String date1=booking.get(i).getBookingTime();
+				String Doctor1 = booking
+				if(date.equals(date1)){
+				}
+			}
+		}
+	}
+	public void delete(){
+		temp.removeAll(temp);
+	}
 }

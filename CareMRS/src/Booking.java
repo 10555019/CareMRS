@@ -5,7 +5,7 @@ import java.util.GregorianCalendar;
 
 public class Booking implements Serializable{
 	private GregorianCalendar date;
-	private String HKID;
+	private static String HKID;
 	private String userName; //DoctorID
 	
 	public Booking(String HKID, String userName, GregorianCalendar date){
@@ -13,7 +13,7 @@ public class Booking implements Serializable{
 		this.userName = userName;
 		this.date = date;
 	}
-	public String getPatientID(){
+	public  String getPatientID(){
 		return HKID;
 	}
 	public String getDoctorID(){
