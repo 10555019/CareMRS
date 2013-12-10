@@ -4,6 +4,7 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 
 public class Db implements Serializable{
@@ -131,7 +132,7 @@ public class Db implements Serializable{
 		}
 	}
 	
-	public void searchinglist(String ID){
+	public void searchinglistd(String ID){
 		delete();
 		for(int i=0; i<booking.size();i++){
 			if (ID.equals(booking.get(i).getPatientID())){
@@ -140,7 +141,7 @@ public class Db implements Serializable{
 		}
 	}
 	
-	public void searchinglistd(String ID){
+	public void searchinglist(String ID){
 		delete();
 		for(int i=0; i<booking.size();i++){
 			if (ID.equals(booking.get(i).getDoctorID())){
@@ -153,21 +154,26 @@ public class Db implements Serializable{
 		int i=0;
 		searchinglist(ID);
 		while (i<temp.size()){
-			String PatientID = booking.get(temp.get(i)).getPatientID();
+			String patientID = booking.get(temp.get(i)).getPatientID();
 			String date = booking.get(temp.get(i)).getBookingDate();
 			String time = booking.get(temp.get(i)).getBookingTime();
 			i++;
 		}
 	}
 	
-	public void showBookingPat(String ID){//print out list
+	public void showBookingPat(DefaultTableModel defaultTableModel, String ID){//print out list
 		int i =0;
+		int rowCount = defaultTableModel.getRowCount();
+		for (int j=rowCount-1;j>=0;j--){
+			defaultTableModel.removeRow(j);
+		}
 		searchinglistd(ID);
 		while(i<temp.size()){
-			String DoctorID = booking.get(temp.get(i)).getDoctorID();
+			String doctorID = booking.get(temp.get(i)).getDoctorID();
 			String date = booking.get(temp.get(i)).getBookingDate();
 			String time = booking.get(temp.get(i)).getBookingTime();
 			i++;
+			defaultTableModel.addRow(new Object[] {date,time,doctorID});
 		}
 	}
 	
