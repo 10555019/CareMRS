@@ -19,14 +19,19 @@ public class Booking implements Serializable{
 	public String getDoctorID(){
 		return userName;
 	}
-	public String getBookingTime(){
-		String day, month, year, hour, min;
+	public String getBookingDate(){
+		String day, month, year;
 		day = Integer.toString(date.get(5));
-		month = Integer.toString(date.get(2));
+		month = Integer.toString(date.get(2))+1;
 		year = Integer.toString(date.get(1));
+		return (day+"/"+month+"/"+year);
+	}
+	
+	public String getBookingTime(){
+		String hour, min;
 		hour = Integer.toString(date.get(11));
 		min = Integer.toString(date.get(12));
-		return (day+"/"+month+"/"+year+" "+hour+":"+min);
+		return (hour+":"+min);
 	}
 	
 }

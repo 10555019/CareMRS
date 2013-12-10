@@ -30,6 +30,7 @@ import javax.swing.JScrollPane;
 import java.awt.Color;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.Scanner;
 
 import javax.swing.ImageIcon;
@@ -107,6 +108,11 @@ public class MyWindow extends JFrame implements Serializable{
 	private JComboBox<String> PBCB_doctor = new JComboBox<String>();
 	private JButton PBB_myTimetable = new JButton("My Timetable");
 	private JButton PBB_account = new JButton("Account");
+	private JPanel PBP_choose = new JPanel();
+	private JPanel PBP_show = new JPanel();
+	private DefaultTableModel PBT_choose_model;
+	private String[] tmp_columns = {};
+	private JTable PBT_choose = new JTable(new DefaultTableModel(null,tmp_columns));
 	
 	//Clinic
 	private JTextField SCT_p50 = new JTextField();
@@ -209,6 +215,7 @@ public class MyWindow extends JFrame implements Serializable{
 	private int mode; //1:doctor 2:admin
 	private boolean saveStatus = false;
 	private String doctorID;
+	private boolean elderly = false;
 	
 	//Window Panels
 	private JPanel color1;
@@ -527,6 +534,10 @@ public class MyWindow extends JFrame implements Serializable{
 				
 				if (index > -1){
 					patient = db.getPatient(index);
+					if (patient.getAge()>50)
+						elderly = true;
+					else
+						elderly = false;
 					SPT_HKID.setValue(null);
 					PB_save.setEnabled(false);
 					PB_update.setEnabled(true);
@@ -691,86 +702,27 @@ public class MyWindow extends JFrame implements Serializable{
 		B_update.setBounds(428, 138, 101, 47);
 		p_bookingPane.add(B_update);
 
+		//set Doctor list
 		PBCB_doctor.removeAllItems();
 		Doctor.addCombo(logAc, PBCB_doctor);
 		
-		JLabel lblNewLabel_1 = new JLabel("10:00     11:00     12:00     15:00     16:00     17:00     18:00     19:00");
-		lblNewLabel_1.setFont(new Font("Arial", Font.PLAIN, 20));
-		lblNewLabel_1.setBounds(81, 213, 620, 29);
-		p_bookingPane.add(lblNewLabel_1);
-		
-		JLabel label = new JLabel("    -            -            -            -            -             -            -            -");
-		label.setFont(new Font("Arial", Font.PLAIN, 20));
-		label.setBounds(81, 237, 620, 29);
-		p_bookingPane.add(label);
-		
-		JLabel label_1 = new JLabel("11:00     12:00     13:00     16:00     17:00     18:00     19:00     20:00");
-		label_1.setFont(new Font("Arial", Font.PLAIN, 20));
-		label_1.setBounds(81, 263, 620, 29);
-		p_bookingPane.add(label_1);
-		
-		JRadioButton radioButton = new JRadioButton("");
-		radioButton.setBackground(SystemColor.activeCaption);
-		radioButton.setHorizontalAlignment(SwingConstants.CENTER);
-		radioButton.setFont(new Font("·s²Ó©úÅé", Font.PLAIN, 20));
-		radioButton.setBounds(75, 288, 60, 50);
-		p_bookingPane.add(radioButton);
-		
-		JRadioButton radioButton_1 = new JRadioButton("");
-		radioButton_1.setBackground(SystemColor.activeCaption);
-		radioButton_1.setHorizontalAlignment(SwingConstants.CENTER);
-		radioButton_1.setBounds(155, 288, 60, 50);
-		p_bookingPane.add(radioButton_1);
-		
-		JRadioButton radioButton_2 = new JRadioButton("");
-		radioButton_2.setBackground(SystemColor.activeCaption);
-		radioButton_2.setHorizontalAlignment(SwingConstants.CENTER);
-		radioButton_2.setBounds(233, 288, 60, 50);
-		p_bookingPane.add(radioButton_2);
-		
-		JRadioButton radioButton_3 = new JRadioButton("");
-		radioButton_3.setBackground(SystemColor.activeCaption);
-		radioButton_3.setHorizontalAlignment(SwingConstants.CENTER);
-		radioButton_3.setBounds(314, 288, 60, 50);
-		p_bookingPane.add(radioButton_3);
-		
-		JRadioButton radioButton_4 = new JRadioButton("");
-		radioButton_4.setBackground(SystemColor.activeCaption);
-		radioButton_4.setHorizontalAlignment(SwingConstants.CENTER);
-		radioButton_4.setBounds(393, 288, 60, 50);
-		p_bookingPane.add(radioButton_4);
-		
-		JRadioButton radioButton_5 = new JRadioButton("");
-		radioButton_5.setBackground(SystemColor.activeCaption);
-		radioButton_5.setHorizontalAlignment(SwingConstants.CENTER);
-		radioButton_5.setBounds(474, 288, 60, 50);
-		p_bookingPane.add(radioButton_5);
-		
-		JRadioButton radioButton_6 = new JRadioButton("");
-		radioButton_6.setBackground(SystemColor.activeCaption);
-		radioButton_6.setHorizontalAlignment(SwingConstants.CENTER);
-		radioButton_6.setBounds(556, 288, 60, 50);
-		p_bookingPane.add(radioButton_6);
-		
-		JRadioButton radioButton_7 = new JRadioButton("");
-		radioButton_7.setBackground(SystemColor.activeCaption);
-		radioButton_7.setHorizontalAlignment(SwingConstants.CENTER);
-		radioButton_7.setBounds(634, 288, 60, 50);
-		p_bookingPane.add(radioButton_7);
-		
-		ButtonGroup radioGroup = new ButtonGroup();
-		radioGroup.add(radioButton);
-		radioGroup.add(radioButton_1);
-		radioGroup.add(radioButton_2);
-		radioGroup.add(radioButton_3);
-		radioGroup.add(radioButton_4);
-		radioGroup.add(radioButton_5);
-		radioGroup.add(radioButton_6);
-		radioGroup.add(radioButton_7);
 		
 		JButton B_book = new JButton("Book");
+		B_book.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int day, month, year;
+				day = Integer.parseInt(((String)PBT_date.getValue()).substring(0,2));
+				month = Integer.parseInt(((String)PBT_date.getValue()).substring(3,5));
+				year = Integer.parseInt(((String)PBT_date.getValue()).substring(6,10));
+				GregorianCalendar date = new GregorianCalendar();
+				date.set(year, month, day);
+				int index = PBCB_doctor.getSelectedIndex();
+				String doctorID = logAc.getDoctor(index).getUserName();
+				db.createbooking(patient.getHKID(), doctorID, date);
+			}
+		});
 		B_book.setFont(new Font("Arial", Font.PLAIN, 20));
-		B_book.setBounds(782, 280, 109, 47);
+		B_book.setBounds(560, 138, 109, 47);
 		p_bookingPane.add(B_book);
 		
 		JButton btnNewButton = new JButton("Delete");
@@ -788,9 +740,8 @@ public class MyWindow extends JFrame implements Serializable{
 		btnBackToPatient.setBounds(827, 585, 116, 47);
 		p_bookingPane.add(btnBackToPatient);
 		
-		JPanel PBP_pane = new JPanel();
-		PBP_pane.setBounds(33, 342, 879, 225);
-		p_bookingPane.add(PBP_pane);
+		
+
 		
 		
 	}
@@ -1439,7 +1390,7 @@ public class MyWindow extends JFrame implements Serializable{
 		lblTreatment.setBounds(349, 20, 286, 47);
 		treatmentPane.add(lblTreatment);
 		
-		JLabel lbl_Tt = new JLabel("Enter Treatment Type");
+		JLabel lbl_Tt = new JLabel("Enter treatment type");
 		lbl_Tt.setFont(new Font("Arial", Font.PLAIN, 20));
 		lbl_Tt.setBounds(10, 10, 193, 24);
 		JP_treatmentType.add(lbl_Tt);
@@ -1903,6 +1854,25 @@ public class MyWindow extends JFrame implements Serializable{
 			}
 		});
 		
+		PBP_show.setBackground(new Color(255, 228, 181));
+		PBP_show.setBounds(33, 388, 879, 186);
+		p_bookingPane.add(PBP_show);
+		
+		PBP_choose.setBackground(new Color(255, 228, 181));
+		PBP_choose.setBounds(33, 213, 879, 111);
+		p_bookingPane.add(PBP_choose);
+		
+		PBT_choose_model = (DefaultTableModel) PBT_choose.getModel();
+		PBT_choose.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		PBT_choose.setFont(new Font("Arial", Font.PLAIN, 18));
+		PBT_choose.setBackground(new Color(255, 228, 181));
+		PBT_choose.setPreferredScrollableViewportSize(new Dimension(850, 80));
+		PBT_choose.setFillsViewportHeight(true);
+		JScrollPane PBjp = new JScrollPane(PBT_choose);
+		PBjp.setFont(new Font("Arial", Font.PLAIN, 18));
+		PBP_choose.add(PBjp);
+		
+		
 		//treatment
 		TtCB_text.setBounds(20, 44, 256, 24);
 		JP_treatmentType.add(TtCB_text);
@@ -1925,15 +1895,20 @@ public class MyWindow extends JFrame implements Serializable{
 		Tlbl_Sub_total.setBounds(143, 48, 123, 24);
 		JP_fee.add(Tlbl_Sub_total);
 		
-		JP_treatmentType.setBackground(new Color(255, 182, 193));
+		JP_treatmentType.setBackground(new Color(255, 228, 181));
 		JP_treatmentType.setBounds(73, 118, 286, 133);
 		treatmentPane.add(JP_treatmentType);
 		JP_treatmentType.setLayout(null);
 		
-		JP_bodyPart.setBackground(new Color(255, 182, 193));
+		JP_bodyPart.setBackground(new Color(255, 228, 181));
 		JP_bodyPart.setLayout(null);
 		JP_bodyPart.setBounds(73, 318, 286, 133);
 		treatmentPane.add(JP_bodyPart);
+		
+		JLabel lblEnterBodyParts = new JLabel("Enter body parts");
+		lblEnterBodyParts.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblEnterBodyParts.setBounds(11, 10, 193, 24);
+		JP_bodyPart.add(lblEnterBodyParts);
 		
 		JP_treatTable.setBounds(410, 94, 254, 285);
 		treatmentPane.add(JP_treatTable);
@@ -1963,12 +1938,12 @@ public class MyWindow extends JFrame implements Serializable{
 		TbL_list.setBounds(10, 44, 234, 227);
 		JP_bodyTable.add(TbL_list);
 		
-		JP_remark.setBackground(new Color(255, 182, 193));
+		JP_remark.setBackground(new Color(255, 228, 181));
 		JP_remark.setBounds(73, 483, 446, 99);
 		treatmentPane.add(JP_remark);
 		JP_remark.setLayout(null);
 		
-		JP_fee.setBackground(new Color(255, 182, 193));
+		JP_fee.setBackground(new Color(255, 228, 181));
 		JP_fee.setBounds(558, 453, 392, 90);
 		treatmentPane.add(JP_fee);
 		JP_fee.setLayout(null);
@@ -2201,7 +2176,7 @@ public class MyWindow extends JFrame implements Serializable{
 		
 		
 		//MT
-		MTP_pane.setBackground(SystemColor.activeCaption);
+		MTP_pane.setBackground(new Color(152, 251, 152));
 		MTP_pane.setBounds(479, 107, 448, 390);
 		MTP_pane.setLayout(new FlowLayout());
 		c_MTPane.add(MTP_pane);
@@ -2284,6 +2259,11 @@ public class MyWindow extends JFrame implements Serializable{
 		B_clinic.setBackground(new Color(255, 192, 203));
 		B_clinic.setBounds(700, 489, 143, 47);
 		c_SCPane.add(B_clinic);
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setBackground(new Color(152, 251, 152));
+		panel_3.setBounds(221, 154, 400, 283);
+		c_SCPane.add(panel_3);
 		
 		
 		//log

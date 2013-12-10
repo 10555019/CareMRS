@@ -130,51 +130,69 @@ public class Db implements Serializable{
 			System.out.println("outFile IOException");
 		}
 	}
+	
 	public void searchinglist(String ID){
+		delete();
 		for(int i=0; i<booking.size();i++){
 			if (ID.equals(booking.get(i).getPatientID())){
-				adda(temp.size(),i);
+				temp.add(i);
 			}
 		}
 	}
-	public void adda(int size, int i) {
-		// TODO Auto-generated method stub
-	}
-	public void showBookDoc(){
-		int i=0;
-		while (i<temp.size()){
-			String PatientID = booking.get(i).getPatientID();
-			String date = booking.get(i).getBookingTime();
+	
+	public void searchinglistd(String ID){
+		delete();
+		for(int i=0; i<booking.size();i++){
+			if (ID.equals(booking.get(i).getDoctorID())){
+				temp.add(i);
+			}
 		}
 	}
-	public void showBooking(String ID){//print out list
-		int i =0;
-		while(i<temp.size()){
-			String DoctorID = booking.get(i).getDoctorID();
-			String date = booking.get(i).getBookingTime();
+	
+	public void showBookingDoc(String ID){
+		int i=0;
+		searchinglist(ID);
+		while (i<temp.size()){
+			String PatientID = booking.get(temp.get(i)).getPatientID();
+			String date = booking.get(temp.get(i)).getBookingDate();
+			String time = booking.get(temp.get(i)).getBookingTime();
 			i++;
 		}
 	}
+	
+	public void showBookingPat(String ID){//print out list
+		int i =0;
+		searchinglistd(ID);
+		while(i<temp.size()){
+			String DoctorID = booking.get(temp.get(i)).getDoctorID();
+			String date = booking.get(temp.get(i)).getBookingDate();
+			String time = booking.get(temp.get(i)).getBookingTime();
+			i++;
+		}
+	}
+	
 	public void cancelBooking(int i){
 		booking.remove(i);
 	}
+	
 	public void createbooking(String ID, String DoctorID, GregorianCalendar date){
 		//add list
-		booking.addBooking(ID, DoctorID, date);
+		Booking booking = new Booking(ID, DoctorID, date);
+		addBooking(booking);
 	}
-	public void checkoverlap(){
-		for (int i=0; i<booking.size();i++){
-			String date = booking.get(i).getBookingTime();//search and check
-			String Doctor = booking.get(i).getDoctorID();
-			for(int j=0; j<booking.size(); j++){
-				String date1=booking.get(j).getBookingTime();
-				String Doctor1 = booking.get(j).getBookingTime();
-				if((date.equals(date1))&&(Doctor.equals(Doctor1))){
-					return 0;
-				}
-			}
+
+	public boolean isoverlap(Booking booking){
+		boolean flag = false;
+		for (int i=0; i<this.booking.size();i++){
+			String time = this.booking.get(i).getBookingTime();
+			String date = this.booking.get(i).getBookingDate();
+			String doctorID = this.booking.get(i).getDoctorID();
+			if((booking.getDoctorID().equals(doctorID)&&(booking.getBookingTime().equals(time))&&(booking.getBookingDate().equals(date))))
+				flag = true;
 		}
+		return flag;
 	}
+
 	public void delete(){
 		temp.removeAll(temp);
 	}
