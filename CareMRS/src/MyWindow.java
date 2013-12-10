@@ -114,6 +114,10 @@ public class MyWindow extends JFrame implements Serializable{
 	private JPanel PBP_show = new JPanel();
 	private DefaultListModel<String> PBL_choose_model = new DefaultListModel<String>();
 	public JList<String> PBL_choose = new JList<String>(PBL_choose_model);
+	private DefaultTableModel PBT_model;
+	private String[] PBcolumn = {"Date","Time","Type of Treatment","Price","Doctor"};
+	private JTable PBT_table = new JTable(new DefaultTableModel(null,PBcolumn));
+	
 	
 	//Clinic
 	private JTextField SCT_p50 = new JTextField();
@@ -1896,6 +1900,13 @@ public class MyWindow extends JFrame implements Serializable{
 		PBP_show.setBackground(new Color(255, 228, 181));
 		PBP_show.setBounds(33, 388, 879, 186);
 		p_bookingPane.add(PBP_show);
+		PBP_show.setLayout(null);
+		
+		JLabel lblBookingLog = new JLabel("Booking log");
+		lblBookingLog.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblBookingLog.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblBookingLog.setBounds(10, 10, 125, 24);
+		PBP_show.add(lblBookingLog);
 		
 		PBP_choose.setBackground(new Color(255, 228, 181));
 		PBP_choose.setBounds(531, 89, 302, 275);
@@ -1910,6 +1921,16 @@ public class MyWindow extends JFrame implements Serializable{
 		lblStartTime.setFont(new Font("Arial", Font.PLAIN, 20));
 		lblStartTime.setBounds(10, 10, 86, 24);
 		PBP_choose.add(lblStartTime);
+		
+		PBT_model = (DefaultTableModel) PBT_table.getModel();
+		PBT_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		PBT_table.setFont(new Font("Arial", Font.PLAIN, 18));
+		PBT_table.setBackground(SystemColor.activeCaption);
+		PBT_table.setPreferredScrollableViewportSize(new Dimension(850, 150));
+		PBT_table.setFillsViewportHeight(true);
+		JScrollPane PBjp = new JScrollPane(PBT_table);
+		PBjp.setFont(new Font("Arial", Font.PLAIN, 18));
+		PBP_show.add(PBjp);
 		
 		
 		//treatment
