@@ -13,7 +13,7 @@ public class Booking implements Serializable{
 		this.userName = userName;
 		this.date = date;
 	}
-	public String getpatientID(){
+	public String getPatientID(){
 		return HKID;
 	}
 	public String getDoctorID(){
