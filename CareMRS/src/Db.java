@@ -82,6 +82,24 @@ public class Db implements Serializable{
 				clinic.setDiscount(0,(float) 0.8);
 				clinic.setDiscount(1,(float) 0.5);
 				clinic.setDiscount(2,(float) 0.95);
+				clinic.setOpenHr(0,0,true);
+				clinic.setOpenHr(0,1,true);
+				clinic.setOpenHr(1,0,true);
+				clinic.setOpenHr(1,1,true);
+				clinic.setOpenHr(2,0,true);
+				clinic.setOpenHr(2,1,true);
+				clinic.setOpenHr(3,0,true);
+				clinic.setOpenHr(3,1,true);
+				clinic.setOpenHr(4,0,true);
+				clinic.setOpenHr(4,1,true);
+				clinic.setOpenHr(5,0,true);
+				clinic.setOpenHr(5,1,false);
+				clinic.setOpenHr(6,0,false);
+				clinic.setOpenHr(6,1,false);
+				clinic.setSession(0, "10:00");
+				clinic.setSession(1, "13:00");
+				clinic.setSession(2, "15:00");
+				clinic.setSession(3, "20:00");
 				return db;
 			}
 		} catch (IOException e){
