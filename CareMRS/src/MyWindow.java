@@ -7,8 +7,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.MaskFormatter;
@@ -18,7 +16,6 @@ import java.awt.Font;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
-import javax.swing.Icon;
 import javax.swing.JFormattedTextField;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -29,10 +26,7 @@ import javax.swing.JScrollPane;
 
 import java.awt.Color;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.Scanner;
-import java.util.Vector;
 
 import javax.swing.ImageIcon;
 
@@ -48,27 +42,15 @@ import javax.swing.SwingConstants;
 import java.awt.SystemColor;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
-import javax.swing.JToggleButton;
 import javax.swing.JList;
-import javax.swing.UIManager;
 import javax.swing.JCheckBox;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-import javax.swing.JTextPane;
-import javax.swing.ListModel;
 
 
 public class MyWindow extends JFrame implements Serializable{
@@ -78,7 +60,6 @@ public class MyWindow extends JFrame implements Serializable{
 	//Database Variables
 	private Db db;
 	private LogAc logAc;
-	private String filePath = "db.sav";
 	
 	//MaskFormatter
 	private MaskFormatter idFormatter = new MaskFormatter("U######'(A')");
@@ -229,6 +210,7 @@ public class MyWindow extends JFrame implements Serializable{
 	private boolean saveStatus = false;
 	private String doctorID;
 	private boolean elderly = false;
+	private String userName;
 	
 	//Window Panels
 	private JPanel color1;
@@ -315,6 +297,31 @@ public class MyWindow extends JFrame implements Serializable{
 		JMenuItem changePassword = new JMenuItem("Change Password");
 		JMenuItem logout = new JMenuItem("Log out");
 		account.add(changePassword);
+		changePassword.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try{
+				String password = JOptionPane.showInputDialog(null,"Please input your current password");
+				if (Staff.checkLogin(db, logAc, userName, password.toCharArray())!=0){
+					password = JOptionPane.showInputDialog(null,"Please input your new password");
+					int index = 0;
+					if (mode==1){
+						while (index < logAc.getDoctorSize()){
+							if (logAc.getDoctor(index).getUserName().equals(userName))
+								logAc.getDoctor(index).setPassword(password);
+							index++;
+						}
+					} else if (mode==2){
+						while (index < logAc.getAdminSize()){
+							if (logAc.getAdmin(index).getUserName().equals(userName))
+								logAc.getAdmin(index).setPassword(password);
+							index++;
+						}
+					}
+				}
+				} catch (NullPointerException e2){
+				}
+			}});
 		account.add(logout);
 		logout.addActionListener(new ActionListener(){
 			@Override
@@ -330,6 +337,7 @@ public class MyWindow extends JFrame implements Serializable{
 		logAc = logAc.load(logAc);
 		if ((mode = Doctor.checkLogin(db,logAc,userName,password))!=0){
 			//when password match, saved mode : 1:Doctor 2:admin
+			this.userName = userName;
 			doctorID = userName;
 			db = db.load(db);
 			menuPage();
@@ -743,12 +751,18 @@ public class MyWindow extends JFrame implements Serializable{
 					year = Integer.parseInt(((String)PBT_date.getValue()).substring(6,10));
 
 					GregorianCalendar date = new GregorianCalendar();
+					
 					date.set(year, month, day,Integer.parseInt(PBL_choose_model.getElementAt(PBL_choose.getSelectedIndex()).substring(0, 2)),0);
 					int index = PBCB_doctor.getSelectedIndex();
 					String doctorID = logAc.getDoctor(index).getUserName();
 					if (!db.is30Day(patient.getHKID(),date))
 						throw new NullFieldException(4);
 					db.createbooking(patient.getHKID(), doctorID, date);
+					if (elderly){
+						GregorianCalendar date2 = new GregorianCalendar();
+						date2.set(year, month, day,Integer.parseInt(PBL_choose_model.getElementAt(PBL_choose.getSelectedIndex()).substring(0, 2))+1,0);
+						db.createbooking(patient.getHKID(), doctorID, date2);
+					}
 				} catch (NullFieldException e){
 					e.error();
 				}
@@ -791,7 +805,16 @@ public class MyWindow extends JFrame implements Serializable{
 						}
 					cnt++;
 				}
-			} 
+			} else {
+				while ((cnt+1)<end){
+					if ((db.isavaliable(doctorID, (String)PBT_date.getValue(), cnt)) && (db.isavaliable(doctorID, (String)PBT_date.getValue(), cnt+1)))
+						if (((cnt<Integer.parseInt(db.getClinic().getSession(1).substring(0, 2))) || (cnt>=Integer.parseInt(db.getClinic().getSession(2).substring(0, 2)))) &&
+						(((cnt+1)<Integer.parseInt(db.getClinic().getSession(1).substring(0, 2))) || ((cnt+1)>=Integer.parseInt(db.getClinic().getSession(2).substring(0, 2))))){
+							PBL_choose_model.add(PBL_choose_model.getSize(), Integer.toString(cnt)+":00");
+						}
+					cnt++;
+				}
+			}
 		}catch (NullFieldException e){
 			e.error();
 		}
@@ -1126,8 +1149,6 @@ public class MyWindow extends JFrame implements Serializable{
 	//**************************Account Page*********************************
 	//***********************************************************************	
 	private void accountPage(){
-		int index; //index for the user account in the LinkedList
-		int type; //type: 1 for doctor, 2 for admin
 		
 		accountPane = new JPanel();
 		accountPane.setBackground(SystemColor.activeCaption);
@@ -1486,7 +1507,6 @@ public class MyWindow extends JFrame implements Serializable{
 		TtB_save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int cur_rec = patient.getTreatmentRecSize()-1;
-				int cur_treat = TtL_list.getSelectedIndex();
 				float tmp_price;
 				float tmp_sub_price;
 				//add treatment
@@ -1783,8 +1803,13 @@ public class MyWindow extends JFrame implements Serializable{
 						db.getPatient(index).setDob((String)PT_dob.getValue());
 						save = true;
 					}
-					if (save)
+					if (save){
 						JOptionPane.showMessageDialog(null, "Patient records have been saved","Patient record", JOptionPane.PLAIN_MESSAGE);
+						if (patient.getAge()>50)
+							elderly = true;
+						else
+							elderly = false;
+					}
 					PT_name.setEditable(false);
 					PT_HKID.setEditable(false);
 					PT_gender.setEditable(false);

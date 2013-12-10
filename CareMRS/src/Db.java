@@ -73,7 +73,7 @@ public class Db implements Serializable{
 				//first time use
 				
 				//temp
-				addPatient(new Patient("Chan", "A000001(1)", "1234 5678", 'M', "01/01/2013"));
+				addPatient(new Patient("Chan", "A000001(1)", "1234 5678", 'M', "01/01/1000"));
 				//temp
 				
 				TreatmentMeta treatmentMeta1 = new TreatmentMeta("Herbal",250,false);

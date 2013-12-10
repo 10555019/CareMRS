@@ -169,17 +169,4 @@ public class Patient implements Serializable{
 		}
 		return diff1;
 	}
-
-	public void book(){
-		int diff1;
-		
-		diff1 = getAge();
-		
-		if(diff1>50){
-			int book = 2;
-		}
-		else{
-			int book = 1;
-		}
-	}
 }
