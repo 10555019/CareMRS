@@ -46,6 +46,21 @@ public class Clinic implements Serializable{
 	public int getNonMin(int i){
 		return nonPeakHr[i].get(12);
 	}
+	
+	public String getNonPHr(int i){
+		String hr, min;
+		try{
+			hr = Integer.toString(nonPeakHr[i].get(11));
+			if (hr.length()==1)
+				hr = "0" + hr;
+			min = Integer.toString(nonPeakHr[i].get(12));
+			if (min.length()==1)
+				min = "0" + min;
+			return hr + ":" + min;
+		} catch(NullPointerException e){
+		}
+		return null;
+	}
 
 	public void setOpenHr(int i, int j, boolean k){
 		openHr[i][j]=k;

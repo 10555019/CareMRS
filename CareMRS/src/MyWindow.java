@@ -137,6 +137,10 @@ public class MyWindow extends JFrame implements Serializable{
 	private JFormattedTextField OHT_AE = new JFormattedTextField(timeFormatter);
 	private JFormattedTextField OHT_PS = new JFormattedTextField(timeFormatter);
 	private JFormattedTextField OHT_PE = new JFormattedTextField(timeFormatter);
+	private JFormattedTextField OHT_np1 = new JFormattedTextField(timeFormatter);
+	private JFormattedTextField OHT_np2 = new JFormattedTextField(timeFormatter);
+	private JFormattedTextField OHT_np3 = new JFormattedTextField(timeFormatter);
+	private JFormattedTextField OHT_np4 = new JFormattedTextField(timeFormatter);
 	private JButton OHB_save = new JButton("Save");
 	private JButton OHB_clinic = new JButton("Clinic");
 	private JCheckBox OH1 = new JCheckBox("");
@@ -1071,6 +1075,10 @@ public class MyWindow extends JFrame implements Serializable{
 		OHT_AE.setValue(db.getClinic().getSession(1));
 		OHT_PS.setValue(db.getClinic().getSession(2));
 		OHT_PE.setValue(db.getClinic().getSession(3));
+		OHT_np1.setValue(db.getClinic().getNonPHr(0));
+		OHT_np2.setValue(db.getClinic().getNonPHr(1));
+		OHT_np3.setValue(db.getClinic().getNonPHr(2));
+		OHT_np4.setValue(db.getClinic().getNonPHr(3));
 		
 		OHB_save.addActionListener(new ActionListener(){
 			@Override
@@ -1093,6 +1101,10 @@ public class MyWindow extends JFrame implements Serializable{
 				db.getClinic().setSession(1, (String)OHT_AE.getValue());
 				db.getClinic().setSession(2, (String)OHT_PS.getValue());
 				db.getClinic().setSession(3, (String)OHT_PE.getValue());
+				db.getClinic().setNonPH(0, (String)OHT_np1.getValue());
+				db.getClinic().setNonPH(1, (String)OHT_np2.getValue());
+				db.getClinic().setNonPH(2, (String)OHT_np3.getValue());
+				db.getClinic().setNonPH(3, (String)OHT_np4.getValue());
 				JOptionPane.showMessageDialog(null, "Setting saved","Opening Hour",JOptionPane.PLAIN_MESSAGE);
 			}});
 		
@@ -2001,6 +2013,26 @@ public class MyWindow extends JFrame implements Serializable{
 		OHT_PE.setBounds(386, 166, 96, 24);
 		c_OHPane.add(OHT_PE);
 		
+		OHT_np1.setFont(new Font("Arial", Font.PLAIN, 20));
+		OHT_np1.setColumns(10);
+		OHT_np1.setBounds(117, 512, 96, 24);
+		c_OHPane.add(OHT_np1);
+		
+		OHT_np2.setFont(new Font("Arial", Font.PLAIN, 20));
+		OHT_np2.setColumns(10);
+		OHT_np2.setBounds(262, 512, 96, 24);
+		c_OHPane.add(OHT_np2);
+		
+		OHT_np3.setFont(new Font("Arial", Font.PLAIN, 20));
+		OHT_np3.setColumns(10);
+		OHT_np3.setBounds(117, 559, 96, 24);
+		c_OHPane.add(OHT_np3);
+		
+		OHT_np4.setFont(new Font("Arial", Font.PLAIN, 20));
+		OHT_np4.setColumns(10);
+		OHT_np4.setBounds(262, 559, 96, 24);
+		c_OHPane.add(OHT_np4);
+		
 		JLabel lblTo = new JLabel("to");
 		lblTo.setFont(new Font("Arial", Font.PLAIN, 20));
 		lblTo.setBounds(342, 119, 25, 24);
@@ -2064,78 +2096,108 @@ public class MyWindow extends JFrame implements Serializable{
 		c_OHPane.add(lblPm);
 		
 		OH1.setHorizontalAlignment(SwingConstants.CENTER);
-		OH1.setBackground(SystemColor.activeCaption);
+		OH1.setBackground(new Color(152, 251, 152));
 		OH1.setBounds(201, 301, 60, 24);
 		c_OHPane.add(OH1);
 		
 		OH3.setHorizontalAlignment(SwingConstants.CENTER);
-		OH3.setBackground(SystemColor.activeCaption);
+		OH3.setBackground(new Color(152, 251, 152));
 		OH3.setBounds(288, 301, 60, 24);
 		c_OHPane.add(OH3);
 		
 		OH5.setHorizontalAlignment(SwingConstants.CENTER);
-		OH5.setBackground(SystemColor.activeCaption);
+		OH5.setBackground(new Color(152, 251, 152));
 		OH5.setBounds(375, 301, 60, 24);
 		c_OHPane.add(OH5);
 		
 		OH7.setHorizontalAlignment(SwingConstants.CENTER);
-		OH7.setBackground(SystemColor.activeCaption);
+		OH7.setBackground(new Color(152, 251, 152));
 		OH7.setBounds(462, 301, 60, 24);
 		c_OHPane.add(OH7);
 		
 		OH9.setHorizontalAlignment(SwingConstants.CENTER);
-		OH9.setBackground(SystemColor.activeCaption);
+		OH9.setBackground(new Color(152, 251, 152));
 		OH9.setBounds(549, 301, 60, 24);
 		c_OHPane.add(OH9);
 		
 		OH11.setHorizontalAlignment(SwingConstants.CENTER);
-		OH11.setBackground(SystemColor.activeCaption);
+		OH11.setBackground(new Color(152, 251, 152));
 		OH11.setBounds(636, 301, 60, 24);
 		c_OHPane.add(OH11);
 		
 		OH13.setHorizontalAlignment(SwingConstants.CENTER);
-		OH13.setBackground(SystemColor.activeCaption);
+		OH13.setBackground(new Color(152, 251, 152));
 		OH13.setBounds(723, 305, 60, 24);
 		c_OHPane.add(OH13);
 		
 		OH2.setHorizontalAlignment(SwingConstants.CENTER);
-		OH2.setBackground(SystemColor.activeCaption);
+		OH2.setBackground(new Color(152, 251, 152));
 		OH2.setBounds(201, 352, 60, 24);
 		c_OHPane.add(OH2);
 		
 		OH4.setHorizontalAlignment(SwingConstants.CENTER);
-		OH4.setBackground(SystemColor.activeCaption);
+		OH4.setBackground(new Color(152, 251, 152));
 		OH4.setBounds(288, 352, 60, 24);
 		c_OHPane.add(OH4);
 		
 		OH6.setHorizontalAlignment(SwingConstants.CENTER);
-		OH6.setBackground(SystemColor.activeCaption);
+		OH6.setBackground(new Color(152, 251, 152));
 		OH6.setBounds(375, 352, 60, 24);
 		c_OHPane.add(OH6);
 		
 		OH8.setHorizontalAlignment(SwingConstants.CENTER);
-		OH8.setBackground(SystemColor.activeCaption);
+		OH8.setBackground(new Color(152, 251, 152));
 		OH8.setBounds(462, 352, 60, 24);
 		c_OHPane.add(OH8);
 		
 		OH10.setHorizontalAlignment(SwingConstants.CENTER);
-		OH10.setBackground(SystemColor.activeCaption);
+		OH10.setBackground(new Color(152, 251, 152));
 		OH10.setBounds(549, 352, 60, 24);
 		c_OHPane.add(OH10);
 		
 		OH12.setHorizontalAlignment(SwingConstants.CENTER);
-		OH12.setBackground(SystemColor.activeCaption);
+		OH12.setBackground(new Color(152, 251, 152));
 		OH12.setBounds(636, 352, 60, 24);
 		c_OHPane.add(OH12);
 		
 		OH14.setHorizontalAlignment(SwingConstants.CENTER);
-		OH14.setBackground(SystemColor.activeCaption);
+		OH14.setBackground(new Color(152, 251, 152));
 		OH14.setBounds(723, 356, 60, 24);
 		c_OHPane.add(OH14);
 		
 		OHB_save.setFont(new Font("Arial", Font.PLAIN, 20));
 		OHB_save.setBounds(640, 552, 143, 47);
 		c_OHPane.add(OHB_save);
+		
+		JLabel lblNonpeakHour = new JLabel("Non-Peak hour");
+		lblNonpeakHour.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblNonpeakHour.setBounds(65, 468, 148, 24);
+		c_OHPane.add(lblNonpeakHour);
+		
+		JLabel label_3 = new JLabel("to");
+		label_3.setFont(new Font("Arial", Font.PLAIN, 20));
+		label_3.setBounds(227, 512, 25, 24);
+		c_OHPane.add(label_3);
+		
+		JLabel label_4 = new JLabel("to");
+		label_4.setFont(new Font("Arial", Font.PLAIN, 20));
+		label_4.setBounds(227, 559, 25, 24);
+		c_OHPane.add(label_4);
+		
+		JPanel panel = new JPanel();
+		panel.setBackground(new Color(152, 251, 152));
+		panel.setBounds(53, 108, 446, 94);
+		c_OHPane.add(panel);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(new Color(152, 251, 152));
+		panel_1.setBounds(90, 239, 716, 151);
+		c_OHPane.add(panel_1);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBackground(new Color(152, 251, 152));
+		panel_2.setBounds(50, 457, 335, 147);
+		c_OHPane.add(panel_2);
 		
 		
 		//MT
