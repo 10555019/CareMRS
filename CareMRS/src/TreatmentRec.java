@@ -13,12 +13,35 @@ public class TreatmentRec implements Serializable{
 	private float discount, totalPrice;
 	private boolean payment;
 
-	public TreatmentRec(String doctorID){
+	public TreatmentRec(Db db,Patient patient,String doctorID){
 		this.doctorID = doctorID;
 		GregorianCalendar currentTime = new GregorianCalendar();
-		time = currentTime;
+		time = currentTime; //set treatment time
+		//set discuont
+		discount = 1;
+		int ch, cm, nh1, nm1, nh2, nm2;
+		ch = currentTime.get(11);
+		cm = currentTime.get(12);
+		nh1 = db.getClinic().getNonHr(0);
+		nm1 = db.getClinic().getNonMin(0);
+		nh2 = db.getClinic().getNonHr(1);
+		nm2 = db.getClinic().getNonMin(1);
+		if ((ch>nh1) || (ch<nh2) || ((ch==nh1) && (cm>nm1)) || ((ch==nh2) && (cm<nm2))){
+			discount = db.getClinic().getDiscount(2);
+			condition = "Non-Peak hour Discount";
+		}
+		if (patient!=null){
+			if (patient.getAge()<18){
+				discount = db.getClinic().getDiscount(1);
+				condition = "Children Discount";
+			} else if (patient.getAge()>50){
+				discount = db.getClinic().getDiscount(0);
+				condition = "Eldery Discount";
+
+			}
+		}
 	}
-	
+
 	public String getDoctorID(){
 		return doctorID;
 	}
