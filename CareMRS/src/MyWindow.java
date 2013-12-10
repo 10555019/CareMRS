@@ -683,7 +683,7 @@ public class MyWindow extends JFrame implements Serializable{
 			db.showBookingPat(PBT_model,patient.getHKID());
 		}
 		PBL_choose_model.removeAllElements();
-		
+		PBT_date.setValue(null);
 		
 		JLabel lbl_Booking = new JLabel("Booking");
 		lbl_Booking.setFont(new Font("Arial", Font.BOLD, 30));
@@ -738,6 +738,8 @@ public class MyWindow extends JFrame implements Serializable{
 					date.set(year, month, day,Integer.parseInt(PBL_choose_model.getElementAt(PBL_choose.getSelectedIndex()).substring(0, 2)),0);
 					int index = PBCB_doctor.getSelectedIndex();
 					String doctorID = logAc.getDoctor(index).getUserName();
+					if (!db.is30Day(patient.getHKID(),date))
+						throw new NullFieldException(4);
 					db.createbooking(patient.getHKID(), doctorID, date);
 				} catch (NullFieldException e){
 					e.error();

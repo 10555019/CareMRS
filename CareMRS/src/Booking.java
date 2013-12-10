@@ -24,7 +24,7 @@ public class Booking implements Serializable{
 		day = Integer.toString(date.get(5));
 		if (day.length()==1)
 			day = "0" + day;
-		month = Integer.toString(date.get(2))+1;
+		month = Integer.toString(date.get(2)+1);
 		if (month.length()==1)
 			month = "0" + month;
 		year = Integer.toString(date.get(1));
@@ -42,6 +42,10 @@ public class Booking implements Serializable{
 		if (min.length()==1)
 			min = "0" + min;
 		return (hour+":"+min);
+	}
+	
+	public GregorianCalendar getDate(){
+		return date;
 	}
 	
 }

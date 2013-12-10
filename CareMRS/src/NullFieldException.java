@@ -17,6 +17,9 @@ public class NullFieldException extends Exception {
 			break;
 		case 3:
 			JOptionPane.showMessageDialog(null, "Please select a time slot.","Blank Field", JOptionPane.ERROR_MESSAGE);
+			break;
+		case 4:
+			JOptionPane.showMessageDialog(null, "Patient have booking within 30 days","Booking", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }

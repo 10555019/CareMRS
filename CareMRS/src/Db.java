@@ -211,6 +211,33 @@ public class Db implements Serializable{
 		}
 		return true;
 	}
+	
+	public boolean is30Day(String ID, GregorianCalendar date){
+		GregorianCalendar cal1 = new GregorianCalendar();
+		GregorianCalendar cal2 = new GregorianCalendar();
+		//cal2.set(Integer.parseInt(date.substring(0,2)),Integer.parseInt(date.substring(3,5)),Integer.parseInt(date.substring(6,10)),0,0);
+		cal2=date;
+		boolean flag=false;
+		int i = 0;
+		while (i < booking.size()){
+			if (booking.get(i).getPatientID().equals(ID)){
+				cal1 = booking.get(i).getDate();
+				flag=true;
+			}
+			i++;
+		}
+		if (!flag)
+			return true;
+		long m1 = cal1.getTimeInMillis();
+		long m2 = cal2.getTimeInMillis();
+		long diff = m2-m1;
+		long diffDay = diff / (24*60*60*1000);
+		if (diffDay>30)
+			return true;
+		else
+			return false;
+		
+	}
 
 	public void delete(){
 		temp.removeAll(temp);
