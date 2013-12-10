@@ -150,14 +150,19 @@ public class Db implements Serializable{
 		}
 	}
 	
-	public void showBookingDoc(String ID){
+	public void showBookingDoc(DefaultTableModel defaultTableModel, String ID){
 		int i=0;
+		int rowCount = defaultTableModel.getRowCount();
+		for (int j=rowCount-1;j>=0;j--){
+			defaultTableModel.removeRow(j);
+		}
 		searchinglist(ID);
 		while (i<temp.size()){
 			String patientID = booking.get(temp.get(i)).getPatientID();
 			String date = booking.get(temp.get(i)).getBookingDate();
 			String time = booking.get(temp.get(i)).getBookingTime();
 			i++;
+			defaultTableModel.addRow(new Object[] {date,time,patientID});
 		}
 	}
 	

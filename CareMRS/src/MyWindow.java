@@ -215,6 +215,14 @@ public class MyWindow extends JFrame implements Serializable{
 	private JList<String> ASL_admin = new JList<String>(ASL_adminmodel);
 	private JButton ASB_menu = new JButton("Menu");
 	
+	
+	//timetable
+	private JButton TiB_menu = new JButton("Menu");
+	private JPanel TiP_pane = new JPanel();
+	private DefaultTableModel TiT_model = new DefaultTableModel();
+	private String[] Ticolums = {"Date","Time","Patient"};
+	private JTable TiT_table = new JTable(new DefaultTableModel(null,Ticolums));
+	
 	//Mode variables
 	private boolean cnt=true;
 	private int mode; //1:doctor 2:admin
@@ -751,11 +759,6 @@ public class MyWindow extends JFrame implements Serializable{
 		PBB_book.setFont(new Font("Arial", Font.PLAIN, 20));
 		PBB_book.setBounds(843, 300, 109, 47);
 		p_bookingPane.add(PBB_book);
-		
-		JButton btnNewButton = new JButton("Delete");
-		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 20));
-		btnNewButton.setBounds(685, 585, 116, 47);
-		p_bookingPane.add(btnNewButton);
 		
 		JButton btnBackToPatient = new JButton("Patient");
 		btnBackToPatient.addActionListener(new ActionListener() {
@@ -1408,6 +1411,14 @@ public class MyWindow extends JFrame implements Serializable{
 		lblTimetable.setFont(new Font("Arial", Font.BOLD, 30));
 		lblTimetable.setBounds(349, 20, 286, 47);
 		timetablePane.add(lblTimetable);
+		
+		db.showBookingDoc(TiT_model, doctorID);
+		
+		TiB_menu.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				cardLayout.show(contentPane, "Menu");
+			}});
 	}
 	//***********************************************************************
 	//*************************Timetable Page********************************
@@ -1899,7 +1910,8 @@ public class MyWindow extends JFrame implements Serializable{
 		menuPane.add(PBB_myTimetable);
 		PBB_myTimetable.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				//
+				timetablePage();
+				cardLayout.show(contentPane, "Timetable");
 			}
 		});
 		
@@ -2448,6 +2460,27 @@ public class MyWindow extends JFrame implements Serializable{
 		ASB_delete.setFont(new Font("Arial", Font.PLAIN, 20));
 		ASB_delete.setBounds(320, 495, 121, 47);
 		accountPane.add(ASB_delete);
+		
+		//Timetable
+		TiB_menu.setFont(new Font("Arial", Font.PLAIN, 25));
+		TiB_menu.setBackground(new Color(255, 192, 203));
+		TiB_menu.setBounds(807, 548, 142, 70);
+		timetablePane.add(TiB_menu);
+		
+		TiP_pane.setBackground(new Color(224, 255, 255));
+		TiP_pane.setBounds(144, 77, 629, 517);
+		TiP_pane.setLayout(new FlowLayout());
+		timetablePane.add(TiP_pane);
+		
+		TiT_model = (DefaultTableModel) TiT_table.getModel();
+		TiT_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		TiT_table.setFont(new Font("Arial", Font.PLAIN, 18));
+		TiT_table.setBackground(new Color(224, 255, 255));
+		TiT_table.setPreferredScrollableViewportSize(new Dimension(580, 470));
+		TiT_table.setFillsViewportHeight(true);
+		JScrollPane Tijp = new JScrollPane(TiT_table);
+		Tijp.setFont(new Font("Arial", Font.PLAIN, 18));
+		TiP_pane.add(Tijp);
 
 	}
 	//*******************Construct Label and Button**************************
