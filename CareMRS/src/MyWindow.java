@@ -32,6 +32,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Scanner;
+import java.util.Vector;
 
 import javax.swing.ImageIcon;
 
@@ -65,6 +66,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.JTextPane;
 import javax.swing.ListModel;
 
@@ -110,9 +112,8 @@ public class MyWindow extends JFrame implements Serializable{
 	private JButton PBB_account = new JButton("Account");
 	private JPanel PBP_choose = new JPanel();
 	private JPanel PBP_show = new JPanel();
-	private DefaultTableModel PBT_choose_model;
-	private String[] tmp_columns = {};
-	private JTable PBT_choose = new JTable(new DefaultTableModel(null,tmp_columns));
+	private DefaultListModel<String> PBL_choose_model = new DefaultListModel<String>();
+	public JList<String> PBL_choose = new JList<String>(PBL_choose_model);
 	
 	//Clinic
 	private JTextField SCT_p50 = new JTextField();
@@ -674,6 +675,9 @@ public class MyWindow extends JFrame implements Serializable{
 		p_bookingPane.setBackground(SystemColor.activeCaption);
 		p_bookingPane.setLayout(null);
 		
+		
+		
+		
 		JLabel lbl_Booking = new JLabel("Booking");
 		lbl_Booking.setFont(new Font("Arial", Font.BOLD, 30));
 		lbl_Booking.setBounds(428, 20, 127, 47);
@@ -682,48 +686,61 @@ public class MyWindow extends JFrame implements Serializable{
 		JLabel lbl_date = new JLabel("Date:");
 		lbl_date.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_date.setFont(new Font("Arial", Font.PLAIN, 20));
-		lbl_date.setBounds(83, 82, 57, 24);
+		lbl_date.setBounds(185, 119, 57, 24);
 		p_bookingPane.add(lbl_date);
 		
 		JLabel lblDdmmyyyy = new JLabel("dd/mm/yyyy");
 		lblDdmmyyyy.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblDdmmyyyy.setFont(new Font("Arial", Font.PLAIN, 20));
-		lblDdmmyyyy.setBounds(22, 104, 116, 24);
+		lblDdmmyyyy.setBounds(124, 141, 116, 24);
 		p_bookingPane.add(lblDdmmyyyy);
 		
 		JLabel lbl_doctor = new JLabel("Doctor:");
 		lbl_doctor.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_doctor.setFont(new Font("Arial", Font.PLAIN, 20));
-		lbl_doctor.setBounds(69, 156, 71, 24);
+		lbl_doctor.setBounds(92, 198, 71, 24);
 		p_bookingPane.add(lbl_doctor);
-		
-		JButton B_update = new JButton("update");
-		B_update.setFont(new Font("Arial", Font.PLAIN, 20));
-		B_update.setBounds(428, 138, 101, 47);
-		p_bookingPane.add(B_update);
+
+		JButton PBB_update = new JButton("update");
+		PBB_update.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				PBupdate();
+			}});
+		PBB_update.setFont(new Font("Arial", Font.PLAIN, 20));
+		PBB_update.setBounds(278, 274, 101, 47);
+		p_bookingPane.add(PBB_update);
 
 		//set Doctor list
 		PBCB_doctor.removeAllItems();
 		Doctor.addCombo(logAc, PBCB_doctor);
-		
-		
-		JButton B_book = new JButton("Book");
-		B_book.addActionListener(new ActionListener() {
+
+
+		JButton PBB_book = new JButton("Book");
+		PBB_book.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int day, month, year;
-				day = Integer.parseInt(((String)PBT_date.getValue()).substring(0,2));
-				month = Integer.parseInt(((String)PBT_date.getValue()).substring(3,5));
-				year = Integer.parseInt(((String)PBT_date.getValue()).substring(6,10));
-				GregorianCalendar date = new GregorianCalendar();
-				date.set(year, month, day);
-				int index = PBCB_doctor.getSelectedIndex();
-				String doctorID = logAc.getDoctor(index).getUserName();
-				db.createbooking(patient.getHKID(), doctorID, date);
+				try{
+					if (PBL_choose.getSelectedIndex()==-1)
+						throw new NullFieldException(3);
+					int day, month, year;
+					day = Integer.parseInt(((String)PBT_date.getValue()).substring(0,2));
+					month = Integer.parseInt(((String)PBT_date.getValue()).substring(3,5))-1;
+					year = Integer.parseInt(((String)PBT_date.getValue()).substring(6,10));
+
+					GregorianCalendar date = new GregorianCalendar();
+					date.set(year, month, day,Integer.parseInt(PBL_choose_model.getElementAt(PBL_choose.getSelectedIndex()).substring(0, 2)),0);
+					int index = PBCB_doctor.getSelectedIndex();
+					String doctorID = logAc.getDoctor(index).getUserName();
+					db.createbooking(patient.getHKID(), doctorID, date);
+				} catch (NullFieldException e){
+					e.error();
+				}
+				PBupdate();
 			}
 		});
-		B_book.setFont(new Font("Arial", Font.PLAIN, 20));
-		B_book.setBounds(560, 138, 109, 47);
-		p_bookingPane.add(B_book);
+		PBB_book.setFont(new Font("Arial", Font.PLAIN, 20));
+		PBB_book.setBounds(843, 300, 109, 47);
+		p_bookingPane.add(PBB_book);
 		
 		JButton btnNewButton = new JButton("Delete");
 		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -741,10 +758,32 @@ public class MyWindow extends JFrame implements Serializable{
 		p_bookingPane.add(btnBackToPatient);
 		
 		
-
-		
-		
 	}
+
+	private void PBupdate(){
+		try{
+			if (PBT_date.getValue()==null)
+				throw new NullFieldException(2);
+			PBL_choose_model.removeAllElements();
+			int index = PBCB_doctor.getSelectedIndex();
+			String doctorID = logAc.getDoctor(index).getUserName();
+			int start = Integer.parseInt(db.getClinic().getSession(0).substring(0, 2));
+			int end = Integer.parseInt(db.getClinic().getSession(3).substring(0, 2));
+			int cnt = start;
+			if (!elderly){
+				while (cnt<end){
+					if (db.isavaliable(doctorID, (String)PBT_date.getValue(), cnt))
+						if ((cnt<Integer.parseInt(db.getClinic().getSession(1).substring(0, 2))) || (cnt>=Integer.parseInt(db.getClinic().getSession(2).substring(0, 2)))){
+							PBL_choose_model.add(PBL_choose_model.getSize(), Integer.toString(cnt)+":00");
+						}
+					cnt++;
+				}
+			} 
+		}catch (NullFieldException e){
+			e.error();
+		}
+	}
+	
 	//***********************************************************************
 	//***********************Patient booking Page****************************
 	//***********************************************************************
@@ -1824,11 +1863,11 @@ public class MyWindow extends JFrame implements Serializable{
 		
 		//Patient Booking
 		PBT_date.setFont(new Font("Arial", Font.PLAIN, 20));
-		PBT_date.setBounds(150, 79, 127, 29);
+		PBT_date.setBounds(252, 116, 127, 29);
 		p_bookingPane.add(PBT_date);
 		
 		PBCB_doctor.setFont(new Font("Arial", Font.PLAIN, 20));
-		PBCB_doctor.setBounds(150, 156, 206, 24);
+		PBCB_doctor.setBounds(173, 198, 206, 24);
 		p_bookingPane.add(PBCB_doctor);
 		
 		PBB_account.setIcon(new ImageIcon(getClass().getResource("account.png")));
@@ -1859,18 +1898,18 @@ public class MyWindow extends JFrame implements Serializable{
 		p_bookingPane.add(PBP_show);
 		
 		PBP_choose.setBackground(new Color(255, 228, 181));
-		PBP_choose.setBounds(33, 213, 879, 111);
+		PBP_choose.setBounds(531, 89, 302, 275);
 		p_bookingPane.add(PBP_choose);
+		PBP_choose.setLayout(null);
 		
-		PBT_choose_model = (DefaultTableModel) PBT_choose.getModel();
-		PBT_choose.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		PBT_choose.setFont(new Font("Arial", Font.PLAIN, 18));
-		PBT_choose.setBackground(new Color(255, 228, 181));
-		PBT_choose.setPreferredScrollableViewportSize(new Dimension(850, 80));
-		PBT_choose.setFillsViewportHeight(true);
-		JScrollPane PBjp = new JScrollPane(PBT_choose);
-		PBjp.setFont(new Font("Arial", Font.PLAIN, 18));
-		PBP_choose.add(PBjp);
+		PBL_choose.setBounds(10, 44, 282, 221);
+		PBP_choose.add(PBL_choose);
+		
+		JLabel lblStartTime = new JLabel("Start time");
+		lblStartTime.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblStartTime.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblStartTime.setBounds(10, 10, 86, 24);
+		PBP_choose.add(lblStartTime);
 		
 		
 		//treatment

@@ -14,6 +14,9 @@ public class NullFieldException extends Exception {
 			break;
 		case 2:
 			JOptionPane.showMessageDialog(null, "Field should not be blank.","Blank Field", JOptionPane.ERROR_MESSAGE);
+			break;
+		case 3:
+			JOptionPane.showMessageDialog(null, "Please select a time slot.","Blank Field", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }

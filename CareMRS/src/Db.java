@@ -72,7 +72,7 @@ public class Db implements Serializable{
 				//first time use
 				
 				//temp
-				addPatient(new Patient("Chan", "A000001(1)", "1234 5678", 'M', "01/01/1000"));
+				addPatient(new Patient("Chan", "A000001(1)", "1234 5678", 'M', "01/01/2013"));
 				//temp
 				
 				TreatmentMeta treatmentMeta1 = new TreatmentMeta("Herbal",250,false);
@@ -191,6 +191,19 @@ public class Db implements Serializable{
 				flag = true;
 		}
 		return flag;
+	}
+	
+	public boolean isavaliable(String doctorID, String date, int time){
+		int i = 0;
+		while (i < booking.size()){
+			if (booking.get(i).getDoctorID().equals(doctorID)){
+				if ((booking.get(i).getBookingDate().equals(date)) && (Integer.parseInt(booking.get(i).getBookingTime().substring(0, 2))==time)){
+					return false;
+				}
+			}
+			i++;
+		}
+		return true;
 	}
 
 	public void delete(){
