@@ -53,11 +53,6 @@ public class Db implements Serializable{
 		patient.remove(index);
 		JOptionPane.showMessageDialog(null, "Patient is deleted","Delete", JOptionPane.PLAIN_MESSAGE);
 	}
-	
-
-	public void setPath(){
-
-	}
 
 	public Db load(Db db){
 		try{
@@ -71,11 +66,6 @@ public class Db implements Serializable{
 				return tmpDb;
 			}else{
 				//first time use
-				
-				//temp
-				addPatient(new Patient("Chan", "A000001(1)", "1234 5678", 'M', "01/01/1000"));
-				//temp
-				
 				TreatmentMeta treatmentMeta1 = new TreatmentMeta("Herbal",250,false);
 				TreatmentMeta treatmentMeta2 = new TreatmentMeta("Acupuncture",350,true);
 				TreatmentMeta treatmentMeta3 = new TreatmentMeta("Cupping",300,true);
@@ -242,6 +232,21 @@ public class Db implements Serializable{
 		else
 			return false;
 		
+	}
+	
+	public boolean isWithin30(GregorianCalendar date){
+		GregorianCalendar cal1 = new GregorianCalendar();
+		GregorianCalendar cal2 = new GregorianCalendar();
+		
+		cal2=date;
+		long m1 = cal1.getTimeInMillis();
+		long m2 = cal2.getTimeInMillis();
+		long diff = m2-m1;
+		long diffDay = diff / (24*60*60*1000);
+		if ((diffDay<30) && (diffDay>=0))
+			return true;
+		else
+			return false;
 	}
 
 	public void delete(){

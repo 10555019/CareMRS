@@ -376,8 +376,7 @@ public class MyWindow extends JFrame implements Serializable{
 		JButton B_login = new JButton("Login");
 		B_login.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				login("user","user".toCharArray());
-				//login(L_userNameField.getText(),L_passwordField.getPassword());
+				login(L_userNameField.getText(),L_passwordField.getPassword());
 				L_userNameField.setText(null);
 				L_passwordField.setText(null);
 			}
@@ -546,13 +545,7 @@ public class MyWindow extends JFrame implements Serializable{
 		B_search.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				//int index = Patient.patientSearch(db, (String) SPT_HKID.getValue());
-				
-				
-				
-				int index = Patient.patientSearch(db, "A000001(1)");
-				
-				
+				int index = Patient.patientSearch(db, (String) SPT_HKID.getValue());
 				if (index > -1){
 					patient = db.getPatient(index);
 					if (patient.getAge()>50)
@@ -757,6 +750,8 @@ public class MyWindow extends JFrame implements Serializable{
 					String doctorID = logAc.getDoctor(index).getUserName();
 					if (!db.is30Day(patient.getHKID(),date))
 						throw new NullFieldException(4);
+					if (!db.isWithin30(date))
+						throw new NullFieldException(5);
 					db.createbooking(patient.getHKID(), doctorID, date);
 					if (elderly){
 						GregorianCalendar date2 = new GregorianCalendar();
@@ -1519,10 +1514,8 @@ public class MyWindow extends JFrame implements Serializable{
 				if (!(db.getClinic().getTreatmentMeta(TtCB_text.getSelectedIndex()).isBodyPart())){
 					//calculate price
 					tmp_sub_price = patient.getTreatmentRec(cur_rec).getTotalPrice() + db.getClinic().getTreatmentMeta(TtCB_text.getSelectedIndex()).getFpp()*discount;
-					//System.out.println(tmp_sub_price);
 					patient.getTreatmentRec(cur_rec).setTotalPrice(tmp_sub_price);
 					tmp_price = db.getClinic().getTreatmentMeta(TtCB_text.getSelectedIndex()).getFpp()*discount;
-					//System.out.println(tmp_price);
 					patient.getTreatmentRec(cur_rec).getTreatment(patient.getTreatmentRec(cur_rec).getTreatmentSize()-1).setPrice(tmp_price);
 					//update price
 					Tlbl_total.setText(Float.toString(tmp_price));
@@ -1752,16 +1745,6 @@ public class MyWindow extends JFrame implements Serializable{
 		L_passwordField.setBounds(439, 342, 253, 30);
 		loginPane.add(L_passwordField);
 		
-		JButton btnLogindoctor = new JButton("Doctor");
-		btnLogindoctor.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				login("doctor","doctor".toCharArray());
-			}
-		});
-		btnLogindoctor.setFont(new Font("Arial", Font.PLAIN, 20));
-		btnLogindoctor.setBounds(327, 537, 110, 60);
-		loginPane.add(btnLogindoctor);
-		
 		//Patient page button
 		//B_save
 		PB_save.setBounds(693, 227, 98, 32);
@@ -1783,7 +1766,6 @@ public class MyWindow extends JFrame implements Serializable{
 						} else{
 							if (JOptionPane.showConfirmDialog(null, "Same patient found, amend record?","Patient record", JOptionPane.YES_NO_OPTION)==1){
 								patient = new Patient(PT_name.getText(),(String)PT_HKID.getValue(),(String)PT_tel.getValue(),PT_gender.getText().charAt(0),(String)PT_dob.getValue());
-								//patient = new Patient(PT_name.getText(),PT_HKID.getText(),PT_tel.getText(),PT_gender.getText().charAt(0),PT_dob.getText());
 								db.addPatient(patient);
 								save = true;
 							} else {

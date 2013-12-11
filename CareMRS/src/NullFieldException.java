@@ -20,6 +20,10 @@ public class NullFieldException extends Exception {
 			break;
 		case 4:
 			JOptionPane.showMessageDialog(null, "Patient have booking within 30 days","Booking", JOptionPane.ERROR_MESSAGE);
+			break;
+		case 5:
+			JOptionPane.showMessageDialog(null, "Please make booking within the next 30 days","Booking", JOptionPane.ERROR_MESSAGE);
+			break;
 		}
 	}
 }
