@@ -75,7 +75,7 @@ public class LogAc implements Serializable{
 			}else{
 				//first time use
 				Admin admin = new Admin("Superusr","user","user");
-				Doctor doctor = new Doctor("Doctor A","doctor","doctor",1);
+				Doctor doctor = new Doctor("Default Doctor","doctor","doctor",1);
 				logAc.addAdmin(admin);
 				logAc.addDoctor(doctor);
 				return logAc;
