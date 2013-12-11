@@ -27,8 +27,6 @@ public class Booking implements Serializable{
 		if (month.length()==1)
 			month = "0" + month;
 		year = Integer.toString(date.get(1));
-		if (year.length()==1)
-			year = "0" + year;
 		return (day+"/"+month+"/"+year);
 	}
 	
